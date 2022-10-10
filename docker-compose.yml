@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+    nestjs_api:
+        container_name: nestjs_api
+        image: nestjs-api
+        build:
+            context: .
+            target: development
+            dockerfile: ./Dockerfile
+        command: npm run start:debug
+        ports:
+            - ${API_PORT}:${API_PORT}
+        env_file:
+            - ./.env
+        networks:
+            - nestjs-network
+        volumes:
+            - .:/usr/src/app
+            - ./node_modules:/usr/src/app/node_modules
+        restart: unless-stopped
+        depends_on:
+            - nestjs_database
+
+    nestjs_database:
+        image: mongo:5.0.3
+        container_name: ${MONGO_CONTAINER_NAME}
+        env_file:
+            - ./.env
+        environment:
+            - MONGO_INITDB_DATABASE=${MONGO_DATEBASE}
+            - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+        ports:
+            - ${MONGO_PORT}:${MONGO_PORT}
+        volumes:
+            - ./database/data:/data/db
+            - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+        networks:
+            - nestjs-network
+
+networks:
+    nestjs-network:
