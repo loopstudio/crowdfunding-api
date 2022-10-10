@@ -1,10 +1,10 @@
 db.createUser({
-  user: 'n3stJsUs3r',
-  pwd: 'BuV8EwjlivPq8z9jISI9',
+  user: 'DB_USER',
+  pwd: 'DB_USER_PASS',
   roles: [
     {
       role: 'readWrite',
-      db: 'nestjs_db',
+      db: 'DB_NAME',
     },
   ],
 });
