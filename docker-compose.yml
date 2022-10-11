@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-    nestjs_api:
-        container_name: nestjs_api
-        image: nestjs-api
+    crowdfunding_api:
+        container_name: crowdfunding_api
+        image: crowdfunding-api
         build:
             context: .
             target: development
@@ -14,15 +14,15 @@ services:
         env_file:
             - ./.env
         networks:
-            - nestjs-network
+            - crowdfunding-network
         volumes:
             - .:/usr/src/app
             - ./node_modules:/usr/src/app/node_modules
         restart: unless-stopped
         depends_on:
-            - nestjs_database
+            - crowdfunding_database
 
-    nestjs_database:
+    crowdfunding_database:
         image: mongo:5.0.3
         container_name: ${MONGO_CONTAINER_NAME}
         env_file:
@@ -37,7 +37,7 @@ services:
             - ./database/data:/data/db
             - ./database/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
         networks:
-            - nestjs-network
+            - crowdfunding-network
 
 networks:
-    nestjs-network:
+    crowdfunding-network:
