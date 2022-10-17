@@ -1,3 +1,3 @@
 export interface APIResponse {
-  data: Array<unknown> | Record<string, unknown>;
+  data: Array<unknown> | unknown;
 }

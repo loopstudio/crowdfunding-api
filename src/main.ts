@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import * as morgan from 'morgan';
 import mongoose from 'mongoose';
@@ -14,9 +15,11 @@ async function bootstrap() {
   app.use(morgan('combined'));
 
   app.setGlobalPrefix('/api/v1');
+  app.useGlobalPipes(new ValidationPipe());
+
+  // TODO: add error handling middleware
 
   try {
-    // TODO: Define if we wanna keep this
     mongoose.set('debug', !!DEBUG);
 
     await app.listen(API_PORT);

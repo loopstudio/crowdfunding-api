@@ -12,8 +12,17 @@
 				{
 					"name": "/users",
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"publicAddress\": \"0xD890357F631d209FB3eFabc116cE21233A624511\",\n    \"username\": \"rcargnelutti\",\n    \"email\": \"rcargnelutti@loopstudio.dev\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "{{protocol}}://{{host}}/api/v1/users",
 							"protocol": "{{protocol}}",
