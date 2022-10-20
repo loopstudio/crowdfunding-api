@@ -1,3 +1,5 @@
-export const getNonce = (): number => {
-  return Math.floor(Math.random() * 1_000_000_000_000_000_000);
+import { randomUUID } from 'crypto';
+
+export const getNonce = (): string => {
+  return randomUUID();
 };

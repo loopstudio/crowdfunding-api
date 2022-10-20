@@ -7,7 +7,6 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { MongoError } from 'mongodb';
-import { getReasonPhrase } from 'http-status-codes';
 
 import { MONGO_DUPLICATED_KEYS_ERROR_CODE } from 'src/common/constants';
 
@@ -46,14 +45,14 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
   private getHttpStatusMessage(exception: unknown): string {
     if (exception instanceof HttpException) {
-      return getReasonPhrase(exception.getStatus());
+      return exception.message;
     } else if (
       exception instanceof MongoError &&
       exception.code === MONGO_DUPLICATED_KEYS_ERROR_CODE
     ) {
-      return getReasonPhrase(HttpStatus.PRECONDITION_FAILED);
+      return 'Model conflict';
     }
 
-    return getReasonPhrase(HttpStatus.INTERNAL_SERVER_ERROR);
+    return 'Internal server error';
   }
 }
