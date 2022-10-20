@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { HttpException } from '@nestjs/common';
@@ -22,10 +24,9 @@ describe('UsersRepository', () => {
         {
           provide: getModelToken(User.name),
           useValue: {
-            create: jest.fn().mockResolvedValue(mongoBuiltUser),
-            count: jest.fn().mockReturnThis(),
-            exec: jest.fn().mockResolvedValue(0),
-            save: jest.fn().mockResolvedValue(createUserServiceResponse),
+            count: jest.fn(),
+            exec: jest.fn(),
+            create: jest.fn(),
           },
         },
       ],
@@ -37,6 +38,11 @@ describe('UsersRepository', () => {
 
   describe('createUser method', () => {
     it('should call createUser usersRepository method without errors', async () => {
+      jest.spyOn(userModel, 'count').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mongoBuiltUser),
+      } as any);
+      jest.spyOn(userModel, 'create').mockImplementation(() => mongoBuiltUser);
+
       const response = await usersRepository.createUser(createUserDTO);
 
       expect(response).toStrictEqual(createUserServiceResponse);
@@ -48,7 +54,7 @@ describe('UsersRepository', () => {
       } as any);
 
       await expect(
-        usersRepository.createUser(createUserDTO)
+        usersRepository.createUser(createUserDTO),
       ).rejects.toThrowError(HttpException);
     });
   });

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable, PreconditionFailedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -15,10 +15,7 @@ export class UsersRepository {
 
     const existingUser = await this.userModel.count({ publicAddress }).exec();
     if (existingUser > 0) {
-      throw new HttpException(
-        'Precondition failed',
-        HttpStatus.PRECONDITION_FAILED
-      );
+      throw new PreconditionFailedException('Users conflict');
     }
 
     const user = await this.userModel.create({

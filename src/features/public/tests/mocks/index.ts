@@ -1,1 +1,1 @@
-export const checkHealthResponse = { message: 'NestJS API v1 running' };
+export const checkHealthResponse = { data: 'NestJS API v1 running' };
