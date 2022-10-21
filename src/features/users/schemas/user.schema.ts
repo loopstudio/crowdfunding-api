@@ -11,8 +11,8 @@ export class User {
   @Prop({ index: true })
   email: string;
 
-  @Prop({ required: true, index: true })
-  nonce: number;
+  @Prop({ required: true })
+  nonce: string;
 
   @Prop({ required: true, unique: true, index: true })
   publicAddress: string;

@@ -1,4 +1,4 @@
-import { Injectable, PreconditionFailedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -12,11 +12,6 @@ export class UsersRepository {
 
   async createUser(body: CreateUserDto): Promise<User> {
     const { username, email, publicAddress } = body;
-
-    const existingUser = await this.userModel.count({ publicAddress }).exec();
-    if (existingUser > 0) {
-      throw new PreconditionFailedException('Users conflict');
-    }
 
     const user = await this.userModel.create({
       username,
