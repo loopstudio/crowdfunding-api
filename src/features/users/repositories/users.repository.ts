@@ -13,11 +13,6 @@ export class UsersRepository {
   async createUser(body: CreateUserDto): Promise<User> {
     const { username, email, publicAddress } = body;
 
-    const existingUser = await this.userModel.count({ publicAddress }).exec();
-    if (existingUser > 0) {
-      throw new ConflictException('User conflict');
-    }
-
     const user = await new this.userModel({
       username,
       email,
