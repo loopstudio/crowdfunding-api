@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { PublicModule } from './features/public/public.module';
 import { EthersModule } from './features/ethers/ethers.module';
+import { UsersModule } from './features/users/users.module';
 
 import { dbConnectionFactory } from './common/database';
 
@@ -13,6 +14,7 @@ import { dbConnectionFactory } from './common/database';
     MongooseModule.forRootAsync(dbConnectionFactory),
     PublicModule,
     EthersModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

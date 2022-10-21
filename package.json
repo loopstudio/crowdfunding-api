@@ -27,6 +27,8 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/mongoose": "^9.2.0",
     "@nestjs/platform-express": "^9.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.13.2",
     "ethers": "^5.7.1",
     "helmet": "^6.0.0",
     "mongoose": "^6.6.5",
@@ -74,6 +76,21 @@
       "**/*.(t|j)s"
     ],
     "coverageDirectory": "../coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": -10
+      }
+    },
+    "coveragePathIgnorePatterns": [
+      "module.ts",
+      "filter.ts",
+      "main.ts",
+      "constants",
+      "database"
+    ],
     "testEnvironment": "node"
   }
 }
