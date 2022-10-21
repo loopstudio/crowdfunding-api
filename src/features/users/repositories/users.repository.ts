@@ -1,10 +1,10 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from '../dto/CreateUser';
-import { getNonce } from 'src/common/utils';
+import { getNonce } from '../../../common/utils/index';
 
 @Injectable()
 export class UsersRepository {
@@ -13,12 +13,12 @@ export class UsersRepository {
   async createUser(body: CreateUserDto): Promise<User> {
     const { username, email, publicAddress } = body;
 
-    const user = await new this.userModel({
+    const user = await this.userModel.create({
       username,
       email,
       publicAddress,
       nonce: getNonce(),
-    }).save();
+    });
 
     return user;
   }
