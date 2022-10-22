@@ -1,0 +1,28 @@
+# 📋 Board card
+
+## [Task name](https://jira.com)
+
+&nbsp;
+
+
+# ℹ️ Description
+
+Please include a summary of the changes and the related issue and its context.
+
+Are there some breaking changes? Please, include them in the following list:
+
+- some-component.ts was changed in order to ...
+
+&nbsp;
+
+
+# 🕵️ How was it tested?
+
+- [ ] Tested manually
+- [ ] Unit test passed and coverage threshold fulfilled
+
+&nbsp;
+
+
+# 🎥 Demo
+Please, include a demo video if you think it will help others to understand better.
