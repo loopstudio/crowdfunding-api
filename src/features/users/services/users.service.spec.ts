@@ -6,7 +6,6 @@ import { createUserDTO, createUserServiceResponse } from '../tests/mocks';
 
 describe('UsersService', () => {
   let usersService: UsersService;
-  let usersRepository: UsersRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,7 +21,6 @@ describe('UsersService', () => {
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
-    usersRepository = module.get<UsersRepository>(UsersRepository);
   });
 
   it('usersService should be defined', () => {
