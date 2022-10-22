@@ -6,7 +6,6 @@ import { checkHealthResponse } from '../tests/mocks';
 
 describe('PublicController', () => {
   let publicController: PublicController;
-  let publicService: PublicService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -22,7 +21,6 @@ describe('PublicController', () => {
     }).compile();
 
     publicController = module.get<PublicController>(PublicController);
-    publicService = module.get<PublicService>(PublicService);
   });
 
   it('publicController should be defined', () => {

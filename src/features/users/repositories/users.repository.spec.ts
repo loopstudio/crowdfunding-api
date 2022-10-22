@@ -47,15 +47,5 @@ describe('UsersRepository', () => {
 
       expect(response).toStrictEqual(createUserServiceResponse);
     });
-
-    it('should call createUser usersRepository method with a Precondition failed error', async () => {
-      jest.spyOn(userModel, 'count').mockReturnValue({
-        exec: jest.fn().mockResolvedValueOnce(1),
-      } as any);
-
-      await expect(
-        usersRepository.createUser(createUserDTO),
-      ).rejects.toThrowError(HttpException);
-    });
   });
 });
