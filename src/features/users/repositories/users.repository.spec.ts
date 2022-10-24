@@ -2,7 +2,6 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
-import { HttpException } from '@nestjs/common';
 import { Model } from 'mongoose';
 
 import { UsersRepository } from './users.repository';
@@ -46,16 +45,6 @@ describe('UsersRepository', () => {
       const response = await usersRepository.createUser(createUserDTO);
 
       expect(response).toStrictEqual(createUserServiceResponse);
-    });
-
-    it('should call createUser usersRepository method with a Precondition failed error', async () => {
-      jest.spyOn(userModel, 'count').mockReturnValue({
-        exec: jest.fn().mockResolvedValueOnce(1),
-      } as any);
-
-      await expect(
-        usersRepository.createUser(createUserDTO),
-      ).rejects.toThrowError(HttpException);
     });
   });
 });
