@@ -68,6 +68,15 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## IMPORTANT:
+### We have added a `pre-commit` and `pre-push` hooks, so linter and test are run before pushing the code to the remote. If for some reason you don't want these processes to be run, add the flag ` --no-verify`, for example:
+```bash
+# commit
+git commit --no-verify -m "commit message"
+# push
+git push --no-verify
+```
+
 ---
 
 ## Testing
