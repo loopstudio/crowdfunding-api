@@ -8,8 +8,9 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "build:ci": "yarn run lint && yarn run test",
+    "build:ci": "yarn run lint && yarn run test:cov",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "postinstall": "git config core.hooksPath ./git-hooks",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -74,6 +75,7 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "collectCoverage": true,
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],

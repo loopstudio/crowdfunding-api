@@ -17,6 +17,8 @@ We are using `yarn`, so you will install all the libs with the following command
 $ yarn install
 ```
 
+IMPORTANT: To configure git-hooks you must have at least git version 2.9. If not, `postinstall` script won't work, thus the hooks won't.
+
 ---
 
 ## Define .env variables
@@ -64,6 +66,15 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
+```
+
+## IMPORTANT:
+### We have added a `pre-commit` and `pre-push` hooks, so linter and test are run before pushing the code to the remote. If for some reason you don't want these processes to be run, add the flag ` --no-verify`, for example:
+```bash
+# commit
+git commit --no-verify -m "commit message"
+# push
+git push --no-verify
 ```
 
 ---
