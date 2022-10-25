@@ -17,6 +17,8 @@ We are using `yarn`, so you will install all the libs with the following command
 $ yarn install
 ```
 
+IMPORTANT: To configure git-hooks you must have at least git version 2.9. If not, `postinstall` script won't work, thus the hooks won't.
+
 ---
 
 ## Define .env variables
