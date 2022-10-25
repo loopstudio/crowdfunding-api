@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-const test = 1;
+const test1 = 1;
 
 @Injectable()
 export class PublicService {
