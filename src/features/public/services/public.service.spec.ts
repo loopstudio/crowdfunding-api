@@ -1,18 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
 import { PublicService } from './public.service';
+import { checkHealthResponse } from '../tests/mocks';
 
 describe('PublicService', () => {
-  let service: PublicService;
+  let publicService: PublicService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [PublicService],
     }).compile();
 
-    service = module.get<PublicService>(PublicService);
+    publicService = module.get<PublicService>(PublicService);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(publicService).toBeDefined();
+  });
+
+  describe('checkHealth method', () => {
+    it('should call checkHealth publicService method', () => {
+      const response = publicService.checkHealth();
+
+      expect(response).toStrictEqual(checkHealthResponse);
+    });
   });
 });

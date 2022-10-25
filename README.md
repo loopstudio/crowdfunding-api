@@ -24,7 +24,7 @@ You can pick `.env.template` as a template file to create a new `.env` file. Tem
 
 PS: If you are using Docker, be sure all the env vars with prefix `MONGO_...` are defined properly. If not, you just need to define `MONGO_URI_CONNECTION` which will point at your MongoDB instance.
 
-🚨 `MONGO_URI_CONNECTION`: If you are using Docker, take care about the values you assign. They should be `"mongodb://MONGO_USERNAME:MONGO_PASSWORD@MONGO_CONTAINER_NAME:MONGO_PORT/MONGO_DATEBASE"`
+🚨 `MONGO_URI_CONNECTION`: If you are using Docker, take care about the values you assign. They should be `"mongodb://MONGO_USERNAME:MONGO_PASSWORD@MONGO_CONTAINER_NAME:MONGO_PORT/MONGO_DATABASE"`
 
 🚨 Only when using Docker: Check `database/mongo-init.js` file, you has to modify the values of the file:
 ```javascript
@@ -34,7 +34,7 @@ db.createUser({
   roles: [
     {
       role: 'readWrite',
-      db: 'DB_NAME', // Same value as MONGO_DATEBASE
+      db: 'DB_NAME', // Same value as MONGO_DATABASE
     },
   ],
 });
