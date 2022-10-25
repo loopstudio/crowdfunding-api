@@ -36,13 +36,15 @@ describe('UsersRepository', () => {
   });
 
   describe('createUser method', () => {
-    // it('should call createUser usersRepository method without errors', async () => {
-    //   jest.spyOn(userModel, 'count').mockReturnValue({
-    //     exec: jest.fn().mockResolvedValue(mongoBuiltUser),
-    //   } as any);
-    //   jest.spyOn(userModel, 'create').mockImplementation(() => mongoBuiltUser);
-    //   const response = await usersRepository.createUser(createUserDTO);
-    //   expect(response).toStrictEqual(createUserServiceResponse);
-    // });
+    it('should call createUser usersRepository method without errors', async () => {
+      jest.spyOn(userModel, 'count').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mongoBuiltUser),
+      } as any);
+      jest.spyOn(userModel, 'create').mockImplementation(() => mongoBuiltUser);
+
+      const response = await usersRepository.createUser(createUserDTO);
+
+      expect(response).toStrictEqual(createUserServiceResponse);
+    });
   });
 });
