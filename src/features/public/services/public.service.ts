@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
+const test = 1;
+
 @Injectable()
 export class PublicService {
   checkHealth() {
