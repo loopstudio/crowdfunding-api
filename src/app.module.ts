@@ -7,6 +7,7 @@ import { EthersModule } from './features/ethers/ethers.module';
 import { UsersModule } from './features/users/users.module';
 
 import { dbConnectionFactory } from './common/database';
+import { CampaignsModule } from './features/campaigns/campaigns.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { dbConnectionFactory } from './common/database';
     PublicModule,
     EthersModule,
     UsersModule,
+    CampaignsModule,
   ],
 })
 export class AppModule {}

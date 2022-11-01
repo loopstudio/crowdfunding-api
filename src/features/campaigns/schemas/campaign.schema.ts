@@ -9,12 +9,12 @@ import { CampaignCategory } from 'src/features/campaignCategories/schemas/campai
 export type CampaignDocument = Campaign & Document;
 
 @Schema()
-class TokenAmount {
+export class TokenAmount {
   @Prop()
   amount: number;
 
-  @Prop({ type: { type: MongooseSchema.Types.ObjectId, ref: 'Token' } })
-  backers: Token;
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Token' })
+  token: Token;
 }
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
@@ -51,25 +51,28 @@ export class Campaign {
 
   @Prop({
     index: true,
-    type: { type: MongooseSchema.Types.ObjectId, ref: 'CampaignStatus' },
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'CampaignStatus',
   })
   status: CampaignStatus;
 
-  @Prop({ type: [TokenAmount] })
+  @Prop([TokenAmount])
   goal: TokenAmount[];
 
-  @Prop({ type: [TokenAmount] })
+  @Prop([TokenAmount])
   currentAmount: TokenAmount[];
 
   @Prop({
     index: true,
-    type: { type: MongooseSchema.Types.ObjectId, ref: 'CampaignCategory' },
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'CampaignCategory',
   })
   category: CampaignCategory;
 
   @Prop({
     index: true,
-    type: { type: MongooseSchema.Types.ObjectId, ref: 'User' },
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
   })
   owner: User;
 }
