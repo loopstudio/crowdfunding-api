@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { UsersService } from './users.service';
-import { UsersRepository } from '../repositories/users.repository';
+import { UsersRepository } from '../repositories/mongo/users.repository';
 import { createUserDTO, createUserServiceResponse } from '../tests/mocks';
 
 describe('UsersService', () => {
