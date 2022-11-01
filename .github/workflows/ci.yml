@@ -20,15 +20,15 @@ jobs:
           version=$(cat .nvmrc | cut -d'/' -f2)
           full_version=$(cat .nvmrc)
 
+          echo "node_version=$version" >> $GITHUB_OUTPUT
+
           echo "Using Node Version      : ${version}"
           echo "Using Node Full Version : ${full_version}"
-
-          export NODE_VERSION=${full_version}
 
       - name: Setup NodeJS version
         uses: actions/setup-node@v3
         with:
-          node-version: $NODE_VERSION
+          node-version: ${{ steps.prepare.outputs.node_version }}
 
       - name: Run linter and test coverage
         shell: bash
