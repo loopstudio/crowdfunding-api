@@ -28,7 +28,7 @@ jobs:
       - name: Setup NodeJS version
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ steps.prepare.outputs.node_version }}
+          node-version: ${{ steps.prepare.outputs.full_version }}
 
       - name: Run linter and test coverage
         shell: bash
