@@ -3,7 +3,6 @@ import {
   IsString,
   IsDefined,
   IsOptional,
-  IsDate,
   MinDate,
   Min,
   IsArray,
