@@ -45,7 +45,16 @@ db.createUser({
 
 ---
 
+## Have you run the DB seed process?
+In order to get your DB seeded with metadata you need to run a `yarn` command. Before doing that, be sure you update the value of `MONGO_URI_CONNECTION` inside `./database/tools/index.ts`. IMPORTANT NOTE: If you are using Docker, please change the host name (from the container name to localhost) because the script is not run inside the Docker network. Once you have updated the `MONGO_URI_CONNECTION` run the following command:
+```bash
+yarn run db:seed
+```
+
+---
+
 ## Running the app
+
 
 - Using Docker
 

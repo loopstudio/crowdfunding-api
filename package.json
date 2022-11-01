@@ -9,6 +9,7 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "build:ci": "yarn run lint && yarn run test:cov",
+    "db:seed": "ts-node ./database/tools/index.ts",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "postinstall": "git config core.hooksPath ./git-hooks",
     "start": "nest start",

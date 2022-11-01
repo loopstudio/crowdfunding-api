@@ -11,10 +11,6 @@ export class Token {
   @Prop()
   symbol: string;
 
-  // TODO: Is this necessary? We can identify tokens by their address
-  @Prop({ index: true })
-  code: string;
-
   @Prop({ required: true, unique: true })
   address: string;
 }
