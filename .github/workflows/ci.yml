@@ -23,9 +23,12 @@ jobs:
           echo "Using Node Version      : ${version}"
           echo "Using Node Full Version : ${full_version}"
 
-      - uses: actions/setup-node@v3
+          export NODE_VERSION=${full_version}
+
+      - name: Setup NodeJS version
+        uses: actions/setup-node@v3
         with:
-          node-version: ${full_version}
+          node-version: $NODE_VERSION
 
       - name: Run linter and test coverage
         shell: bash
