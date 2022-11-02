@@ -14,7 +14,7 @@ class TokenAmount {
   amount: number;
 
   @Prop({ type: { type: MongooseSchema.Types.ObjectId, ref: 'Token' } })
-  backers: Token;
+  token: Token;
 }
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
@@ -66,6 +66,20 @@ export class Campaign {
     type: { type: MongooseSchema.Types.ObjectId, ref: 'CampaignCategory' },
   })
   category: CampaignCategory;
+
+  @Prop({
+    index: true,
+    type: {
+      date: Date,
+      status: { type: MongooseSchema.Types.ObjectId, ref: 'CampaignStatus' },
+      statusName: String,
+    },
+  })
+  statusHistory: {
+    date: Date;
+    status: CampaignStatus;
+    statusName: string;
+  };
 
   @Prop({
     index: true,
