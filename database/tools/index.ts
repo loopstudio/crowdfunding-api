@@ -38,6 +38,14 @@ const checkCampaignStatuses = async () => {
       code: 'active',
     },
     {
+      name: 'Started',
+      code: 'started',
+    },
+    {
+      name: 'Claimed',
+      code: 'claimed',
+    },
+    {
       name: 'Finished',
       code: 'finished',
     },
