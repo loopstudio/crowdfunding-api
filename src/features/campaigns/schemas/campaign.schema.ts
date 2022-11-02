@@ -3,8 +3,8 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 
 import { User } from 'src/features/users/schemas/user.schema';
 import { Token } from 'src/features/tokens/schemas/token.schema';
-import { CampaignStatus } from 'src/features/campaignStatuses/schemas/campaignStatus.schema';
-import { CampaignCategory } from 'src/features/campaignCategories/schemas/campaignCategory.schema';
+import { CampaignStatus } from 'src/features/campaignStatuses/schemas/campaign-status.schema';
+import { CampaignCategory } from 'src/features/campaignCategories/schemas/campaign-category.schema';
 
 export type CampaignDocument = Campaign & Document;
 

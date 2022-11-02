@@ -16,7 +16,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"publicAddress\": \"0xD890357F631d209FB3eFabc116cE21233A624511\",\n    \"username\": \"rcargnelutti\",\n    \"email\": \"rcargnelutti@loopstudio.dev\"\n}",
+							"raw": "{\n    \"publicAddress\": \"0xD890357F631d209FB3eFabc116cE21233A624651\",\n    \"username\": \"facu\",\n    \"email\": \"facu@loopstudio.dev\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -64,6 +64,98 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Campaigns",
+			"item": [
+				{
+					"name": "GET /campaigns",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/v1/campaigns",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"campaigns"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /campaigns/:id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/v1/campaigns/63611e69143b8def9c4843d9",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"campaigns",
+								"63611e69143b8def9c4843d9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /campaigns",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');",
+									"",
+									"const nextMinute = Date.now() + (1000 * 60);",
+									"const nextHour = Date.now() + (1000 * 60 * 60);",
+									"",
+									"pm.collectionVariables.set('startDate', new Date(nextMinute));",
+									"pm.collectionVariables.set('endDate', new Date(nextHour));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"My campaign\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\",\n    \"code\": \"abc123\",\n    \"fiatAmount\": 100,\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\",\n    \"goal\": [{\n        \"token\": \"63611e69143b8def9c4843dd\",\n        \"amount\": 100\n    }],\n    \"category\": \"63611e69143b8def9c4843d9\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/v1/campaigns",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"campaigns"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -95,6 +187,16 @@
 		{
 			"key": "host",
 			"value": "localhost:10000",
+			"type": "string"
+		},
+		{
+			"key": "startDate",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "endDate",
+			"value": "",
 			"type": "string"
 		}
 	]
