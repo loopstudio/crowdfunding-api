@@ -11,7 +11,7 @@ export type CampaignDocument = Campaign & Document;
 @Schema()
 class TokenAmount {
   @Prop()
-  amount: number;
+  amount: string;
 
   @Prop({ type: { type: MongooseSchema.Types.ObjectId, ref: 'Token' } })
   token: Token;

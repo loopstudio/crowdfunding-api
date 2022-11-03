@@ -19,7 +19,7 @@ export class Refund {
   token: Token;
 
   @Prop()
-  amount: number;
+  amount: string;
 
   @Prop()
   date: Date;

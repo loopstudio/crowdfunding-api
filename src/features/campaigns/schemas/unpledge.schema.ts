@@ -19,7 +19,7 @@ export class Unpledge {
   token: Token;
 
   @Prop()
-  amount: number;
+  amount: string;
 
   @Prop()
   date: Date;

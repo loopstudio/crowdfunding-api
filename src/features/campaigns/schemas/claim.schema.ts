@@ -19,7 +19,7 @@ export class Claim {
   token: Token;
 
   @Prop()
-  amount: number;
+  amount: string;
 
   @Prop()
   date: Date;

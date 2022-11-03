@@ -34,16 +34,16 @@ export class UserCampaign {
   token: Token;
 
   @Prop()
-  totalPledged: number;
+  totalPledged: string;
 
   @Prop()
-  totalUnpledged: number;
+  totalUnpledged: string;
 
   @Prop()
-  totalClaimed: number;
+  totalClaimed: string;
 
   @Prop()
-  totalRefunded: number;
+  totalRefunded: string;
 
   @Prop([Pledge])
   pledges: Pledge[];
