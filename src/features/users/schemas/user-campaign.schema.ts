@@ -37,7 +37,7 @@ export class UserCampaign {
   totalPledged: number;
 
   @Prop()
-  totalUnpledge: number;
+  totalUnpledged: number;
 
   @Prop()
   totalClaimed: number;

@@ -35,7 +35,7 @@ export class Campaign {
   endDate: Date;
 
   @Prop({ unique: true })
-  code: string;
+  onchainId: string;
 
   @Prop()
   fiatAmount: number;
@@ -69,17 +69,19 @@ export class Campaign {
 
   @Prop({
     index: true,
-    type: {
-      date: Date,
-      status: { type: MongooseSchema.Types.ObjectId, ref: 'CampaignStatus' },
-      statusName: String,
-    },
+    type: [
+      {
+        date: Date,
+        status: { type: MongooseSchema.Types.ObjectId, ref: 'CampaignStatus' },
+        statusName: String,
+      },
+    ],
   })
   statusHistory: {
     date: Date;
     status: CampaignStatus;
     statusName: string;
-  };
+  }[];
 
   @Prop({
     index: true,

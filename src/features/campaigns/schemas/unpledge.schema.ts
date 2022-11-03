@@ -13,7 +13,7 @@ export class Unpledge {
   campaign: Campaign;
 
   @Prop({ index: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
-  pledger: User;
+  user: User;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Token' })
   token: Token;

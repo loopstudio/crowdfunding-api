@@ -11,7 +11,7 @@ export class CampaignLaunch {
   campaign: Campaign;
 
   @Prop()
-  code: string;
+  onchainId: string;
 
   @Prop()
   date: Date;
