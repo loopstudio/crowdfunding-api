@@ -25,30 +25,29 @@ export class CampaignsMongoRepository {
     return campaing;
   }
 
-  async create(createCampaignDto: CreateCampaignDto) {
+  async create(createCampaignData: {
+    dto: CreateCampaignDto;
+    pendingStatusId;
+  }) {
     // TODO: Use upsert for POST and PATCH
 
-    // TODO: Validate that sent tokens exist
-    // TODO: Validate that sent category exists
-
-    // TODO: Look for PENDING campaign status
-    const status = '63611e68143b8def9c4843cf';
     // TODO: Assign logged in user
     const owner = '634dd92c34361cf5a21fb96b';
 
     const {
-      title,
-      subtitle,
-      story,
-      startDate,
-      endDate,
-      code,
-      fiatAmount,
-      image,
-      video,
-      category,
-      goal,
-    } = createCampaignDto;
+      dto: {
+        title,
+        subtitle,
+        story,
+        startDate,
+        endDate,
+        image,
+        video,
+        category,
+        goal,
+      },
+      pendingStatusId,
+    } = createCampaignData;
 
     const currentAmount = goal.map((tokenAmount) => ({
       token: tokenAmount.token,
@@ -61,12 +60,9 @@ export class CampaignsMongoRepository {
       story,
       startDate,
       endDate,
-      code,
-      fiatAmount,
       image,
       video,
-      backers: [],
-      status,
+      status: pendingStatusId,
       goal,
       currentAmount,
       category,

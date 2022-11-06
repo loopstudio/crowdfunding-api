@@ -34,10 +34,16 @@ export class Campaign {
   @Prop()
   endDate: Date;
 
-  @Prop({ unique: true })
+  @Prop({
+    default: null,
+    index: {
+      unique: true,
+      partialFilterExpression: { onchainId: { $type: 'string' } },
+    },
+  })
   onchainId: string;
 
-  @Prop()
+  @Prop({ default: 0 })
   fiatAmount: number;
 
   @Prop({ default: null })
@@ -46,7 +52,10 @@ export class Campaign {
   @Prop({ default: null })
   video: string;
 
-  @Prop({ type: [{ type: MongooseSchema.Types.ObjectId, ref: 'User' }] })
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'User' }],
+    default: [],
+  })
   backers: User[];
 
   @Prop({

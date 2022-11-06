@@ -4,7 +4,6 @@ import {
   IsDefined,
   IsOptional,
   MinDate,
-  Min,
   IsArray,
   ArrayNotEmpty,
   ValidateNested,
@@ -32,14 +31,6 @@ export class CreateCampaignDto {
   @MinDate(new Date(Date.now() + 1))
   @Type(() => Date)
   endDate: Date;
-
-  @IsDefined()
-  @IsString()
-  code: string;
-
-  @IsOptional()
-  @Min(0)
-  fiatAmount = 0;
 
   @IsOptional()
   @IsString()

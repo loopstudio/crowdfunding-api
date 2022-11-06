@@ -5,6 +5,8 @@ import { CampaignsService } from './services/campaigns.service';
 import { CampaignsController } from './controllers/campaigns.controller';
 import { CampaignsMongoRepository } from './repositories/mongo/campaigns.repository';
 import { Campaign, CampaignSchema } from './schemas/campaign.schema';
+import { TokensModule } from '../tokens/tokens.module';
+import { CampaignStatusesModule } from '../campaignStatuses/campaign-statuses.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { Campaign, CampaignSchema } from './schemas/campaign.schema';
         schema: CampaignSchema,
       },
     ]),
+    TokensModule,
+    CampaignStatusesModule,
   ],
   controllers: [CampaignsController],
   providers: [CampaignsService, CampaignsMongoRepository],

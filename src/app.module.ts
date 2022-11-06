@@ -8,6 +8,8 @@ import { UsersModule } from './features/users/users.module';
 
 import { dbConnectionFactory } from './common/database';
 import { CampaignsModule } from './features/campaigns/campaigns.module';
+import { TokensModule } from './features/tokens/tokens.module';
+import { CampaignStatusesModule } from './features/campaignStatuses/campaign-statuses.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { CampaignsModule } from './features/campaigns/campaigns.module';
     EthersModule,
     UsersModule,
     CampaignsModule,
+    TokensModule,
+    CampaignStatusesModule,
   ],
 })
 export class AppModule {}
