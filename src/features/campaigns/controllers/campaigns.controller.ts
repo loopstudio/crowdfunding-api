@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 
 import { CampaignsService } from '../services/campaigns.service';
 import { CreateCampaignDto } from '../dto/create-campaign.dto';
 // import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { APIResponse } from 'src/common/types';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from 'src/common/constants';
 
 @Controller('campaigns')
 export class CampaignsController {
@@ -18,8 +19,11 @@ export class CampaignsController {
   }
 
   @Get()
-  async findAll(): Promise<APIResponse> {
-    const { campaigns } = await this.campaignsService.findAll();
+  async findAll(
+    @Query('size') size = DEFAULT_PAGE_SIZE,
+    @Query('page') page = DEFAULT_PAGE,
+  ): Promise<APIResponse> {
+    const { campaigns } = await this.campaignsService.findAll({ page, size });
     return { data: campaigns };
   }
 

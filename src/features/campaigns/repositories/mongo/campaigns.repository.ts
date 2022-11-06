@@ -11,8 +11,16 @@ export class CampaignsMongoRepository {
     @InjectModel(Campaign.name) private campaignModel: Model<CampaignDocument>,
   ) {}
 
-  async findAll() {
-    const campaings = await this.campaignModel.find().lean();
+  async findAll({ page, size }: { page: number; size: number }) {
+    const skipValue = page > 0 ? (page - 1) * size : 0;
+
+    const campaings = await this.campaignModel
+      .find()
+      .sort({ created: -1 })
+      .skip(skipValue)
+      .limit(size)
+      .lean();
+
     return campaings;
   }
 

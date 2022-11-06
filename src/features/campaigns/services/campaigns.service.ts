@@ -5,6 +5,7 @@ import { CreateCampaignDto } from '../dto/create-campaign.dto';
 import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { CampaignStatusService } from 'src/features/campaignStatuses/services/campaign-statuses.service';
+import { CampaignCategoriesService } from 'src/features/campaignCategories/services/campaign-category.service';
 
 import { pendingStatusCode } from '../../campaignStatuses/types/index';
 
@@ -13,11 +14,14 @@ export class CampaignsService {
   constructor(
     private readonly campaignsMongoRepository: CampaignsMongoRepository,
     private readonly tokensService: TokensService,
+    private readonly campaignCategoriesService: CampaignCategoriesService,
     private readonly campaignStatusService: CampaignStatusService,
   ) {}
 
   async create(createCampaignDto: CreateCampaignDto) {
-    const tokensIds = createCampaignDto.goal.map((tokenGoal) => {
+    const { goal, category } = createCampaignDto;
+
+    const tokensIds = goal.map((tokenGoal) => {
       return tokenGoal.token as unknown as string;
     });
     const areTokensValid = await this.tokensService.areTokensValid(tokensIds);
@@ -32,7 +36,11 @@ export class CampaignsService {
       throw new BadRequestException();
     }
 
-    // TODO: Add category validation!!!!
+    const isCampaignCAtegoryValid =
+      await this.campaignCategoriesService.areCategoriesValid([category]);
+    if (!isCampaignCAtegoryValid) {
+      throw new BadRequestException();
+    }
 
     const campaign = await this.campaignsMongoRepository.create({
       dto: createCampaignDto,
@@ -42,8 +50,12 @@ export class CampaignsService {
     return { campaign };
   }
 
-  async findAll() {
-    const campaigns = await this.campaignsMongoRepository.findAll();
+  async findAll({ page, size }: { page: number; size: number }) {
+    const campaigns = await this.campaignsMongoRepository.findAll({
+      page,
+      size,
+    });
+
     return { campaigns };
   }
 

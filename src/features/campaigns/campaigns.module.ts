@@ -7,6 +7,7 @@ import { CampaignsMongoRepository } from './repositories/mongo/campaigns.reposit
 import { Campaign, CampaignSchema } from './schemas/campaign.schema';
 import { TokensModule } from '../tokens/tokens.module';
 import { CampaignStatusesModule } from '../campaignStatuses/campaign-statuses.module';
+import { CampaignCategoriesModule } from '../campaignCategories/campaign-categories.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CampaignStatusesModule } from '../campaignStatuses/campaign-statuses.mo
     ]),
     TokensModule,
     CampaignStatusesModule,
+    CampaignCategoriesModule,
   ],
   controllers: [CampaignsController],
   providers: [CampaignsService, CampaignsMongoRepository],
