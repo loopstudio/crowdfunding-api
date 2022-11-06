@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
-import { User, UserDocument } from '../schemas/user.schema';
-import { CreateUserDto } from '../dto/CreateUser';
-import { getNonce } from '../../../common/utils/index';
+import { User, UserDocument } from '../../schemas/user.schema';
+import { CreateUserDto } from '../../dto/CreateUser';
+import { getNonce } from '../../../../common/utils/index';
 
 @Injectable()
 export class UsersRepository {

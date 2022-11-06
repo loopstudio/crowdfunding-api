@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { UsersRepository } from '../repositories/users.repository';
+import { UsersRepository } from '../repositories/mongo/users.repository';
 import { User } from '../schemas/user.schema';
 import { CreateUserDto } from '../dto/CreateUser';
 
