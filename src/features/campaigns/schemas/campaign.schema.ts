@@ -9,11 +9,11 @@ import { CampaignCategory } from 'src/features/campaignCategories/schemas/campai
 export type CampaignDocument = Campaign & Document;
 
 @Schema()
-class TokenAmount {
+export class TokenAmount {
   @Prop()
   amount: string;
 
-  @Prop({ type: { type: MongooseSchema.Types.ObjectId, ref: 'Token' } })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Token' })
   token: Token;
 }
 
@@ -51,41 +51,28 @@ export class Campaign {
 
   @Prop({
     index: true,
-    type: { type: MongooseSchema.Types.ObjectId, ref: 'CampaignStatus' },
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'CampaignStatus',
   })
   status: CampaignStatus;
 
-  @Prop({ type: [TokenAmount] })
+  @Prop([TokenAmount])
   goal: TokenAmount[];
 
-  @Prop({ type: [TokenAmount] })
+  @Prop([TokenAmount])
   currentAmount: TokenAmount[];
 
   @Prop({
     index: true,
-    type: { type: MongooseSchema.Types.ObjectId, ref: 'CampaignCategory' },
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'CampaignCategory',
   })
   category: CampaignCategory;
 
   @Prop({
     index: true,
-    type: [
-      {
-        date: Date,
-        status: { type: MongooseSchema.Types.ObjectId, ref: 'CampaignStatus' },
-        statusName: String,
-      },
-    ],
-  })
-  statusHistory: {
-    date: Date;
-    status: CampaignStatus;
-    statusName: string;
-  }[];
-
-  @Prop({
-    index: true,
-    type: { type: MongooseSchema.Types.ObjectId, ref: 'User' },
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
   })
   owner: User;
 }
