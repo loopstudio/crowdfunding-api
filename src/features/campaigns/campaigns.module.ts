@@ -6,8 +6,8 @@ import { CampaignsController } from './controllers/campaigns.controller';
 import { CampaignsMongoRepository } from './repositories/mongo/campaigns.repository';
 import { Campaign, CampaignSchema } from './schemas/campaign.schema';
 import { TokensModule } from '../tokens/tokens.module';
-import { CampaignStatusesModule } from '../campaignStatuses/campaign-statuses.module';
-import { CampaignCategoriesModule } from '../campaignCategories/campaign-categories.module';
+import { CampaignStatusesModule } from '../campaign-statuses/campaign-statuses.module';
+import { CampaignCategoriesModule } from '../campaign-categories/campaign-categories.module';
 
 @Module({
   imports: [

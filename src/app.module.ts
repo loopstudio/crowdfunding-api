@@ -9,8 +9,8 @@ import { UsersModule } from './features/users/users.module';
 import { dbConnectionFactory } from './common/database';
 import { CampaignsModule } from './features/campaigns/campaigns.module';
 import { TokensModule } from './features/tokens/tokens.module';
-import { CampaignStatusesModule } from './features/campaignStatuses/campaign-statuses.module';
-import { CampaignCategoriesModule } from './features/campaignCategories/campaign-categories.module';
+import { CampaignStatusesModule } from './features/campaign-statuses/campaign-statuses.module';
+import { CampaignCategoriesModule } from './features/campaign-categories/campaign-categories.module';
 
 @Module({
   imports: [

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-import { CampaignStatusSchema } from '../../src/features/campaignStatuses/schemas/campaign-status.schema';
-import { CampaignCategorySchema } from '../../src/features/campaignCategories/schemas/campaign-category.schema';
+import { CampaignStatusSchema } from '../../src/features/campaign-statuses/schemas/campaign-status.schema';
+import { CampaignCategorySchema } from '../../src/features/campaign-categories/schemas/campaign-category.schema';
 import { TokenSchema } from '../../src/features/tokens/schemas/token.schema';
 
 // !IMPORTANT: You need to add the connection string right below

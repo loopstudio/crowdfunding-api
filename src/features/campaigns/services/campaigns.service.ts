@@ -4,10 +4,10 @@ import { CreateCampaignDto } from '../dto/create-campaign.dto';
 // import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
-import { CampaignStatusService } from 'src/features/campaignStatuses/services/campaign-statuses.service';
-import { CampaignCategoriesService } from 'src/features/campaignCategories/services/campaign-category.service';
+import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
+import { CampaignCategoriesService } from 'src/features/campaign-categories/services/campaign-category.service';
 
-import { pendingStatusCode } from '../../campaignStatuses/types/index';
+import { pendingStatusCode } from '../../campaign-statuses/types/index';
 
 @Injectable()
 export class CampaignsService {

@@ -95,7 +95,8 @@
       "main.ts",
       "constants",
       "database",
-      "schema.ts"
+      "schema.ts",
+      "dto.ts"
     ],
     "testEnvironment": "node"
   }
