@@ -1,8 +1,16 @@
-import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Body,
+  Param,
+  Query,
+} from '@nestjs/common';
 
 import { CampaignsService } from '../services/campaigns.service';
 import { CreateCampaignDto } from '../dto/create-campaign.dto';
-// import { UpdateCampaignDto } from '../dto/update-campaign.dto';
+import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { APIResponse } from 'src/common/types';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from 'src/common/constants';
 
@@ -33,11 +41,15 @@ export class CampaignsController {
     return { data: campaign };
   }
 
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateCampaignDto: UpdateCampaignDto,
-  // ) {
-  //   return this.campaignsService.update(+id, updateCampaignDto);
-  // }
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateCampaignDto: UpdateCampaignDto,
+  ) {
+    const { campaign } = await this.campaignsService.update({
+      id,
+      updateCampaignDto,
+    });
+    return { data: campaign };
+  }
 }

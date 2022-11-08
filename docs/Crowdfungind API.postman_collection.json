@@ -164,6 +164,53 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "PATCH /campaigns/:id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment');",
+									"",
+									"const nextMinute = Date.now() + (1000 * 60);",
+									"const nextHour = Date.now() + (1000 * 60 * 60);",
+									"",
+									"pm.collectionVariables.set('startDate', new Date(nextMinute));",
+									"pm.collectionVariables.set('endDate', new Date(nextHour));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"My campaign\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/v1/campaigns/6367be0422ca99a33946949b",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"campaigns",
+								"6367be0422ca99a33946949b"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

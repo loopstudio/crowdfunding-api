@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { CreateCampaignDto } from '../dto/create-campaign.dto';
-// import { UpdateCampaignDto } from '../dto/update-campaign.dto';
+import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
@@ -64,7 +64,18 @@ export class CampaignsService {
     return { campaign };
   }
 
-  // update(id: number, updateCampaignDto: UpdateCampaignDto) {
-  //   return `This action updates a #${id} campaign`;
-  // }
+  async update({
+    id,
+    updateCampaignDto,
+  }: {
+    id: string;
+    updateCampaignDto: UpdateCampaignDto;
+  }) {
+    const campaign = await this.campaignsMongoRepository.update({
+      id,
+      updateCampaignDto,
+    });
+
+    return { campaign };
+  }
 }

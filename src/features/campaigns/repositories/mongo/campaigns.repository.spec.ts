@@ -7,7 +7,12 @@ import { Model } from 'mongoose';
 
 import { CampaignsMongoRepository } from './campaigns.repository';
 import { Campaign } from '../../schemas/campaign.schema';
-import { createCampaignDtoMock, mongoBuiltCampaign } from '../../tests/mocks';
+import {
+  createCampaignDtoMock,
+  mongoBuiltCampaign,
+  mongoBuiltUpdatedCampaign,
+  updateCampaignDtoMock,
+} from '../../tests/mocks';
 
 describe('Campaign Statuses Repository', () => {
   let campaignsRepository: CampaignsMongoRepository;
@@ -30,6 +35,7 @@ describe('Campaign Statuses Repository', () => {
             limit: jest.fn(),
             lean: jest.fn(),
             create: jest.fn(),
+            save: jest.fn(),
           },
         },
       ],
@@ -103,6 +109,38 @@ describe('Campaign Statuses Repository', () => {
       });
 
       expect(response).toStrictEqual(mongoBuiltCampaign);
+    });
+  });
+
+  describe('update method', () => {
+    it('should call update method and fails because campaign does not exist', async () => {
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null),
+      } as any);
+
+      await expect(
+        campaignsRepository.update({
+          id: campaignId,
+          updateCampaignDto: updateCampaignDtoMock,
+        }),
+      ).rejects.toThrowError(NotFoundException);
+    });
+
+    it('should call update method and return an updated campaign', async () => {
+      const modifiedMongoBuiltUpdatedCampaign = mongoBuiltUpdatedCampaign;
+      delete modifiedMongoBuiltUpdatedCampaign.save;
+
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mongoBuiltCampaign),
+      } as any);
+
+      const response = await campaignsRepository.update({
+        id: campaignId,
+        updateCampaignDto: updateCampaignDtoMock,
+      });
+      delete response.save;
+
+      expect(response).toStrictEqual(mongoBuiltUpdatedCampaign);
     });
   });
 });

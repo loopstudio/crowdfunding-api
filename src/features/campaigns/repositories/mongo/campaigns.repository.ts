@@ -3,7 +3,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
+import { campaignFieldsToModify } from '../../constants';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
+import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 
 @Injectable()
 export class CampaignsMongoRepository {
@@ -37,8 +39,6 @@ export class CampaignsMongoRepository {
     dto: CreateCampaignDto;
     pendingStatusId;
   }) {
-    // TODO: Use upsert for POST and PATCH
-
     // TODO: Assign logged in user
     const owner = '634dd92c34361cf5a21fb96b';
 
@@ -78,5 +78,31 @@ export class CampaignsMongoRepository {
     });
 
     return campaign;
+  }
+
+  async update({
+    id,
+    updateCampaignDto,
+  }: {
+    id: string;
+    updateCampaignDto: UpdateCampaignDto;
+  }) {
+    const existingCampaign = await this.campaignModel
+      .findOne({ _id: id })
+      .exec();
+    if (!existingCampaign) {
+      throw new NotFoundException();
+    }
+
+    // TODO: Move to utils
+    for (const [key, value] of Object.entries(updateCampaignDto)) {
+      if (campaignFieldsToModify.includes(key)) {
+        existingCampaign[key] = value;
+      }
+    }
+
+    await existingCampaign.save();
+
+    return existingCampaign;
   }
 }

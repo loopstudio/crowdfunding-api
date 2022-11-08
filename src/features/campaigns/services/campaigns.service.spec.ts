@@ -8,7 +8,12 @@ import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.reposi
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { CampaignCategoriesService } from 'src/features/campaign-categories/services/campaign-category.service';
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
-import { createCampaignDtoMock, mongoBuiltCampaign } from '../tests/mocks';
+import {
+  createCampaignDtoMock,
+  mongoBuiltCampaign,
+  mongoBuiltUpdatedCampaign,
+  updateCampaignDtoMock,
+} from '../tests/mocks';
 import { mongoBuiltCampaingStatus } from 'src/features/campaign-statuses/tests/mocks';
 import { mongoBuiltCampaingCategory } from 'src/features/campaign-categories/tests/mocks';
 
@@ -31,6 +36,7 @@ describe('UsersService', () => {
             findAll: jest.fn(),
             findOne: jest.fn(),
             create: jest.fn(),
+            update: jest.fn(),
           },
         },
         {
@@ -154,6 +160,25 @@ describe('UsersService', () => {
       expect(campaignsRepository.create).toBeCalledWith({
         dto: createCampaignDtoMock,
         pendingStatusId: mongoBuiltCampaingStatus._id,
+      });
+    });
+  });
+
+  describe('update method', () => {
+    it('should call update and return a campaign', async () => {
+      jest
+        .spyOn(campaignsRepository, 'update')
+        .mockResolvedValue(mongoBuiltUpdatedCampaign as any);
+
+      const response = await campaignService.update({
+        id: campaignId,
+        updateCampaignDto: updateCampaignDtoMock,
+      });
+
+      expect(response).toStrictEqual({ campaign: mongoBuiltUpdatedCampaign });
+      expect(campaignsRepository.update).toBeCalledWith({
+        id: campaignId,
+        updateCampaignDto: updateCampaignDtoMock,
       });
     });
   });
