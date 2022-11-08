@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { CampaignCategoriesService } from './campaign-category.service';
@@ -17,7 +19,7 @@ describe('Campaign Categories Service', () => {
         {
           provide: CampaignCategoriesRepository,
           useValue: {
-            getById: jest.fn(),
+            getByIdOrCode: jest.fn(),
           },
         },
       ],
@@ -40,8 +42,8 @@ describe('Campaign Categories Service', () => {
   describe('areCategoriesValid method', () => {
     it('should call areCategoriesValid with a true return value', async () => {
       jest
-        .spyOn(campaignCategoriesRepository, 'getById')
-        .mockResolvedValue(mongoBuiltCampaingCategory);
+        .spyOn(campaignCategoriesRepository, 'getByIdOrCode')
+        .mockResolvedValue(mongoBuiltCampaingCategory as any);
 
       const response = await campaignCategoriesService.areCategoriesValid([
         campaignCategoryId,

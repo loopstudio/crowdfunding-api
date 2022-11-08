@@ -12,7 +12,8 @@ describe('Campaign Categories Repository', () => {
   let campaignCategoriesRepository: CampaignCategoriesRepository;
   let campaignCategoryModel: Model<CampaignCategory>;
 
-  const campaignCategoryId = 'general';
+  const campaignCategoryCode = 'general';
+  const campaignCategoryId = '123';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -21,8 +22,8 @@ describe('Campaign Categories Repository', () => {
         {
           provide: getModelToken(CampaignCategory.name),
           useValue: {
-            findById: jest.fn(),
-            lean: jest.fn(),
+            findOne: jest.fn(),
+            exec: jest.fn(),
           },
         },
       ],
@@ -38,13 +39,14 @@ describe('Campaign Categories Repository', () => {
 
   describe('getById method', () => {
     it('should call getById method without errors', async () => {
-      jest.spyOn(campaignCategoryModel, 'findById').mockReturnValue({
-        lean: jest.fn().mockResolvedValue(mongoBuiltCampaingCategory),
+      jest.spyOn(campaignCategoryModel, 'findOne').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mongoBuiltCampaingCategory),
       } as any);
 
-      const response = await campaignCategoriesRepository.getById(
-        campaignCategoryId,
-      );
+      const response = await campaignCategoriesRepository.getByIdOrCode({
+        code: campaignCategoryCode,
+        id: campaignCategoryId,
+      });
 
       expect(response).toStrictEqual(mongoBuiltCampaingCategory);
     });

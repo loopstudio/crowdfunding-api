@@ -143,7 +143,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"My campaign\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\",\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\",\n    \"goal\": [{\n        \"token\": \"63611e69143b8def9c4843dd\",\n        \"amount\": \"100\"\n    }],\n    \"category\": \"63611e69143b8def9c4843d9\"\n}",
+							"raw": "{\n    \"title\": \"My campaign\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\",\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\",\n    \"goal\": [{\n        \"token\": \"63611e69143b8def9c4843dd\",\n        \"amount\": \"100\"\n    }]\n}",
 							"options": {
 								"raw": {
 									"language": "json"

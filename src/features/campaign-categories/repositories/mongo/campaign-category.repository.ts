@@ -14,10 +14,21 @@ export class CampaignCategoriesRepository {
     private campaignCategoryModel: Model<CampaignCategoryDocument>,
   ) {}
 
-  async getById(id: string): Promise<CampaignCategory> {
+  async getByIdOrCode({
+    id,
+    code,
+  }: {
+    id?: string;
+    code?: string;
+  }): Promise<CampaignCategoryDocument> {
+    const filter = {
+      ...(id && { _id: id }),
+      ...(code && { code }),
+    };
+
     const campaignCategory = await this.campaignCategoryModel
-      .findById(id)
-      .lean();
+      .findOne(filter)
+      .exec();
 
     return campaignCategory;
   }

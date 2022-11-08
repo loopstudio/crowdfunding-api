@@ -20,6 +20,7 @@ describe('Campaign Statuses Repository', () => {
 
   const campaignId = '1';
   const pendingStatusId = 'abc123';
+  const generalCategoryId = 'abc123';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -106,6 +107,7 @@ describe('Campaign Statuses Repository', () => {
       const response = await campaignsRepository.create({
         dto: createCampaignDtoMock,
         pendingStatusId,
+        generalCategoryId,
       });
 
       expect(response).toStrictEqual(mongoBuiltCampaign);

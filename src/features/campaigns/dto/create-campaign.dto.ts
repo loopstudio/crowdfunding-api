@@ -45,8 +45,4 @@ export class CreateCampaignDto {
   @ArrayNotEmpty()
   @ValidateNested()
   goal: TokenAmount[];
-
-  @IsDefined()
-  @IsString()
-  category: string;
 }

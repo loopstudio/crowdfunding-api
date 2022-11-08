@@ -7,7 +7,10 @@ import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
 import { CampaignCategoriesService } from 'src/features/campaign-categories/services/campaign-category.service';
 
-import { pendingStatusCode } from '../../campaign-statuses/types/index';
+import {
+  pendingStatusCode,
+  generalCategoryCode,
+} from '../../campaign-statuses/types/index';
 
 @Injectable()
 export class CampaignsService {
@@ -19,7 +22,7 @@ export class CampaignsService {
   ) {}
 
   async create(createCampaignDto: CreateCampaignDto) {
-    const { goal, category } = createCampaignDto;
+    const { goal } = createCampaignDto;
 
     const tokensIds = goal.map((tokenGoal) => {
       return tokenGoal.token as unknown as string;
@@ -36,15 +39,17 @@ export class CampaignsService {
       throw new BadRequestException();
     }
 
-    const isCampaignCAtegoryValid =
-      await this.campaignCategoriesService.areCategoriesValid([category]);
-    if (!isCampaignCAtegoryValid) {
+    const generalCategory = await this.campaignCategoriesService.getByIdOrCode({
+      code: generalCategoryCode,
+    });
+    if (!generalCategory) {
       throw new BadRequestException();
     }
 
     const campaign = await this.campaignsMongoRepository.create({
       dto: createCampaignDto,
       pendingStatusId: pendingStatus._id,
+      generalCategoryId: generalCategory._id,
     });
 
     return { campaign };

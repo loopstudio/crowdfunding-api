@@ -37,24 +37,16 @@ export class CampaignsMongoRepository {
 
   async create(createCampaignData: {
     dto: CreateCampaignDto;
-    pendingStatusId;
+    pendingStatusId: string;
+    generalCategoryId: string;
   }) {
     // TODO: Assign logged in user
     const owner = '634dd92c34361cf5a21fb96b';
 
     const {
-      dto: {
-        title,
-        subtitle,
-        story,
-        startDate,
-        endDate,
-        image,
-        video,
-        category,
-        goal,
-      },
+      dto: { title, subtitle, story, startDate, endDate, image, video, goal },
       pendingStatusId,
+      generalCategoryId,
     } = createCampaignData;
 
     const currentAmount = goal.map((tokenAmount) => ({
@@ -73,7 +65,7 @@ export class CampaignsMongoRepository {
       status: pendingStatusId,
       goal,
       currentAmount,
-      category,
+      category: generalCategoryId,
       owner,
     });
 

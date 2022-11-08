@@ -48,7 +48,7 @@ describe('UsersService', () => {
         {
           provide: CampaignCategoriesService,
           useValue: {
-            areCategoriesValid: jest.fn(),
+            getByIdOrCode: jest.fn(),
           },
         },
         {
@@ -131,8 +131,8 @@ describe('UsersService', () => {
         .spyOn(campaignStatusService, 'getStatusByCode')
         .mockResolvedValue({} as any);
       jest
-        .spyOn(campaignCategoriesService, 'areCategoriesValid')
-        .mockResolvedValue(false);
+        .spyOn(campaignCategoriesService, 'getByIdOrCode')
+        .mockResolvedValue(null);
 
       await expect(
         campaignService.create(createCampaignDtoMock),
@@ -145,7 +145,7 @@ describe('UsersService', () => {
         .spyOn(campaignStatusService, 'getStatusByCode')
         .mockResolvedValue(mongoBuiltCampaingStatus as any);
       jest
-        .spyOn(campaignCategoriesService, 'areCategoriesValid')
+        .spyOn(campaignCategoriesService, 'getByIdOrCode')
         .mockResolvedValue(mongoBuiltCampaingCategory as any);
       jest
         .spyOn(campaignsRepository, 'create')
@@ -156,7 +156,7 @@ describe('UsersService', () => {
       expect(response).toStrictEqual({ campaign: mongoBuiltCampaign });
       expect(tokenService.areTokensValid).toBeCalledTimes(1);
       expect(campaignStatusService.getStatusByCode).toBeCalledTimes(1);
-      expect(campaignCategoriesService.areCategoriesValid).toBeCalledTimes(1);
+      expect(campaignCategoriesService.getByIdOrCode).toBeCalledTimes(1);
       expect(campaignsRepository.create).toBeCalledWith({
         dto: createCampaignDtoMock,
         pendingStatusId: mongoBuiltCampaingStatus._id,
