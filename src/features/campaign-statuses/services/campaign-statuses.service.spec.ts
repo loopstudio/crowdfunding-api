@@ -2,10 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { CampaignStatusService } from './campaign-statuses.service';
 import { CampaignStatusRepository } from '../repositories/mongo/campaign-status.repository';
-import {
-  mongoBuiltCampaingStatus,
-  pendingCampaignStatusMock,
-} from '../tests/mocks';
+import { mongoBuiltCampaingStatus } from '../tests/mocks';
 import { CampaignStatusDocument } from '../schemas/campaign-status.schema';
 
 describe('Campaign Statuses Service', () => {
@@ -53,7 +50,7 @@ describe('Campaign Statuses Service', () => {
         campaignStatusCode,
       );
 
-      expect(response).toStrictEqual(pendingCampaignStatusMock);
+      expect(response).toStrictEqual(mongoBuiltCampaingStatus);
     });
   });
 });

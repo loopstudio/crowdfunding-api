@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { CampaignCategoriesService } from './campaign-category.service';
 import { CampaignCategoriesRepository } from '../repositories/mongo/campaign-category.repository';
-import { generalCampaignCategoryMock } from '../tests/mocks';
+import { mongoBuiltCampaingCategory } from '../tests/mocks';
 
 describe('Campaign Categories Service', () => {
   let campaignCategoriesService: CampaignCategoriesService;
@@ -41,7 +41,7 @@ describe('Campaign Categories Service', () => {
     it('should call areCategoriesValid with a true return value', async () => {
       jest
         .spyOn(campaignCategoriesRepository, 'getById')
-        .mockResolvedValue(generalCampaignCategoryMock);
+        .mockResolvedValue(mongoBuiltCampaingCategory);
 
       const response = await campaignCategoriesService.areCategoriesValid([
         campaignCategoryId,

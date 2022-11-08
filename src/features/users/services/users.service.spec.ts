@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { UsersService } from './users.service';
 import { UsersRepository } from '../repositories/mongo/users.repository';
-import { createUserDTO, createUserServiceResponse } from '../tests/mocks';
+import { createUserDTO, mongoBuiltUser } from '../tests/mocks';
 
 describe('UsersService', () => {
   let usersService: UsersService;
@@ -14,7 +14,7 @@ describe('UsersService', () => {
         {
           provide: UsersRepository,
           useValue: {
-            createUser: jest.fn().mockResolvedValue(createUserServiceResponse),
+            createUser: jest.fn().mockResolvedValue(mongoBuiltUser),
           },
         },
       ],
@@ -31,7 +31,7 @@ describe('UsersService', () => {
     it('should call createUser usersRepository method', async () => {
       const response = await usersService.createUser(createUserDTO);
 
-      expect(response).toStrictEqual(createUserServiceResponse);
+      expect(response).toStrictEqual(mongoBuiltUser);
     });
   });
 });

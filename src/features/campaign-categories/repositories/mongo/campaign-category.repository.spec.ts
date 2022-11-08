@@ -6,10 +6,7 @@ import { Model } from 'mongoose';
 
 import { CampaignCategoriesRepository } from './campaign-category.repository';
 import { CampaignCategory } from '../../schemas/campaign-category.schema';
-import {
-  mongoBuiltCampaingCategory,
-  generalCampaignCategoryMock,
-} from '../../tests/mocks';
+import { mongoBuiltCampaingCategory } from '../../tests/mocks';
 
 describe('Campaign Categories Repository', () => {
   let campaignCategoriesRepository: CampaignCategoriesRepository;
@@ -49,7 +46,7 @@ describe('Campaign Categories Repository', () => {
         campaignCategoryId,
       );
 
-      expect(response).toStrictEqual(generalCampaignCategoryMock);
+      expect(response).toStrictEqual(mongoBuiltCampaingCategory);
     });
   });
 });

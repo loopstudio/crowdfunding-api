@@ -6,11 +6,7 @@ import { Model } from 'mongoose';
 
 import { UsersRepository } from './users.repository';
 import { User } from '../../schemas/user.schema';
-import {
-  createUserDTO,
-  createUserServiceResponse,
-  mongoBuiltUser,
-} from '../../tests/mocks';
+import { createUserDTO, mongoBuiltUser } from '../../tests/mocks';
 
 describe('UsersRepository', () => {
   let usersRepository: UsersRepository;
@@ -44,7 +40,7 @@ describe('UsersRepository', () => {
 
       const response = await usersRepository.createUser(createUserDTO);
 
-      expect(response).toStrictEqual(createUserServiceResponse);
+      expect(response).toStrictEqual(mongoBuiltUser);
     });
   });
 });

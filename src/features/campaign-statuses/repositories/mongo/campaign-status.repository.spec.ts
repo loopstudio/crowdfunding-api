@@ -4,10 +4,7 @@ import { Model } from 'mongoose';
 
 import { CampaignStatusRepository } from './campaign-status.repository';
 import { CampaignStatus } from '../../schemas/campaign-status.schema';
-import {
-  mongoBuiltCampaingStatus,
-  pendingCampaignStatusMock,
-} from '../../tests/mocks';
+import { mongoBuiltCampaingStatus } from '../../tests/mocks';
 
 describe('Campaign Statuses Repository', () => {
   let campaignStatusesRepository: CampaignStatusRepository;
@@ -46,7 +43,7 @@ describe('Campaign Statuses Repository', () => {
         campaignStatusId,
       );
 
-      expect(response).toStrictEqual(pendingCampaignStatusMock);
+      expect(response).toStrictEqual(mongoBuiltCampaingStatus);
     });
   });
 });

@@ -6,10 +6,10 @@ import { Model } from 'mongoose';
 
 import { TokenRepository } from './tokens.repository';
 import { Token } from '../../schemas/token.schema';
-import { mongoBuiltToken, loopTokenMock } from '../../tests/mocks';
+import { mongoBuiltToken } from '../../tests/mocks';
 
 describe('Campaign Statuses Repository', () => {
-  let tokenesRepository: TokenRepository;
+  let tokensRepository: TokenRepository;
   let tokenModel: Model<Token>;
 
   const tokenId = mongoBuiltToken.address;
@@ -29,7 +29,7 @@ describe('Campaign Statuses Repository', () => {
     }).compile();
 
     tokenModel = module.get<Model<Token>>(getModelToken(Token.name));
-    tokenesRepository = module.get<TokenRepository>(TokenRepository);
+    tokensRepository = module.get<TokenRepository>(TokenRepository);
   });
 
   describe('getById method', () => {
@@ -38,9 +38,9 @@ describe('Campaign Statuses Repository', () => {
         lean: jest.fn().mockResolvedValue(mongoBuiltToken),
       } as any);
 
-      const response = await tokenesRepository.getById(tokenId);
+      const response = await tokensRepository.getById(tokenId);
 
-      expect(response).toStrictEqual(loopTokenMock);
+      expect(response).toStrictEqual(mongoBuiltToken);
     });
   });
 });

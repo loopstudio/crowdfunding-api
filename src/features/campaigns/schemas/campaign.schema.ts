@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
 import { User } from 'src/features/users/schemas/user.schema';
-import { Token } from 'src/features/tokens/schemas/token.schema';
 import { CampaignStatus } from 'src/features/campaign-statuses/schemas/campaign-status.schema';
 import { CampaignCategory } from 'src/features/campaign-categories/schemas/campaign-category.schema';
 
@@ -14,7 +13,7 @@ export class TokenAmount {
   amount: string;
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Token' })
-  token: Token;
+  token: string;
 }
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })

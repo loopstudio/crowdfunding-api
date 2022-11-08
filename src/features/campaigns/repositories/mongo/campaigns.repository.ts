@@ -62,7 +62,7 @@ export class CampaignsMongoRepository {
       amount: 0,
     }));
 
-    const campaign = await new this.campaignModel({
+    const campaign = await this.campaignModel.create({
       title,
       subtitle,
       story,
@@ -75,7 +75,7 @@ export class CampaignsMongoRepository {
       currentAmount,
       category,
       owner,
-    }).save();
+    });
 
     return campaign;
   }

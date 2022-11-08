@@ -31,3 +31,20 @@ export const mongoBuiltCampaign = {
   updated: '2022-11-06T14:00:36.947+0000',
   __v: 0,
 };
+
+export const createCampaignDtoMock = {
+  title: 'My campaign',
+  subtitle: 'An amazing campaign',
+  story: 'This is the long short story: We need the money',
+  startDate: new Date(Date.now() + 1),
+  endDate: new Date(Date.now() + 10),
+  image: 'image.png',
+  video: 'video.mp4',
+  goal: [
+    {
+      token: '63611e69143b8def9c4843dd',
+      amount: '100',
+    },
+  ],
+  category: '63611e69143b8def9c4843d9',
+};
