@@ -7,6 +7,10 @@ import { EthersModule } from './features/ethers/ethers.module';
 import { UsersModule } from './features/users/users.module';
 
 import { dbConnectionFactory } from './common/database';
+import { CampaignsModule } from './features/campaigns/campaigns.module';
+import { TokensModule } from './features/tokens/tokens.module';
+import { CampaignStatusesModule } from './features/campaign-statuses/campaign-statuses.module';
+import { CampaignCategoriesModule } from './features/campaign-categories/campaign-categories.module';
 
 @Module({
   imports: [
@@ -15,6 +19,10 @@ import { dbConnectionFactory } from './common/database';
     PublicModule,
     EthersModule,
     UsersModule,
+    CampaignsModule,
+    TokensModule,
+    CampaignStatusesModule,
+    CampaignCategoriesModule,
   ],
 })
 export class AppModule {}
