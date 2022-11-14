@@ -3,6 +3,7 @@ import {
   IsString,
   IsDefined,
   IsOptional,
+  MaxDate,
   MinDate,
   IsArray,
   ArrayNotEmpty,
@@ -10,6 +11,7 @@ import {
 } from 'class-validator';
 
 import { TokenAmount } from '../schemas/campaign.schema';
+import { maxCampaignDurationInMs } from '../constants';
 
 export class CreateCampaignDto {
   @IsDefined()
@@ -29,6 +31,7 @@ export class CreateCampaignDto {
 
   @IsDefined()
   @MinDate(new Date(Date.now() + 1))
+  @MaxDate(new Date(Date.now() + maxCampaignDurationInMs))
   @Type(() => Date)
   endDate: Date;
 
