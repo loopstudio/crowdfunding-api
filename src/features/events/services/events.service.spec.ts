@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { EthersService } from './ethers.service';
+import { EthersService } from './events.service';
 
 describe('EthersService', () => {
   let service: EthersService;

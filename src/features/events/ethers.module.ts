@@ -1,12 +1,12 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
-import { EthersService } from './services/ethers.service';
+import { EventsService } from './services/events.service';
 
 @Global()
 @Module({
   imports: [ConfigModule],
-  providers: [EthersService],
-  exports: [EthersService],
+  providers: [EventsService],
+  exports: [EventsService],
 })
-export class EthersModule {}
+export class EventsModule {}
