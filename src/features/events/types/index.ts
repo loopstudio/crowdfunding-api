@@ -1,4 +1,4 @@
-export enum EventType {
+export enum CrowdfundingEvent {
   Launch = 'Launch',
   Cancel = 'Cancel',
   Pledge = 'Pledge',

@@ -1,21 +1,18 @@
-import { utils as EthersUtils } from 'ethers';
-
-import { EventType } from 'src/features/events/types';
+import { CrowdfundingEvent } from 'src/features/events/types';
 
 export const eventsToHandle = {
   // event Launch(uint256 id, uint256 goal, address indexed creator, uint64 startDate, uint64 endDate);
-  [EthersUtils.id('Launch(uint256,uint256,address,uint64,uint64)')]:
-    EventType.Launch,
+  ['Launch']: CrowdfundingEvent.Launch,
   // event Cancel(uint256 id);
-  [EthersUtils.id('Cancel(uint256)')]: EventType.Cancel,
+  ['Cancel']: CrowdfundingEvent.Cancel,
   // event Pledge(uint256 id, address indexed pledger, uint256 amount);
-  [EthersUtils.id('Pledge(uint256,address,uint256)')]: EventType.Pledge,
+  ['Pledge']: CrowdfundingEvent.Pledge,
   //event Unpledge(uint256 id, address indexed pledger, uint256 amount);
-  [EthersUtils.id('Unpledge(uint256,address,uint256)')]: EventType.Unpledge,
+  ['Unpledge']: CrowdfundingEvent.Unpledge,
   // event Refund(uint256 id, address indexed pledger, uint256 amount);
-  [EthersUtils.id('Refund(uint256,address,uint256)')]: EventType.Refund,
+  ['Refund']: CrowdfundingEvent.Refund,
   // event Claim(uint256 id, address indexed creator, uint256 amount);
-  [EthersUtils.id('Claim(uint256,address,uint256)')]: EventType.Claim,
+  ['Claim']: CrowdfundingEvent.Claim,
 };
 
 export const contractsToHandle = [

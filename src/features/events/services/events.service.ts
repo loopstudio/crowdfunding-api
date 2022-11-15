@@ -9,6 +9,7 @@ import { Contract, getDefaultProvider } from 'ethers';
 
 import { contractsToHandle, eventsToHandle } from 'src/common/contracts';
 import { EventsMongoRepository } from '../repositories/mongo/events.repository';
+import { CrowdfundingEvent } from '../types';
 
 @Injectable()
 export class EventsService
@@ -37,11 +38,9 @@ export class EventsService
   private initializeProvider() {
     // TODO: Configure api keys for production (https://docs.ethers.io/v5/api/providers)
 
-    const ethereumNetwork = this.configService.get<string>(
-      'ETHEREUM_NETWORK_URL',
-    );
+    const rpcEndpoint = this.configService.get<string>('NETWORK_RPC_URL');
 
-    this.provider = getDefaultProvider(ethereumNetwork);
+    this.provider = getDefaultProvider(rpcEndpoint);
   }
 
   private intializeContracts() {
@@ -67,7 +66,11 @@ export class EventsService
     }
   }
 
-  private async handleEvent(event: string, contract: Contract, data: unknown) {
+  private async handleEvent(
+    event: CrowdfundingEvent,
+    contract: Contract,
+    data: unknown,
+  ) {
     console.log(`Handle event ${event} for contract ${contract.address}`);
     console.log(`Data ${data}`);
 
