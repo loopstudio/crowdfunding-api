@@ -8,6 +8,7 @@ import { BaseProvider } from '@ethersproject/providers';
 import { Contract, getDefaultProvider } from 'ethers';
 
 import { contractsToHandle, eventsToHandle } from 'src/common/contracts';
+import { EventsMongoRepository } from '../repositories/mongo/events.repository';
 
 @Injectable()
 export class EventsService
@@ -16,7 +17,10 @@ export class EventsService
   private provider: BaseProvider = null;
   private contracts: Contract[] = [];
 
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    private eventsMongoRepository: EventsMongoRepository,
+  ) {}
 
   onApplicationShutdown() {
     this.provider.removeAllListeners();
@@ -63,9 +67,17 @@ export class EventsService
     }
   }
 
-  private handleEvent(event: string, contract: Contract, data: unknown) {
-    // TODO: Call features services to handle the event
+  private async handleEvent(event: string, contract: Contract, data: unknown) {
     console.log(`Handle event ${event} for contract ${contract.address}`);
     console.log(`Data ${data}`);
+
+    // TODO: Call features services to handle the event
+
+    // TODO: Get block number! Event model will be reviewed
+    await this.eventsMongoRepository.createEvent({
+      event,
+      blockNumber: 123,
+      data,
+    });
   }
 }

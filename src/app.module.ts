@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { PublicModule } from './features/public/public.module';
-import { EventsModule } from './features/events/ethers.module';
+import { EventsModule } from './features/events/events.module';
 import { UsersModule } from './features/users/users.module';
 
 import { dbConnectionFactory } from './common/database';
