@@ -23,6 +23,7 @@ async function bootstrap() {
       disableErrorMessages: true,
     }),
   );
+  app.enableShutdownHooks();
 
   try {
     mongoose.set('debug', !!DEBUG);

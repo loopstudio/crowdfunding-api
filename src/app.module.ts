@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 
 import { PublicModule } from './features/public/public.module';
-import { EthersModule } from './features/ethers/ethers.module';
+import { EventsModule } from './features/events/events.module';
 import { UsersModule } from './features/users/users.module';
 
 import { dbConnectionFactory } from './common/database';
@@ -17,7 +17,7 @@ import { CampaignCategoriesModule } from './features/campaign-categories/campaig
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync(dbConnectionFactory),
     PublicModule,
-    EthersModule,
+    EventsModule,
     UsersModule,
     CampaignsModule,
     TokensModule,
