@@ -6,7 +6,6 @@ import mongoose from 'mongoose';
 
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './middlewares/filters/exception.filter';
-import { Console } from 'console';
 
 const { API_PORT, DEBUG } = process.env;
 

@@ -10,7 +10,6 @@ import { Contract, getDefaultProvider } from 'ethers';
 import { contractsToHandle, eventsToHandle } from 'src/common/contracts';
 import { EventsMongoRepository } from '../repositories/mongo/events.repository';
 import { CrowdfundingEvent } from '../types';
-import { Campaign } from 'src/features/campaigns/schemas/campaign.schema';
 import { CampaignLaunchService } from 'src/features/campaigns/services/campaign-launch.service';
 
 @Injectable()
@@ -84,11 +83,6 @@ export class EventsService
 
     this.storeRawEvent(data, event);
   }
-
-  private async handleLaunchEvent(
-    data: unknown,
-    event: CrowdfundingEvent.Launch,
-  ) {}
 
   private async storeRawEvent(data: unknown, event: CrowdfundingEvent) {
     if (Array.isArray(data) && data.length) {
