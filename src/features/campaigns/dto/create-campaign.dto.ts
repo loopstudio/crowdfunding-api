@@ -8,6 +8,7 @@ import {
   ArrayNotEmpty,
   ValidateNested,
 } from 'class-validator';
+import { CampaignStatus } from 'src/features/campaign-statuses/schemas/campaign-status.schema';
 
 import { TokenAmount } from '../schemas/campaign.schema';
 
@@ -45,4 +46,7 @@ export class CreateCampaignDto {
   @ArrayNotEmpty()
   @ValidateNested()
   goal: TokenAmount[];
+
+  @IsOptional()
+  status: CampaignStatus;
 }

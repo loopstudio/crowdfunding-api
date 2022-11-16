@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './middlewares/filters/exception.filter';
+import { Console } from 'console';
 
 const { API_PORT, DEBUG } = process.env;
 
@@ -31,6 +32,7 @@ async function bootstrap() {
     await app.listen(API_PORT);
     console.log(`NestJS API listening on port ${API_PORT}`);
   } catch (err) {
+    console.log('Error starting app!', err);
     process.exit(1);
   }
 }
