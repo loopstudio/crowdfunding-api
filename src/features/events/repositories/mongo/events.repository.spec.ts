@@ -39,8 +39,6 @@ describe('MongoService', () => {
 
       const response = await eventRepository.createEvent(createEventDto);
 
-      console.log(response);
-
       expect(response).toStrictEqual(createdEvent);
     });
   });

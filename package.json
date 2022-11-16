@@ -96,7 +96,8 @@
       "constants",
       "database",
       "schema.ts",
-      "dto.ts"
+      "dto.ts",
+      "events.service.ts"
     ],
     "testEnvironment": "node",
     "moduleNameMapper": {
