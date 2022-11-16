@@ -72,15 +72,24 @@ export class EventsService
     data: unknown,
   ) {
     console.log(`Handle event ${event} for contract ${contract.address}`);
-    console.log(`Data ${data}`);
 
     // TODO: Call features services to handle the event
 
-    // TODO: Get block number! Event model will be reviewed
-    await this.eventsMongoRepository.createEvent({
-      event,
-      blockNumber: 123,
-      data,
-    });
+    if (Array.isArray(data) && data.length) {
+      try {
+        const transactionData = data[data.length - 1];
+        const { blockNumber, blockHash, transactionHash } = transactionData;
+
+        await this.eventsMongoRepository.createEvent({
+          event,
+          blockNumber,
+          blockHash,
+          transactionHash,
+          data,
+        });
+      } catch (err) {
+        console.log("Event couldn't be processed");
+      }
+    }
   }
 }

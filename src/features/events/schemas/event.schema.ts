@@ -12,6 +12,12 @@ export class Event {
   blockNumber: number;
 
   @Prop()
+  blockHash: string;
+
+  @Prop()
+  transactionHash: string;
+
+  @Prop()
   data: MongooseSchema.Types.Mixed;
 
   @Prop({ index: true })

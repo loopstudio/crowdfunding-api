@@ -12,11 +12,13 @@ export class EventsMongoRepository {
   ) {}
 
   async createEvent(body: CreateEventDto): Promise<Event> {
-    const { event, blockNumber, data } = body;
+    const { event, blockNumber, blockHash, transactionHash, data } = body;
 
     const savedEvent = await this.eventModel.create({
       event,
       blockNumber,
+      blockHash,
+      transactionHash,
       data,
       date: new Date(),
     });

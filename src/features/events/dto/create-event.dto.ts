@@ -10,5 +10,13 @@ export class CreateEventDto {
   blockNumber: number;
 
   @IsDefined()
+  @IsString()
+  blockHash: string;
+
+  @IsDefined()
+  @IsString()
+  transactionHash: string;
+
+  @IsDefined()
   data: unknown;
 }
