@@ -57,10 +57,6 @@ export class EventsService
   private intializeListeners() {
     for (const contract of this.contracts) {
       for (const eventId in eventsToHandle) {
-        console.log(
-          `registering ${eventsToHandle[eventId]} - ${eventId}: for contract ${contract}`,
-        );
-
         contract.on(eventId, (...args) =>
           this.handleEvent(eventsToHandle[eventId], contract, [...args]),
         );
@@ -73,8 +69,6 @@ export class EventsService
     contract: Contract,
     data: unknown,
   ) {
-    console.log(`Handle event ${event} for contract ${contract.address}`);
-
     // TODO: Call features services to handle the event
     switch (event) {
       case CrowdfundingEvent.Launch:
