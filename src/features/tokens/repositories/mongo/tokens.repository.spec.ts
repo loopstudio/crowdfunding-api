@@ -24,6 +24,7 @@ describe('Token Repository', () => {
             findById: jest.fn(),
             lean: jest.fn(),
             find: jest.fn(),
+            findOne: jest.fn(),
           },
         },
       ],
@@ -40,6 +41,17 @@ describe('Token Repository', () => {
       } as any);
 
       const response = await tokensRepository.getById(tokenId);
+      expect(response).toStrictEqual(mongoBuiltToken);
+    });
+  });
+
+  describe('getByAddress method', () => {
+    it('should call getByAddress method without errors', async () => {
+      jest.spyOn(tokenModel, 'findOne').mockReturnValue({
+        lean: jest.fn().mockResolvedValue(mongoBuiltToken),
+      } as any);
+
+      const response = await tokensRepository.getByAddress(tokenId);
       expect(response).toStrictEqual(mongoBuiltToken);
     });
   });
