@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { CreateCampaignDto } from '../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
@@ -11,11 +15,14 @@ import {
   pendingStatusCode,
   generalCategoryCode,
 } from '../../campaign-statuses/types/index';
+import { start } from 'repl';
+import { UsersRepository } from 'src/features/users/repositories/mongo/users.repository';
 
 @Injectable()
 export class CampaignsService {
   constructor(
     private readonly campaignsMongoRepository: CampaignsMongoRepository,
+    private readonly usersMongoRepository: UsersRepository,
     private readonly tokensService: TokensService,
     private readonly campaignCategoriesService: CampaignCategoriesService,
     private readonly campaignStatusService: CampaignStatusService,
@@ -67,6 +74,37 @@ export class CampaignsService {
   async findOne(id: string) {
     const campaign = await this.campaignsMongoRepository.findOne(id);
     return { campaign };
+  }
+
+  /*
+   Finds campaign based on contract event, considering
+    - Same creator address
+    - Same goal
+    - Same start and end date
+    - Sorted by created at asc
+    This way, if a user creates N campaings with the same parameters, are processed secuentially.
+   */
+  async findByLaunchEvent(
+    address: string,
+    goal: string,
+    startDate: string,
+    endDate: string,
+  ) {
+    const user = await this.usersMongoRepository.findByAddress(address);
+    if (!user) {
+      throw new NotFoundException(
+        'User not found when processing launch event. Address: ',
+        address,
+      );
+    }
+    const campaign = await this.campaignsMongoRepository.findByLaunchEvent(
+      user._id,
+      goal,
+      startDate,
+      endDate,
+    );
+
+    return { campaign }; //TODO why this?
   }
 
   async update({

@@ -5,7 +5,6 @@ import { CampaignCategorySchema } from '../../src/features/campaign-categories/s
 import { TokenSchema } from '../../src/features/tokens/schemas/token.schema';
 
 // !IMPORTANT: You need to add the connection string right below
-const MONGO_URI_CONNECTION = '';
 
 const log = (message) => {
   console.log(`${new Date().toISOString()} >>> ${message}`);
@@ -80,7 +79,6 @@ const checkCampaignCategories = async () => {
 };
 
 const checkTokens = async () => {
-  log('Check tokens');
   const tokensCount = await TokenModel.count();
   if (tokensCount > 0) {
     return log('Tokens already created \n');
@@ -101,7 +99,7 @@ const checkTokens = async () => {
 };
 
 (async () => {
-  if (!MONGO_URI_CONNECTION) {
+  if (!process.env.MONGO_URI_CONNECTION) {
     log(
       'Please, fill in the MONGO_URI_CONNECTION constant where the value in your .env file',
     );
@@ -112,7 +110,7 @@ const checkTokens = async () => {
   }
 
   log('Initializing DB connection');
-  await mongoose.connect(MONGO_URI_CONNECTION);
+  await mongoose.connect(process.env.MONGO_URI_CONNECTION);
   log('DB connection initialized \n');
 
   await checkCampaignStatuses();

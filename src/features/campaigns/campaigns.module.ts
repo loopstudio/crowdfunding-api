@@ -14,6 +14,9 @@ import {
   CampaignLaunch,
   CampaignLaunchSchema,
 } from './schemas/campaign-launch.schema';
+import { UsersRepository } from '../users/repositories/mongo/users.repository';
+import { UsersModule } from '../users/users.module';
+import { User, UserSchema } from '../users/schemas/user.schema';
 
 @Module({
   imports: [
@@ -26,10 +29,15 @@ import {
         name: CampaignLaunch.name,
         schema: CampaignLaunchSchema,
       },
+      {
+        name: User.name,
+        schema: UserSchema,
+      },
     ]),
     TokensModule,
     CampaignStatusesModule,
     CampaignCategoriesModule,
+    UsersModule,
   ],
   controllers: [CampaignsController],
   providers: [
@@ -37,6 +45,7 @@ import {
     CampaignsMongoRepository,
     CampaignLaunchService,
     CampaignLaunchMongoRepository,
+    UsersRepository,
   ],
   exports: [CampaignLaunchService],
 })

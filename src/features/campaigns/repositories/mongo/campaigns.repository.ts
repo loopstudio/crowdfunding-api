@@ -26,8 +26,31 @@ export class CampaignsMongoRepository {
     return campaings;
   }
 
-  async findOne(id: string) {
-    const campaing = await this.campaignModel.findOne({ _id: id }).lean();
+  async findOne(onchainId: string) {
+    const campaing = await this.campaignModel
+      .findOne({ onchainId: onchainId })
+      .lean();
+    if (!campaing) {
+      throw new NotFoundException();
+    }
+    return campaing;
+  }
+
+  async findByLaunchEvent(
+    ownerId: string,
+    amount: string,
+    startDate: string,
+    endDate: string,
+  ) {
+    const campaing = await this.campaignModel
+      .findOne({
+        owner: ownerId,
+        'goal.amount': amount,
+        'goal.token': '638749e585e016f7996e493b', //FIXME change to use the address
+        //startDate: startDate, // FIXME 1970-07-13T03:08:01.123Z, should we store timestamps?
+      })
+      .sort({ created: 'ascending' });
+
     if (!campaing) {
       throw new NotFoundException();
     }

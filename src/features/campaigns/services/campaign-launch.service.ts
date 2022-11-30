@@ -13,12 +13,16 @@ export class CampaignLaunchService {
   ) {}
 
   async create(eventData: unknown) {
-    this.logger.log('Handling Launch event: ', eventData);
     // FIXME add succesful and error logs
-    // TODO: find campaing by address, end date, start date and amount.
-    const pendingCampaign = await this.campaignService.findOne('1'); // Fixme
+    const pendingCampaign = await this.campaignService.findByLaunchEvent(
+      //FIXME what if is already Active? It should be pending
+      //FIXME use right values
+      '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+      '100',
+      '16686381555',
+      '16686481123',
+    );
 
-    // If not exists, raise and log error
     if (!pendingCampaign) {
       const errorMsg =
         'Pending campaing doesnt exists for event: ' +
@@ -27,7 +31,6 @@ export class CampaignLaunchService {
       throw new Error(errorMsg);
     }
 
-    // Mark as active
     const updateStatusDto: UpdateCampaignDto = {
       // FIXME should be constants
       status: {
@@ -35,13 +38,16 @@ export class CampaignLaunchService {
         code: 'active',
       },
     };
+
     await this.campaignService.update({
       // Fixme ID?
-      id: '1',
+      id: pendingCampaign.campaign.id,
       updateCampaignDto: updateStatusDto,
     });
 
-    // Store event
-    await this.campaignLaunchMongoRepository.create('1', eventData['id']); // FIXME ID?
+    await this.campaignLaunchMongoRepository.create(
+      pendingCampaign.campaign.id,
+      eventData[0],
+    );
   }
 }
