@@ -22,4 +22,9 @@ export class TokensService {
 
     return !someNullToken;
   }
+
+  async findAll() {
+    const tokens = await this.tokenRepository.findAll();
+    return { tokens };
+  }
 }

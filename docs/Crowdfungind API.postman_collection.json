@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "09232f45-f2d3-4eb8-92dc-cdeb7006c9b1",
+		"_postman_id": "7634dffa-f1cf-494e-a9cc-d8cead7f433d",
 		"name": "Crowdfungind API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "6806423"
+		"_exporter_id": "15969721"
 	},
 	"item": [
 		{
@@ -207,6 +207,32 @@
 								"v1",
 								"campaigns",
 								"6367be0422ca99a33946949b"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tokens",
+			"item": [
+				{
+					"name": "Get /tokens",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/v1/tokens/findAll",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tokens",
+								"findAll"
 							]
 						}
 					},
