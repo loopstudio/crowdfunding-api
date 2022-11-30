@@ -19,4 +19,9 @@ export class TokenRepository {
     const token = await this.tokenModel.findById(id).lean();
     return token;
   }
+
+  async getByAddress(address: string): Promise<Token> {
+    const token = await this.tokenModel.findOne({ address }).lean();
+    return token;
+  }
 }

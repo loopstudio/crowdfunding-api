@@ -12,7 +12,7 @@ export class TokenAmount {
   @Prop()
   amount: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Token' })
+  @Prop({})
   token: string;
 }
 
