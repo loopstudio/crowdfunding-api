@@ -22,4 +22,9 @@ export class TokensService {
 
     return !someNullToken;
   }
+
+  async getByAddress(address: string): Promise<Token> {
+    const token = this.tokenRepository.getByAddress(address);
+    return token;
+  }
 }

@@ -12,4 +12,9 @@ export class UsersService {
     const user = await this.userRepository.createUser(body);
     return user;
   }
+
+  async findUserByAddress(address: string): Promise<User> {
+    const user = await this.userRepository.findByAddress(address);
+    return user;
+  }
 }

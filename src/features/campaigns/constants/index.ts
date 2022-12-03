@@ -11,3 +11,5 @@ export const campaignFieldsToModify = [
   'image',
   'video',
 ];
+
+export type movementType = 'INCREASE' | 'DECREASE';
