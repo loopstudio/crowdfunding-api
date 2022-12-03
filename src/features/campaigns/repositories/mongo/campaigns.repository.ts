@@ -5,11 +5,14 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ethers } from 'ethers';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
-import { campaignFieldsToModify } from '../../constants';
+import { campaignFieldsToModify, movementType } from '../../constants';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
+
+const etherUtils = ethers.utils;
 
 @Injectable()
 export class CampaignsMongoRepository {
@@ -31,9 +34,7 @@ export class CampaignsMongoRepository {
   }
 
   async findOne(onchainId: string) {
-    const campaing = await this.campaignModel
-      .findOne({ onchainId: onchainId })
-      .lean();
+    const campaing = await this.campaignModel.findOne({ onchainId: onchainId });
     if (!campaing) {
       throw new NotFoundException();
     }
@@ -142,5 +143,38 @@ export class CampaignsMongoRepository {
 
     await existingCampaign.save();
     return existingCampaign;
+  }
+
+  async updateTokenAmount({
+    campaignId,
+    amountToChange,
+    tokenAddress,
+    action,
+  }: {
+    campaignId: string;
+    amountToChange: string;
+    tokenAddress: string;
+    action: movementType;
+  }): Promise<void> {
+    const campaign = await this.findOne(campaignId);
+    // const tokenIndex = campaign.currentAmount.findIndex(
+    //   (token) => token.token === tokenAddress,
+    // );
+
+    // TODO: Change this!!!!
+    const tokenIndex = 0;
+
+    if (tokenIndex >= 0) {
+      const currentValue = etherUtils.parseEther(
+        campaign.currentAmount[tokenIndex].amount,
+      );
+
+      campaign.currentAmount[tokenIndex].amount =
+        action === 'INCREASE'
+          ? currentValue.add(amountToChange).toString()
+          : currentValue.sub(amountToChange).toString();
+
+      await campaign.save();
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { TokenRepository } from '../repositories/mongo/tokens.repository';
+import { Token } from '../schemas/token.schema';
 
 @Injectable()
 export class TokensService {
@@ -20,5 +21,10 @@ export class TokensService {
   async findAll() {
     const tokens = await this.tokenRepository.findAll();
     return { tokens };
+  }
+
+  async getByAddress(address: string): Promise<Token> {
+    const token = this.tokenRepository.getByAddress(address);
+    return token;
   }
 }

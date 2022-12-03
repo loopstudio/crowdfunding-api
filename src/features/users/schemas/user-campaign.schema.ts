@@ -3,13 +3,17 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 
 import { Campaign } from 'src/features/campaigns/schemas/campaign.schema';
 import { Claim } from 'src/features/campaigns/schemas/claim.schema';
-import { Pledge } from 'src/features/campaigns/schemas/pledge.schema';
+import { CampaignPledge } from 'src/features/campaigns/schemas/campaign-pledge.schema';
 import { Refund } from 'src/features/campaigns/schemas/refund.schema';
 import { Unpledge } from 'src/features/campaigns/schemas/unpledge.schema';
 import { Token } from 'src/features/tokens/schemas/token.schema';
 import { User } from './user.schema';
 
 export type UserCampaignDocument = UserCampaign & Document;
+
+// TODO: Update this documents once we receive a new event!!!
+// TODO: Update this documents once we receive a new event!!!
+// TODO: Update this documents once we receive a new event!!!
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
 export class UserCampaign {
@@ -45,8 +49,8 @@ export class UserCampaign {
   @Prop()
   totalRefunded: string;
 
-  @Prop([Pledge])
-  pledges: Pledge[];
+  @Prop([CampaignPledge])
+  pledges: CampaignPledge[];
 
   @Prop([Unpledge])
   unpledges: Unpledge[];

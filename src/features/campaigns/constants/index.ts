@@ -13,3 +13,5 @@ export const campaignFieldsToModify = [
   'status',
   'onchainId',
 ];
+
+export type movementType = 'INCREASE' | 'DECREASE';
