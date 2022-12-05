@@ -157,12 +157,9 @@ export class CampaignsMongoRepository {
     action: movementType;
   }): Promise<void> {
     const campaign = await this.findOne(campaignId);
-    // const tokenIndex = campaign.currentAmount.findIndex(
-    //   (token) => token.token === tokenAddress,
-    // );
-
-    // TODO: Change this!!!!
-    const tokenIndex = 0;
+    const tokenIndex = campaign.currentAmount.findIndex(
+      (token) => token.token === tokenAddress,
+    );
 
     if (tokenIndex >= 0) {
       const currentValue = etherUtils.parseEther(
