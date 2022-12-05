@@ -11,10 +11,6 @@ import { User } from './user.schema';
 
 export type UserCampaignDocument = UserCampaign & Document;
 
-// TODO: Update this documents once we receive a new event!!!
-// TODO: Update this documents once we receive a new event!!!
-// TODO: Update this documents once we receive a new event!!!
-
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
 export class UserCampaign {
   @Prop({
