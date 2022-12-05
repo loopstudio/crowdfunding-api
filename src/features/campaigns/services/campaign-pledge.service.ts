@@ -36,7 +36,7 @@ export class CampaignPledgeService {
     }
 
     // TODO: how to get token address?
-    const tokenAddress = '0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413';
+    const tokenAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
     const token = await this.tokensService.getByAddress(tokenAddress);
     if (!token) {
       throw new Error('No associated token');
@@ -50,13 +50,14 @@ export class CampaignPledgeService {
     });
 
     // TODO: Update Campaign document
-    await this.campaignMongoRepository.updateTokenAmount({
-      campaignId,
-      amountToChange: amount,
-      tokenAddress,
-      action: 'INCREASE',
-    });
+    // await this.campaignMongoRepository.updateTokenAmount({
+    //   campaignId,
+    //   amountToChange: amount,
+    //   tokenAddress,
+    //   action: 'INCREASE',
+    // });
 
     // TODO: Update UserCampaign document
+    // TODO: This document should be created when launching the campaign
   }
 }
