@@ -50,7 +50,7 @@ export class CampaignsMongoRepository {
     } = createCampaignData;
 
     const currentAmount = goal.map((tokenAmount) => ({
-      token: tokenAmount.token,
+      token: tokenAmount.tokenAddress,
       amount: 0,
     }));
 

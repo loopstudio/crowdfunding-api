@@ -25,7 +25,7 @@ export class CampaignsService {
     const { goal } = createCampaignDto;
 
     const tokenAddresses = goal.map((tokenGoal) => {
-      return tokenGoal.token as unknown as string;
+      return tokenGoal.tokenAddress as unknown as string;
     });
     const areTokensValid = await this.tokensService.areTokensValid(
       tokenAddresses,
