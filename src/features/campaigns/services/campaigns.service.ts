@@ -24,10 +24,12 @@ export class CampaignsService {
   async create(createCampaignDto: CreateCampaignDto) {
     const { goal } = createCampaignDto;
 
-    const tokensIds = goal.map((tokenGoal) => {
-      return tokenGoal.token as unknown as string;
+    const tokenAddresses = goal.map((tokenGoal) => {
+      return tokenGoal.tokenAddress as unknown as string;
     });
-    const areTokensValid = await this.tokensService.areTokensValid(tokensIds);
+    const areTokensValid = await this.tokensService.areTokensValid(
+      tokenAddresses,
+    );
     if (!areTokensValid) {
       throw new BadRequestException();
     }

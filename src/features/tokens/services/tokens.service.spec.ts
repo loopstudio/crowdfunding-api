@@ -20,6 +20,7 @@ describe('Token Service', () => {
           provide: TokenRepository,
           useValue: {
             getById: jest.fn(),
+            getByAddress: jest.fn(),
             findAll: jest.fn(),
           },
         },
@@ -38,7 +39,9 @@ describe('Token Service', () => {
 
   describe('areTokensValid method', () => {
     it('should call areTokensValid without errors', async () => {
-      jest.spyOn(tokenRepository, 'getById').mockResolvedValue(mongoBuiltToken);
+      jest
+        .spyOn(tokenRepository, 'getByAddress')
+        .mockResolvedValue(mongoBuiltToken);
 
       const response = await tokenService.areTokensValid([tokenId]);
 

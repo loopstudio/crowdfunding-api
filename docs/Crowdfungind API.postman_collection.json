@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "7634dffa-f1cf-494e-a9cc-d8cead7f433d",
+		"_postman_id": "e6a7a4cd-6fb2-4bb5-91b7-c6a58047845f",
 		"name": "Crowdfungind API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "15969721"
+		"_exporter_id": "6806423"
 	},
 	"item": [
 		{
@@ -69,7 +69,7 @@
 			"name": "Campaigns",
 			"item": [
 				{
-					"name": "GET /campaigns",
+					"name": "/campaigns",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -99,7 +99,7 @@
 					"response": []
 				},
 				{
-					"name": "GET /campaigns/:id",
+					"name": "/campaigns/:id",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -120,7 +120,7 @@
 					"response": []
 				},
 				{
-					"name": "POST /campaigns",
+					"name": "/campaigns",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -143,7 +143,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"My campaign\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\",\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\",\n    \"goal\": [{\n        \"token\": \"63611e69143b8def9c4843dd\",\n        \"amount\": \"100\"\n    }]\n}",
+							"raw": "{\n    \"title\": \"My campaign\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\",\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\",\n    \"goal\": [{\n        \"tokenAddress\": \"0x5FbDB2315678afecb367f032d93F642f64180aa3\",\n        \"amount\": \"100\"\n    }]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -166,7 +166,7 @@
 					"response": []
 				},
 				{
-					"name": "PATCH /campaigns/:id",
+					"name": "/campaigns/:id",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -218,12 +218,12 @@
 			"name": "Tokens",
 			"item": [
 				{
-					"name": "Get /tokens",
+					"name": "/tokens",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}://{{host}}/api/v1/tokens/findAll",
+							"raw": "{{protocol}}://{{host}}/api/v1/tokens",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{host}}"
@@ -231,8 +231,7 @@
 							"path": [
 								"api",
 								"v1",
-								"tokens",
-								"findAll"
+								"tokens"
 							]
 						}
 					},
