@@ -4,6 +4,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TokensService } from './services/tokens.service';
 import { TokenRepository } from './repositories/mongo/tokens.repository';
 import { Token, TokenSchema } from './schemas/token.schema';
+import { TokensController } from './controllers/tokens.controller';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { Token, TokenSchema } from './schemas/token.schema';
       },
     ]),
   ],
+  controllers: [TokensController],
   providers: [TokensService, TokenRepository],
   exports: [TokensService, TokenRepository],
 })

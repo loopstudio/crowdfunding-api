@@ -12,8 +12,8 @@ export class TokenAmount {
   @Prop()
   amount: string;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Token' })
-  token: string;
+  @Prop({})
+  tokenAddress: string;
 }
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
