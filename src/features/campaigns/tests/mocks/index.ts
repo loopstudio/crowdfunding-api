@@ -83,10 +83,8 @@ export const createCampaignDtoMock = {
     },
   ],
   category: '63611e69143b8def9c4843d9',
-  status: {
-    name: 'Pending',
-    code: 'pending',
-  },
+  status: '',
+  onchainId: '',
 };
 
 export const updateCampaignDtoMock = {

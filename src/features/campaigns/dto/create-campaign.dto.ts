@@ -3,16 +3,12 @@ import {
   IsString,
   IsDefined,
   IsOptional,
-  MaxDate,
-  MinDate,
   IsArray,
   ArrayNotEmpty,
   ValidateNested,
 } from 'class-validator';
-import { CampaignStatus } from 'src/features/campaign-statuses/schemas/campaign-status.schema';
 
 import { TokenAmount } from '../schemas/campaign.schema';
-import { maxCampaignDurationInMs } from '../constants';
 
 export class CreateCampaignDto {
   @IsDefined()
@@ -26,13 +22,13 @@ export class CreateCampaignDto {
   story = '';
 
   @IsDefined()
-  @MinDate(new Date(Date.now()))
+  //@MinDate(new Date(Date.now()))
   @Type(() => Date)
   startDate: Date;
 
   @IsDefined()
-  @MinDate(new Date(Date.now() + 1))
-  @MaxDate(new Date(Date.now() + maxCampaignDurationInMs))
+  //@MinDate(new Date(Date.now() + 1))
+  //@MaxDate(new Date(Date.now() + maxCampaignDurationInMs))
   @Type(() => Date)
   endDate: Date;
 
@@ -51,5 +47,8 @@ export class CreateCampaignDto {
   goal: TokenAmount[];
 
   @IsOptional()
-  status: CampaignStatus;
+  status: string; // FIXME does it make sense to have a string when a object id is set?
+
+  @IsOptional()
+  onchainId: string;
 }

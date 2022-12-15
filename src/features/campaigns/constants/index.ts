@@ -10,4 +10,6 @@ export const campaignFieldsToModify = [
   'story',
   'image',
   'video',
+  'status',
+  'onchainId',
 ];

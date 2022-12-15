@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -36,17 +40,29 @@ export class CampaignsMongoRepository {
     return campaing;
   }
 
+  /*
+   Finds campaign based on contract event, considering
+    - Same creator address
+    - Same goal
+    - Same start and end date
+    - Pending status
+    - Sorted by created at asc
+    This way, if a user creates N campaings with the same parameters, are processed secuentially.
+   */
   async findByLaunchEvent(
     ownerId: string,
     amount: string,
     startDate: string,
     endDate: string,
+    tokenAddress: string,
   ) {
+    // TODO Search object id by active text
     const campaing = await this.campaignModel
       .findOne({
         owner: ownerId,
+        status: '638749e585e016f7996e492f', // FIXME
         'goal.amount': amount,
-        'goal.token': '638749e585e016f7996e493b', //FIXME change to use the address
+        'goal.token': tokenAddress,
         //startDate: startDate, // FIXME 1970-07-13T03:08:01.123Z, should we store timestamps?
       })
       .sort({ created: 'ascending' });
@@ -63,7 +79,7 @@ export class CampaignsMongoRepository {
     pendingStatusId: string;
     generalCategoryId: string;
   }) {
-    // TODO: Assign logged in user
+    // FIXME: Assign logged in user
     const owner = '634dd92c34361cf5a21fb96b';
 
     const {
@@ -112,12 +128,17 @@ export class CampaignsMongoRepository {
     // TODO: Move to utils
     for (const [key, value] of Object.entries(updateCampaignDto)) {
       if (campaignFieldsToModify.includes(key)) {
+        // FIXME this is error prone
         existingCampaign[key] = value;
+      } else {
+        throw new InternalServerErrorException(
+          'Trying to update an unaccepted campaign field: ',
+          key,
+        );
       }
     }
 
     await existingCampaign.save();
-
     return existingCampaign;
   }
 }

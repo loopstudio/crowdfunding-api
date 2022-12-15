@@ -69,13 +69,12 @@ export class EventsService
     contract: Contract,
     data: unknown,
   ) {
-    // TODO: Call features services to handle the event
     switch (event) {
       case CrowdfundingEvent.Launch:
         await this.campaignLaunchService.create(data);
     }
 
-    this.storeRawEvent(data, event);
+    this.storeRawEvent(data, event); //FIXME could process repetead events. storeRawEvent does not distinguish.
   }
 
   private async storeRawEvent(data: unknown, event: CrowdfundingEvent) {

@@ -15,7 +15,6 @@ import {
   pendingStatusCode,
   generalCategoryCode,
 } from '../../campaign-statuses/types/index';
-import { start } from 'repl';
 import { UsersRepository } from 'src/features/users/repositories/mongo/users.repository';
 
 @Injectable()
@@ -30,7 +29,6 @@ export class CampaignsService {
 
   async create(createCampaignDto: CreateCampaignDto) {
     const { goal } = createCampaignDto;
-
     const tokenAddresses = goal.map((tokenGoal) => {
       return tokenGoal.tokenAddress as unknown as string;
     });
@@ -78,19 +76,12 @@ export class CampaignsService {
     return { campaign };
   }
 
-  /*
-   Finds campaign based on contract event, considering
-    - Same creator address
-    - Same goal
-    - Same start and end date
-    - Sorted by created at asc
-    This way, if a user creates N campaings with the same parameters, are processed secuentially.
-   */
   async findByLaunchEvent(
     address: string,
     goal: string,
     startDate: string,
     endDate: string,
+    tokenAddress: string,
   ) {
     const user = await this.usersMongoRepository.findByAddress(address);
     if (!user) {
@@ -104,6 +95,7 @@ export class CampaignsService {
       goal,
       startDate,
       endDate,
+      tokenAddress,
     );
 
     return { campaign }; //TODO why this?
