@@ -20,7 +20,7 @@ import {
   CampaignPledge,
   CampaignPledgeSchema,
 } from './schemas/campaign-pledge.schema';
-import { UsersRepository } from '../users/repositories/mongo/users.repository';
+import { UsersRepository } from '../users/repositories/users/mongo/users.repository';
 import { UsersModule } from '../users/users.module';
 import { User, UserSchema } from '../users/schemas/user.schema';
 

@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 
 import {
   CampaignPledge,
   CampaignPledgeDocument,
 } from '../../schemas/campaign-pledge.schema';
-import { User } from 'src/features/users/schemas/user.schema';
-import { Campaign } from '../../schemas/campaign.schema';
-import { Token } from 'src/features/tokens/schemas/token.schema';
 
 @Injectable()
 export class CampaignPledgeMongoRepository {
@@ -18,20 +15,20 @@ export class CampaignPledgeMongoRepository {
   ) {}
 
   async create({
-    campaign,
-    user,
-    token,
+    campaignId,
+    userId,
+    tokenId,
     amount,
   }: {
-    user: User;
-    campaign: Campaign;
-    token: Token;
+    userId: ObjectId;
+    campaignId: ObjectId;
+    tokenId: ObjectId;
     amount: string;
   }) {
     return await this.campaignPledgeModel.create({
-      campaign,
-      user,
-      token,
+      campaign: campaignId,
+      user: userId,
+      token: tokenId,
       amount,
       date: new Date(),
     });

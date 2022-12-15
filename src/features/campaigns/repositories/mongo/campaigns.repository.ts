@@ -5,7 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
 import { campaignFieldsToModify, movementType } from '../../constants';
@@ -152,7 +153,7 @@ export class CampaignsMongoRepository {
     action,
   }: {
     campaignId: string;
-    amountToChange: string;
+    amountToChange: BigNumber;
     tokenAddress: string;
     action: movementType;
   }): Promise<void> {
@@ -168,8 +169,8 @@ export class CampaignsMongoRepository {
 
       campaign.currentAmount[tokenIndex].amount =
         action === 'INCREASE'
-          ? currentValue.add(amountToChange).toString()
-          : currentValue.sub(amountToChange).toString();
+          ? formatEther(currentValue.add(amountToChange))
+          : formatEther(currentValue.sub(amountToChange));
 
       await campaign.save();
     }
