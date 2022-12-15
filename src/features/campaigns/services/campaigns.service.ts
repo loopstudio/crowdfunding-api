@@ -16,7 +16,7 @@ import {
   generalCategoryCode,
 } from '../../campaign-statuses/types/index';
 import { start } from 'repl';
-import { UsersRepository } from 'src/features/users/repositories/mongo/users.repository';
+import { UsersRepository } from 'src/features/users/repositories/users/mongo/users.repository';
 
 @Injectable()
 export class CampaignsService {

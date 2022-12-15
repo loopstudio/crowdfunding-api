@@ -27,4 +27,9 @@ export class TokensService {
     const token = this.tokenRepository.getByAddress(address);
     return token;
   }
+
+  async getByDefault(): Promise<Token> {
+    const token = this.tokenRepository.getByDefault();
+    return token;
+  }
 }

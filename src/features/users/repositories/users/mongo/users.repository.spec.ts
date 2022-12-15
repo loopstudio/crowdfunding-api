@@ -5,8 +5,8 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 import { UsersRepository } from './users.repository';
-import { User } from '../../schemas/user.schema';
-import { createUserDTO, mongoBuiltUser } from '../../tests/mocks';
+import { User } from '../../../schemas/user.schema';
+import { createUserDTO, mongoBuiltUser } from '../../../tests/mocks';
 
 describe('UsersRepository', () => {
   let usersRepository: UsersRepository;

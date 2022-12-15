@@ -5,6 +5,10 @@ import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { UsersService } from 'src/features/users/services/users.service';
 import { CampaignPledgeMongoRepository } from '../repositories/mongo/campaign-pledge.repository';
 import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
+import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
+import { UserDocument } from 'src/features/users/schemas/user.schema';
+import { CampaignDocument } from '../schemas/campaign.schema';
+import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/user-campaigns.repository';
 
 @Injectable()
 export class CampaignPledgeService {
@@ -16,6 +20,7 @@ export class CampaignPledgeService {
     private readonly tokensService: TokensService,
     private readonly campaignPledgeMongoRepository: CampaignPledgeMongoRepository,
     private readonly campaignMongoRepository: CampaignsMongoRepository,
+    private readonly userCampaignsMongoRepository: UserCampaignsRepository,
   ) {}
 
   async create(eventData: unknown) {
@@ -23,41 +28,60 @@ export class CampaignPledgeService {
       throw new Error('Event data is corrupted');
     }
 
-    const [campaignId, userAddress, amount] = eventData;
+    const [onchainId, userAddress, amount] = eventData;
+    const { campaign, user, token } = await this.getMetadata({
+      onchainId,
+      userAddress,
+    });
 
-    const { campaign } = await this.campaignService.findOne(campaignId);
-    if (!campaign) {
-      throw new Error('No associated campaing');
-    }
-
-    const user = await this.usersService.findUserByAddress(userAddress);
-    if (!user) {
-      throw new Error('No associated user');
-    }
-
-    // TODO: how to get token address?
-    const tokenAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-    const token = await this.tokensService.getByAddress(tokenAddress);
-    if (!token) {
-      throw new Error('No associated token');
-    }
-
-    await this.campaignPledgeMongoRepository.create({
-      campaign,
-      user,
-      token,
+    const savedPledge = await this.campaignPledgeMongoRepository.create({
+      campaignId: campaign._id,
+      userId: user._id,
+      tokenId: token._id,
       amount,
     });
 
-    // TODO: Update Campaign document
-    // await this.campaignMongoRepository.updateTokenAmount({
-    //   campaignId,
-    //   amountToChange: amount,
-    //   tokenAddress,
-    //   action: 'INCREASE',
-    // });
+    await this.campaignMongoRepository.updateTokenAmount({
+      campaignId: onchainId,
+      amountToChange: amount,
+      tokenAddress: token.address,
+      action: 'INCREASE',
+    });
 
-    // TODO: Update UserCampaign document
-    // TODO: This document should be created when launching the campaign
+    await this.userCampaignsMongoRepository.updateUserCampaign({
+      campaign,
+      user,
+      token,
+      pledge: savedPledge,
+    });
+  }
+
+  private async getMetadata({
+    onchainId,
+    userAddress,
+  }: {
+    onchainId: string;
+    userAddress: string;
+  }): Promise<{
+    campaign: CampaignDocument;
+    user: UserDocument;
+    token: TokenDocument;
+  }> {
+    const promises = [
+      this.campaignService.findOne(onchainId),
+      this.usersService.findUserByAddress(userAddress),
+      this.tokensService.getByDefault(),
+    ];
+
+    const promiseResults = await Promise.all<unknown>(promises);
+    if (promiseResults.some((result) => !result)) {
+      throw new Error('No metadata associated');
+    }
+
+    const { campaign } = promiseResults[0] as { campaign: CampaignDocument };
+    const user = promiseResults[1] as UserDocument;
+    const token = promiseResults[2] as TokenDocument;
+
+    return { campaign, user, token };
   }
 }
