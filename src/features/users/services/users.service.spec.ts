@@ -15,6 +15,7 @@ describe('UsersService', () => {
           provide: UsersRepository,
           useValue: {
             createUser: jest.fn().mockResolvedValue(mongoBuiltUser),
+            findByAddress: jest.fn().mockResolvedValue(mongoBuiltUser),
           },
         },
       ],
@@ -30,6 +31,16 @@ describe('UsersService', () => {
   describe('createUser method', () => {
     it('should call createUser usersRepository method', async () => {
       const response = await usersService.createUser(createUserDTO);
+
+      expect(response).toStrictEqual(mongoBuiltUser);
+    });
+  });
+
+  describe('findUserByAddress method', () => {
+    it('should call findUserByAddress usersRepository method', async () => {
+      const response = await usersService.findUserByAddress(
+        createUserDTO.publicAddress,
+      );
 
       expect(response).toStrictEqual(mongoBuiltUser);
     });
