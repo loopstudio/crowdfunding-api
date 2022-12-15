@@ -6,11 +6,11 @@ import { formatEther, parseEther } from 'ethers/lib/utils';
 import { CampaignPledgeDocument } from 'src/features/campaigns/schemas/campaign-pledge.schema';
 import { CampaignDocument } from 'src/features/campaigns/schemas/campaign.schema';
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
-import { UserDocument } from '../../schemas/user.schema';
+import { UserDocument } from 'src/features/users/schemas/user.schema';
 import {
   UserCampaign,
   UserCampaignDocument,
-} from '../../schemas/user-campaign.schema';
+} from 'src/features/users/schemas/user-campaign.schema';
 
 @Injectable()
 export class UserCampaignsRepository {
@@ -46,7 +46,7 @@ export class UserCampaignsRepository {
 
       await existingUserCampaign.save();
     } else {
-      const newUserCampaign = this.userCampaignModel.create({
+      const newUserCampaign = await this.userCampaignModel.create({
         campaign: campaign._id,
         user: user._id,
         token: token._id,
@@ -60,7 +60,7 @@ export class UserCampaignsRepository {
         refunds: [],
       });
 
-      await (await newUserCampaign).save();
+      await newUserCampaign.save();
     }
   }
 }
