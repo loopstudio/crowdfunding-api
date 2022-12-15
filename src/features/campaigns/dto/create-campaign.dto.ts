@@ -22,11 +22,13 @@ export class CreateCampaignDto {
   story = '';
 
   @IsDefined()
+  // FIXME
   //@MinDate(new Date(Date.now()))
   @Type(() => Date)
   startDate: Date;
 
   @IsDefined()
+  // FIXME
   //@MinDate(new Date(Date.now() + 1))
   //@MaxDate(new Date(Date.now() + maxCampaignDurationInMs))
   @Type(() => Date)
