@@ -42,6 +42,7 @@ export class CampaignLaunchService {
       const activeStatus = await this.campaignStatusRepository.getStatusByCode(
         activeStatusCode,
       );
+
       const updateStatusDto: UpdateCampaignDto = {
         status: activeStatus._id,
         onchainId: eventData[0],
