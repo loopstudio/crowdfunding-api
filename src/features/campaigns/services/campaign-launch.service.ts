@@ -4,6 +4,8 @@ import {
   InternalServerErrorException,
   Logger,
 } from '@nestjs/common';
+import { CampaignStatusRepository } from 'src/features/campaign-statuses/repositories/mongo/campaign-status.repository';
+import { activeStatusCode } from 'src/features/campaign-statuses/types';
 import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { CampaignLaunchMongoRepository } from '../repositories/mongo/campaign-launch.repository';
@@ -15,24 +17,33 @@ export class CampaignLaunchService {
   constructor(
     private readonly campaignService: CampaignsService,
     private readonly campaignLaunchMongoRepository: CampaignLaunchMongoRepository,
+    private readonly campaignStatusRepository: CampaignStatusRepository,
   ) {}
 
   async create(eventData: unknown) {
-    console.log('----> Event data ', eventData);
+    if (!Array.isArray(eventData)) {
+      throw new Error('Event data is corrupted');
+    }
+
+    const [onchainId, goal, creator, startDate, endDate] = eventData;
+    this.logger
+      .log(`Processing launch event. onchainId ${onchainId}, goal: ${goal}, 
+    creator: ${creator}, startDate: ${startDate}, endDate: ${endDate},`);
+
     // FIXME add succesful and error logs
     try {
+      // FIXME discuss dates. Dats are not stored ... trazability?
       const pendingCampaign = await this.campaignService.findByLaunchEvent(
-        //FIXME what if is already Active? It should be pending
-        //FIXME use right values
-        '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
-        '100',
-        '16686381555', //FIXME
-        '16686481123', //FIXME
-        '638749e585e016f7996e493b', // FIXME use token address not token id. Depends on https://github.com/loopstudio/crowdfunding-api/pull/13
+        creator,
+        goal,
+        '638749e585e016f7996e493b', // FIXME use get by default
       );
 
+      const activeStatus = await this.campaignStatusRepository.getStatusByCode(
+        activeStatusCode,
+      );
       const updateStatusDto: UpdateCampaignDto = {
-        status: '638749e585e016f7996e4930', // FIXME use object id?
+        status: activeStatus._id,
         onchainId: eventData[0],
       };
 
@@ -45,8 +56,6 @@ export class CampaignLaunchService {
         pendingCampaign.campaign.id,
         eventData[0],
       );
-
-      // TODO al recibir la cam
     } catch (err) {
       if (err.status === HttpStatus.NOT_FOUND) {
         const errorMsg =

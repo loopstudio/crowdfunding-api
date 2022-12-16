@@ -76,13 +76,7 @@ export class CampaignsService {
     return { campaign };
   }
 
-  async findByLaunchEvent(
-    address: string,
-    goal: string,
-    startDate: string,
-    endDate: string,
-    tokenAddress: string,
-  ) {
+  async findByLaunchEvent(address: string, goal: string, tokenAddress: string) {
     const user = await this.usersMongoRepository.findByAddress(address);
     if (!user) {
       throw new NotFoundException(
@@ -90,15 +84,23 @@ export class CampaignsService {
         address,
       );
     }
+    const pendingStatus = await this.campaignStatusService.getStatusByCode(
+      pendingStatusCode,
+    );
+    if (!pendingStatus) {
+      throw new NotFoundException(
+        'Pending status not found when processing launch event',
+      );
+    }
+
     const campaign = await this.campaignsMongoRepository.findByLaunchEvent(
       user._id,
       goal,
-      startDate,
-      endDate,
       tokenAddress,
+      pendingStatus._id,
     );
 
-    return { campaign }; //TODO why this?
+    return { campaign };
   }
 
   async update({

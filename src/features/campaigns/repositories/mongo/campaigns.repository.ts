@@ -44,26 +44,25 @@ export class CampaignsMongoRepository {
    Finds campaign based on contract event, considering
     - Same creator address
     - Same goal
-    - Same start and end date
     - Pending status
     - Sorted by created at asc
     This way, if a user creates N campaings with the same parameters, are processed secuentially.
+    TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This 
+    _id could be emmited on Launch event to map the correct campaign
    */
   async findByLaunchEvent(
     ownerId: string,
     amount: string,
-    startDate: string,
-    endDate: string,
     tokenAddress: string,
+    pendingStatusId: string,
   ) {
     // TODO Search object id by active text
     const campaing = await this.campaignModel
       .findOne({
         owner: ownerId,
-        status: '638749e585e016f7996e492f', // FIXME
+        status: pendingStatusId,
         'goal.amount': amount,
         'goal.token': tokenAddress,
-        //startDate: startDate, // FIXME 1970-07-13T03:08:01.123Z, should we store timestamps?
       })
       .sort({ created: 'ascending' });
 
@@ -128,7 +127,6 @@ export class CampaignsMongoRepository {
     // TODO: Move to utils
     for (const [key, value] of Object.entries(updateCampaignDto)) {
       if (campaignFieldsToModify.includes(key)) {
-        // FIXME this is error prone
         existingCampaign[key] = value;
       } else {
         throw new InternalServerErrorException(
