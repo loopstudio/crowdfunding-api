@@ -8,7 +8,7 @@ import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.reposi
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
 import { UserDocument } from 'src/features/users/schemas/user.schema';
 import { CampaignDocument } from '../schemas/campaign.schema';
-import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/user-campaigns.repository';
+import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 
 @Injectable()
 export class CampaignPledgeService {

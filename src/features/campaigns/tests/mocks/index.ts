@@ -1,3 +1,7 @@
+const onchainId = 1;
+const userAddress = '0xBB9bc244D798123fDe783fCc1C72d3Bb8C189123';
+const amount = 1;
+
 export const mongoBuiltCampaign = {
   _id: '6367be0422ca99a33946949b',
   title: 'My campaign',
@@ -95,4 +99,39 @@ export const updateCampaignDtoMock = {
   story: 'This is the long short story: We need the money updated ',
   image: 'updatedImage.png',
   video: 'updatedVideo.mp4',
+};
+
+export const campaignPledgeArgumentMock = [onchainId, userAddress, amount];
+
+export const userMock = {
+  username: 'rcargnelutti',
+  email: 'rcargnelutti@loopstudio.dev',
+  nonce: 721102917354423900,
+  publicAddress: '0xD890357F631d209FB3eFabc116cE211111111111',
+  _id: '634f3292a486274ca2f3d47f',
+  created: '2022-10-18T23:11:14.611Z',
+  updated: '2022-10-18T23:11:14.611Z',
+  __v: 0,
+};
+
+export const tokenMock = {
+  _id: '63611e69143b8def9c4843dd',
+  name: 'LoopToken',
+  symbol: 'LT',
+  address: '0xBB9bc244D798123fDe783fCc1C72d3Bb8C189123',
+  created: '2022-11-01T13:26:01.032+0000',
+  updated: '2022-11-01T13:26:01.032+0000',
+  __v: 0,
+};
+
+export const campaignPledgeMock = {
+  _id: '639b969369bed1e35eeca7a5',
+  campaign: '638e605ab710197625b571be',
+  user: '634dd92c34361cf5a21fb96b',
+  token: '63611e69143b8def9c4843dd',
+  amount: '1000000000000000000',
+  date: '2022-12-15T21:50:11.066+0000',
+  created: '2022-12-15T21:50:11.072+0000',
+  updated: '2022-12-15T21:50:11.072+0000',
+  __v: 0,
 };
