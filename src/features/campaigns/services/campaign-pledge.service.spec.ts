@@ -1,25 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException } from '@nestjs/common';
 
 import { CampaignsService } from './campaigns.service';
 import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
-import { CampaignCategoriesService } from 'src/features/campaign-categories/services/campaign-category.service';
-import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
 import {
   campaignPledgeArgumentMock,
   campaignPledgeMock,
-  createCampaignDtoMock,
-  mongoBuiltCampaign,
-  mongoBuiltUpdatedCampaign,
   tokenMock,
-  updateCampaignDtoMock,
   userMock,
 } from '../tests/mocks';
-import { mongoBuiltCampaingStatus } from 'src/features/campaign-statuses/tests/mocks';
-import { mongoBuiltCampaingCategory } from 'src/features/campaign-categories/tests/mocks';
 import { UsersService } from 'src/features/users/services/users.service';
 import { CampaignPledgeMongoRepository } from '../repositories/mongo/campaign-pledge.repository';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
