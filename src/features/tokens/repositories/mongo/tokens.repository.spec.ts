@@ -7,6 +7,7 @@ import { Model } from 'mongoose';
 import { TokenRepository } from './tokens.repository';
 import { Token } from '../../schemas/token.schema';
 import { mongoBuiltToken } from '../../tests/mocks';
+import { createUserDTO } from 'src/features/users/tests/mocks';
 
 describe('Token Repository', () => {
   let tokensRepository: TokenRepository;
@@ -22,9 +23,9 @@ describe('Token Repository', () => {
           provide: getModelToken(Token.name),
           useValue: {
             findById: jest.fn(),
+            findOne: jest.fn(),
             lean: jest.fn(),
             find: jest.fn(),
-            findOne: jest.fn(),
           },
         },
       ],
@@ -51,7 +52,10 @@ describe('Token Repository', () => {
         lean: jest.fn().mockResolvedValue(mongoBuiltToken),
       } as any);
 
-      const response = await tokensRepository.getByAddress(tokenId);
+      const response = await tokensRepository.getByAddress(
+        createUserDTO.publicAddress,
+      );
+
       expect(response).toStrictEqual(mongoBuiltToken);
     });
   });
@@ -62,6 +66,18 @@ describe('Token Repository', () => {
 
       const response = await tokensRepository.findAll();
       expect(response).toStrictEqual([mongoBuiltToken]);
+    });
+  });
+
+  describe('getByDefault method', () => {
+    it('should call getByDefault method without errors', async () => {
+      jest.spyOn(tokenModel, 'findOne').mockReturnValue({
+        lean: jest.fn().mockResolvedValue(mongoBuiltToken),
+      } as any);
+
+      const response = await tokensRepository.getByDefault();
+
+      expect(response).toStrictEqual(mongoBuiltToken);
     });
   });
 });

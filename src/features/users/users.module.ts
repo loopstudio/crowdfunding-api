@@ -5,7 +5,7 @@ import { User, UserSchema } from './schemas/user.schema';
 import { UsersController } from './controllers/users.controller';
 import { UsersService } from './services/users.service';
 import { UsersRepository } from './repositories/users/mongo/users.repository';
-import { UserCampaignsRepository } from './repositories/user-campaigns/user-campaigns.repository';
+import { UserCampaignsRepository } from './repositories/user-campaigns/mongo/user-campaigns.repository';
 import {
   UserCampaign,
   UserCampaignSchema,
