@@ -7,14 +7,9 @@ import { Token } from '../schemas/token.schema';
 export class TokensService {
   constructor(private tokenRepository: TokenRepository) {}
 
-  private async getById(id: string): Promise<Token> {
-    const token = await this.tokenRepository.getById(id);
-    return token;
-  }
-
-  async areTokensValid(ids: string[]): Promise<boolean> {
-    const tokenPromises = ids.map((tokenId) => {
-      return this.getById(tokenId);
+  async areTokensValid(addresses: string[]): Promise<boolean> {
+    const tokenPromises = addresses.map((tokenAddress) => {
+      return this.tokenRepository.getByAddress(tokenAddress);
     });
 
     const tokens = await Promise.all(tokenPromises);
@@ -31,5 +26,10 @@ export class TokensService {
   async getByDefault(): Promise<Token> {
     const token = this.tokenRepository.getByDefault();
     return token;
+  }
+
+  async findAll() {
+    const tokens = await this.tokenRepository.findAll();
+    return { tokens };
   }
 }

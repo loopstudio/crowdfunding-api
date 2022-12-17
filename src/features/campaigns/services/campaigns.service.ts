@@ -15,7 +15,6 @@ import {
   pendingStatusCode,
   generalCategoryCode,
 } from '../../campaign-statuses/types/index';
-import { start } from 'repl';
 import { UsersRepository } from 'src/features/users/repositories/users/mongo/users.repository';
 
 @Injectable()
@@ -30,11 +29,12 @@ export class CampaignsService {
 
   async create(createCampaignDto: CreateCampaignDto) {
     const { goal } = createCampaignDto;
-
-    const tokensIds = goal.map((tokenGoal) => {
-      return tokenGoal.token as unknown as string;
+    const tokenAddresses = goal.map((tokenGoal) => {
+      return tokenGoal.tokenAddress as unknown as string;
     });
-    const areTokensValid = await this.tokensService.areTokensValid(tokensIds);
+    const areTokensValid = await this.tokensService.areTokensValid(
+      tokenAddresses,
+    );
     if (!areTokensValid) {
       throw new BadRequestException();
     }
@@ -76,20 +76,7 @@ export class CampaignsService {
     return { campaign };
   }
 
-  /*
-   Finds campaign based on contract event, considering
-    - Same creator address
-    - Same goal
-    - Same start and end date
-    - Sorted by created at asc
-    This way, if a user creates N campaings with the same parameters, are processed secuentially.
-   */
-  async findByLaunchEvent(
-    address: string,
-    goal: string,
-    startDate: string,
-    endDate: string,
-  ) {
+  async findByLaunchEvent(address: string, goal: string, tokenAddress: string) {
     const user = await this.usersMongoRepository.findByAddress(address);
     if (!user) {
       throw new NotFoundException(
@@ -97,14 +84,23 @@ export class CampaignsService {
         address,
       );
     }
+    const pendingStatus = await this.campaignStatusService.getStatusByCode(
+      pendingStatusCode,
+    );
+    if (!pendingStatus) {
+      throw new NotFoundException(
+        'Pending status not found when processing launch event',
+      );
+    }
+
     const campaign = await this.campaignsMongoRepository.findByLaunchEvent(
       user._id,
       goal,
-      startDate,
-      endDate,
+      tokenAddress,
+      pendingStatus._id,
     );
 
-    return { campaign }; //TODO why this?
+    return { campaign };
   }
 
   async update({

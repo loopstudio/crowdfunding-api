@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BigNumber, ethers } from 'ethers';
@@ -38,18 +42,29 @@ export class CampaignsMongoRepository {
     return campaing;
   }
 
+  /*
+   Finds campaign based on contract event, considering
+    - Same creator address
+    - Same goal
+    - Pending status
+    - Sorted by created at asc
+    This way, if a user creates N campaings with the same parameters, are processed secuentially.
+    TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This 
+    _id could be emmited on Launch event to map the correct campaign
+   */
   async findByLaunchEvent(
     ownerId: string,
     amount: string,
-    startDate: string,
-    endDate: string,
+    tokenAddress: string,
+    pendingStatusId: string,
   ) {
+    // TODO Search object id by active text
     const campaing = await this.campaignModel
       .findOne({
         owner: ownerId,
+        status: pendingStatusId,
         'goal.amount': amount,
-        'goal.token': '638749e585e016f7996e493b', //FIXME change to use the address
-        //startDate: startDate, // FIXME 1970-07-13T03:08:01.123Z, should we store timestamps?
+        'goal.token': tokenAddress,
       })
       .sort({ created: 'ascending' });
 
@@ -65,7 +80,7 @@ export class CampaignsMongoRepository {
     pendingStatusId: string;
     generalCategoryId: string;
   }) {
-    // TODO: Assign logged in user
+    // FIXME: Assign logged in user
     const owner = '634dd92c34361cf5a21fb96b';
 
     const {
@@ -75,7 +90,7 @@ export class CampaignsMongoRepository {
     } = createCampaignData;
 
     const currentAmount = goal.map((tokenAmount) => ({
-      token: tokenAmount.token,
+      token: tokenAmount.tokenAddress,
       amount: 0,
     }));
 
@@ -115,11 +130,15 @@ export class CampaignsMongoRepository {
     for (const [key, value] of Object.entries(updateCampaignDto)) {
       if (campaignFieldsToModify.includes(key)) {
         existingCampaign[key] = value;
+      } else {
+        throw new InternalServerErrorException(
+          'Trying to update an unaccepted campaign field: ',
+          key,
+        );
       }
     }
 
     await existingCampaign.save();
-
     return existingCampaign;
   }
 

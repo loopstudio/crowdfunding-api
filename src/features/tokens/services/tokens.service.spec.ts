@@ -23,6 +23,7 @@ describe('Token Service', () => {
             getById: jest.fn(),
             getByDefault: jest.fn(),
             getByAddress: jest.fn(),
+            findAll: jest.fn(),
           },
         },
       ],
@@ -40,7 +41,9 @@ describe('Token Service', () => {
 
   describe('areTokensValid method', () => {
     it('should call areTokensValid without errors', async () => {
-      jest.spyOn(tokenRepository, 'getById').mockResolvedValue(mongoBuiltToken);
+      jest
+        .spyOn(tokenRepository, 'getByAddress')
+        .mockResolvedValue(mongoBuiltToken);
 
       const response = await tokenService.areTokensValid([tokenId]);
 
@@ -71,6 +74,19 @@ describe('Token Service', () => {
       const response = await tokenService.getByDefault();
 
       expect(response).toStrictEqual(mongoBuiltToken);
+    });
+  });
+
+  describe('findAll method', () => {
+    it('should call findAll and return an array of tokens', async () => {
+      jest
+        .spyOn(tokenRepository, 'findAll')
+        .mockResolvedValue([mongoBuiltToken] as any);
+
+      const response = await tokenService.findAll();
+
+      expect(response).toStrictEqual({ tokens: [mongoBuiltToken] });
+      expect(tokenRepository.findAll).toBeCalled();
     });
   });
 });

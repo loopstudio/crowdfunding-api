@@ -10,6 +10,8 @@ export const campaignFieldsToModify = [
   'story',
   'image',
   'video',
+  'status',
+  'onchainId',
 ];
 
 export type movementType = 'INCREASE' | 'DECREASE';

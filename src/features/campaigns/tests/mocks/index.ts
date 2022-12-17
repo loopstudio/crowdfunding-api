@@ -18,14 +18,14 @@ export const mongoBuiltCampaign = {
   goal: [
     {
       amount: '0',
-      token: '63611e69143b8def9c4843dd',
+      tokenAddress: '63611e69143b8def9c4843dd',
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      token: '63611e69143b8def9c4843dd',
+      tokenAddress: '63611e69143b8def9c4843dd',
       _id: '6367be0422ca99a33946949d',
     },
   ],
@@ -53,14 +53,14 @@ export const mongoBuiltUpdatedCampaign = {
   goal: [
     {
       amount: '0',
-      token: '63611e69143b8def9c4843dd',
+      tokenAddress: '63611e69143b8def9c4843dd',
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      token: '63611e69143b8def9c4843dd',
+      tokenAddress: '63611e69143b8def9c4843dd',
       _id: '6367be0422ca99a33946949d',
     },
   ],
@@ -82,15 +82,13 @@ export const createCampaignDtoMock = {
   video: 'video.mp4',
   goal: [
     {
-      token: '63611e69143b8def9c4843dd',
+      tokenAddress: '63611e69143b8def9c4843dd',
       amount: '100',
     },
   ],
   category: '63611e69143b8def9c4843d9',
-  status: {
-    name: 'Pending',
-    code: 'pending',
-  },
+  status: '',
+  onchainId: '',
 };
 
 export const updateCampaignDtoMock = {

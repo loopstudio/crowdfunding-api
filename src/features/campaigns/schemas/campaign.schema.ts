@@ -12,8 +12,8 @@ export class TokenAmount {
   @Prop()
   amount: string;
 
-  @Prop()
-  token: string;
+  @Prop({})
+  tokenAddress: string;
 }
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
