@@ -6,7 +6,7 @@ import { Model, ObjectId } from 'mongoose';
 
 import { CampaignPledgeMongoRepository } from './campaign-pledge.repository';
 import { CampaignPledge } from '../../schemas/campaign-pledge.schema';
-import { campaignPledgeMock, mongoBuiltCampaign } from '../../tests/mocks';
+import { campaignPledgeMock } from '../../tests/mocks';
 
 describe('Campaign Statuses Repository', () => {
   let campaignPledgeRepository: CampaignPledgeMongoRepository;
@@ -58,7 +58,7 @@ describe('Campaign Statuses Repository', () => {
         amount,
       });
 
-      expect(response).toStrictEqual([mongoBuiltCampaign]);
+      expect(response).toStrictEqual(campaignPledgeMock);
     });
   });
 });

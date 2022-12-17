@@ -83,9 +83,7 @@ describe('Campaign Statuses Repository', () => {
 
   describe('findOne method', () => {
     it('should call findOne and throw NotFoundException', async () => {
-      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
-        lean: jest.fn().mockResolvedValue(null),
-      } as any);
+      jest.spyOn(campaignModel, 'findOne').mockResolvedValue(null);
 
       await expect(
         campaignsRepository.findOne(campaignId),
@@ -93,9 +91,9 @@ describe('Campaign Statuses Repository', () => {
     });
 
     it('should call findAll and return related campaign', async () => {
-      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
-        lean: jest.fn().mockResolvedValue(mongoBuiltCampaign),
-      } as any);
+      jest
+        .spyOn(campaignModel, 'findOne')
+        .mockResolvedValue(mongoBuiltCampaign);
 
       const response = await campaignsRepository.findOne(campaignId);
 
