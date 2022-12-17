@@ -49,7 +49,7 @@ export class CampaignsMongoRepository {
     - Pending status
     - Sorted by created at asc
     This way, if a user creates N campaings with the same parameters, are processed secuentially.
-    TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This 
+    TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This
     _id could be emmited on Launch event to map the correct campaign
    */
   async findByLaunchEvent(
@@ -155,7 +155,7 @@ export class CampaignsMongoRepository {
   }): Promise<void> {
     const campaign = await this.findOne(campaignId);
     const tokenIndex = campaign.currentAmount.findIndex(
-      (token) => token.token === tokenAddress,
+      (token) => token.tokenAddress === tokenAddress,
     );
 
     if (tokenIndex >= 0) {
