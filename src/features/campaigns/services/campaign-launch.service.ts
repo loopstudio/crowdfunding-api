@@ -7,6 +7,8 @@ import {
 import { CampaignStatusRepository } from 'src/features/campaign-statuses/repositories/mongo/campaign-status.repository';
 import { activeStatusCode } from 'src/features/campaign-statuses/types';
 import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
+import { TokenRepository } from 'src/features/tokens/repositories/mongo/tokens.repository';
+import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { CampaignLaunchMongoRepository } from '../repositories/mongo/campaign-launch.repository';
 
@@ -18,25 +20,26 @@ export class CampaignLaunchService {
     private readonly campaignService: CampaignsService,
     private readonly campaignLaunchMongoRepository: CampaignLaunchMongoRepository,
     private readonly campaignStatusRepository: CampaignStatusRepository,
+    private readonly tokenRepository: TokenRepository,
   ) {}
 
   async create(eventData: unknown) {
     if (!Array.isArray(eventData)) {
       throw new Error('Event data is corrupted');
     }
-
     const [onchainId, goal, creator, startDate, endDate] = eventData;
     this.logger
       .log(`Processing launch event. onchainId ${onchainId}, goal: ${goal}, 
     creator: ${creator}, startDate: ${startDate}, endDate: ${endDate},`);
-
-    // FIXME add succesful and error logs
     try {
-      // FIXME discuss dates. Dats are not stored ... trazability?
+      const token =
+        (await this.tokenRepository.getByDefault()) as TokenDocument; // FIXME can we make standard the promises returned by the repositories? Documents?
       const pendingCampaign = await this.campaignService.findByLaunchEvent(
         creator,
         goal,
-        '638749e585e016f7996e493b', // FIXME use get by default
+        token._id,
+        startDate,
+        endDate,
       );
 
       const activeStatus = await this.campaignStatusRepository.getStatusByCode(
@@ -45,7 +48,7 @@ export class CampaignLaunchService {
 
       const updateStatusDto: UpdateCampaignDto = {
         status: activeStatus._id,
-        onchainId: eventData[0],
+        onchainId,
       };
 
       await this.campaignService.update({
@@ -55,8 +58,12 @@ export class CampaignLaunchService {
 
       await this.campaignLaunchMongoRepository.create(
         pendingCampaign.campaign.id,
-        eventData[0],
+        onchainId,
       );
+
+      this.logger
+        .log(`Succesfuly processed launch event. onchainId ${onchainId}, goal: ${goal}, 
+    creator: ${creator}, startDate: ${startDate}, endDate: ${endDate},`);
     } catch (err) {
       if (err.status === HttpStatus.NOT_FOUND) {
         const errorMsg =

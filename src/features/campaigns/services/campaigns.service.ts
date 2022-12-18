@@ -76,7 +76,13 @@ export class CampaignsService {
     return { campaign };
   }
 
-  async findByLaunchEvent(address: string, goal: string, tokenAddress: string) {
+  async findByLaunchEvent(
+    address: string,
+    goal: string,
+    tokenAddress: string,
+    startDate: string,
+    endDate: string,
+  ) {
     const user = await this.usersMongoRepository.findByAddress(address);
     if (!user) {
       throw new NotFoundException(
@@ -98,6 +104,8 @@ export class CampaignsService {
       goal,
       tokenAddress,
       pendingStatus._id,
+      startDate,
+      endDate,
     );
 
     return { campaign };
