@@ -49,7 +49,7 @@ export class CreateCampaignDto {
   goal: TokenAmount[];
 
   @IsOptional()
-  status: string; // FIXME does it make sense to have a string when a object id is set?
+  status: string;
 
   @IsOptional()
   onchainId: string;

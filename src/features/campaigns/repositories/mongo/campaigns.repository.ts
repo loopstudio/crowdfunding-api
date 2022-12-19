@@ -59,7 +59,6 @@ export class CampaignsMongoRepository {
     startDate: string,
     endDate: string,
   ) {
-    // TODO Search object id by active text
     const campaing = await this.campaignModel
       .findOne({
         owner: ownerId,
@@ -97,7 +96,6 @@ export class CampaignsMongoRepository {
       amount: 0,
     }));
 
-    console.log('Creating campaign dates ', startDate, endDate);
     const campaign = await this.campaignModel.create({
       title,
       subtitle,
