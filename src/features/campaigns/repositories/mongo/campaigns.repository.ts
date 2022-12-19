@@ -65,8 +65,8 @@ export class CampaignsMongoRepository {
         status: pendingStatusId,
         'goal.amount': amount,
         'goal.token': tokenAddress,
-        startDate: new Date(Number(startDate) * 1000),
-        endDate: new Date(Number(endDate) * 1000),
+        startDate: new Date(Number(startDate)),
+        endDate: new Date(Number(endDate)),
       })
       .sort({ created: 'ascending' });
 
@@ -100,8 +100,8 @@ export class CampaignsMongoRepository {
       title,
       subtitle,
       story,
-      startDate: new Date(Number(startDate) * 1000), // FIXME talk with rena. Maybe the date conversion is worng on dto
-      endDate: new Date(Number(endDate) * 1000), // FIXME talk with rena
+      startDate: new Date(Number(startDate)), // FIXME talk with rena. Maybe the date conversion is worng on dto
+      endDate: new Date(Number(endDate)), // FIXME talk with rena
       image,
       video,
       status: pendingStatusId,
