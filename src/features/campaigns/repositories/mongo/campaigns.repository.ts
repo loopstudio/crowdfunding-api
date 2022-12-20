@@ -51,6 +51,7 @@ export class CampaignsMongoRepository {
     - Same creator address
     - Same goal
     - Pending status
+    = Start and end date
     - Sorted by created at asc
     This way, if a user creates N campaings with the same parameters, are processed secuentially.
     TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This
@@ -61,14 +62,17 @@ export class CampaignsMongoRepository {
     amount: string,
     tokenAddress: string,
     pendingStatusId: string,
+    startDate: string,
+    endDate: string,
   ) {
-    // TODO Search object id by active text
     const campaing = await this.campaignModel
       .findOne({
         owner: ownerId,
         status: pendingStatusId,
         'goal.amount': amount,
         'goal.token': tokenAddress,
+        startDate: new Date(Number(startDate)),
+        endDate: new Date(Number(endDate)),
       })
       .sort({ created: 'ascending' });
 
@@ -102,8 +106,8 @@ export class CampaignsMongoRepository {
       title,
       subtitle,
       story,
-      startDate,
-      endDate,
+      startDate: new Date(Number(startDate)), // FIXME talk with rena. Maybe the date conversion is worng on dto
+      endDate: new Date(Number(endDate)), // FIXME talk with rena
       image,
       video,
       status: pendingStatusId,

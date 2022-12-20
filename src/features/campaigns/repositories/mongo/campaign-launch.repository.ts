@@ -17,7 +17,7 @@ export class CampaignLaunchMongoRepository {
   async create(campaignId: string, onchainId: string) {
     return await this.campaignLaunchModel.create({
       campaign: campaignId,
-      onchainId: onchainId,
+      onchainId,
       date: new Date(),
     });
   }
