@@ -26,7 +26,7 @@ async function bootstrap() {
   app.enableShutdownHooks();
   app.enableCors({
     // TODO: To be updated once we upload it to production
-    origin: ['*'],
+    origin: '*',
     methods: ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'],
   });
 
