@@ -9,7 +9,11 @@ import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
-import { campaignFieldsToModify, movementType } from '../../constants';
+import {
+  campaignFieldsToModify,
+  movementType,
+  movementTypeEnum,
+} from '../../constants';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 
@@ -168,7 +172,7 @@ export class CampaignsMongoRepository {
       );
 
       campaign.currentAmount[tokenIndex].amount =
-        action === 'INCREASE'
+        action === movementTypeEnum.INCREASE
           ? formatEther(currentValue.add(amountToChange))
           : formatEther(currentValue.sub(amountToChange));
 

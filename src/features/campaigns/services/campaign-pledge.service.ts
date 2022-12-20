@@ -9,6 +9,7 @@ import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
 import { UserDocument } from 'src/features/users/schemas/user.schema';
 import { CampaignDocument } from '../schemas/campaign.schema';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
+import { movementTypeEnum } from '../constants';
 
 @Injectable()
 export class CampaignPledgeService {
@@ -45,7 +46,7 @@ export class CampaignPledgeService {
       campaignId: onchainId,
       amountToChange: amount,
       tokenAddress: token.address,
-      action: 'INCREASE',
+      action: movementTypeEnum.INCREASE,
     });
 
     await this.userCampaignsMongoRepository.updateUserCampaign({

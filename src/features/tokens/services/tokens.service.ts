@@ -28,6 +28,8 @@ export class TokensService {
     return token;
   }
 
+  // TODO: This method will be changed once we handle different tokens
+  // TODO: Right now, we are just returning the only one we have in our DB
   async getByDefault(): Promise<Token> {
     const token = this.tokenRepository.getByDefault();
     return token;
