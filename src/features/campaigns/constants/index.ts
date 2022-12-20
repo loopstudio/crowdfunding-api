@@ -15,3 +15,7 @@ export const campaignFieldsToModify = [
 ];
 
 export type movementType = 'INCREASE' | 'DECREASE';
+export enum movementTypeEnum {
+  INCREASE = 'INCREASE',
+  DECREASE = 'DECREASE',
+}
