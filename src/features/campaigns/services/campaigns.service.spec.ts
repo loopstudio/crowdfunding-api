@@ -24,8 +24,15 @@ describe('UsersService', () => {
   let tokenService: TokensService;
   let campaignStatusService: CampaignStatusService;
   let campaignCategoriesService: CampaignCategoriesService;
+  let usersRepository: UsersRepository;
 
   const campaignId = '1';
+  const pendingStatusId = '63611e68143b8def9c4843cf';
+  const amount = '1000000000000000000';
+  const ownerId = '634dd92c34361cf5a21fb96b';
+  const tokenAddress = '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C';
+  const startDate = '1667754096';
+  const endDate = '1667757636';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +45,7 @@ describe('UsersService', () => {
             findOne: jest.fn(),
             create: jest.fn(),
             update: jest.fn(),
+            findByLaunchEvent: jest.fn(),
           },
         },
         {
@@ -78,6 +86,7 @@ describe('UsersService', () => {
     campaignCategoriesService = module.get<CampaignCategoriesService>(
       CampaignCategoriesService,
     );
+    usersRepository = module.get<UsersRepository>(UsersRepository);
   });
 
   it('campaignService should be defined', () => {
@@ -187,6 +196,40 @@ describe('UsersService', () => {
         id: campaignId,
         updateCampaignDto: updateCampaignDtoMock,
       });
+    });
+  });
+
+  describe('findByLaunchEvent method', () => {
+    it('Should find by launch event succesfully', async () => {
+      jest
+        .spyOn(campaignsRepository, 'findByLaunchEvent')
+        .mockResolvedValue([mongoBuiltCampaign] as any);
+
+      jest
+        .spyOn(usersRepository, 'findByAddress')
+        .mockResolvedValue({ _id: ownerId } as any);
+
+      jest
+        .spyOn(campaignStatusService, 'getStatusByCode')
+        .mockResolvedValue({ _id: pendingStatusId } as any);
+
+      const response = await campaignService.findByLaunchEvent(
+        ownerId,
+        amount,
+        tokenAddress,
+        startDate,
+        endDate,
+      );
+
+      expect(response).toStrictEqual({ campaign: [mongoBuiltCampaign] });
+      expect(campaignsRepository.findByLaunchEvent).toBeCalledWith(
+        ownerId,
+        amount,
+        tokenAddress,
+        pendingStatusId,
+        startDate,
+        endDate,
+      );
     });
   });
 });

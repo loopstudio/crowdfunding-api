@@ -100,8 +100,8 @@ export class CampaignsMongoRepository {
       title,
       subtitle,
       story,
-      startDate: new Date(Number(startDate)), // FIXME talk with rena. Maybe the date conversion is worng on dto
-      endDate: new Date(Number(endDate)), // FIXME talk with rena
+      startDate: new Date(Number(startDate)),
+      endDate: new Date(Number(endDate)),
       image,
       video,
       status: pendingStatusId,

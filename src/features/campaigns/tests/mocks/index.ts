@@ -13,15 +13,15 @@ export const mongoBuiltCampaign = {
   status: '63611e68143b8def9c4843cf',
   goal: [
     {
-      amount: '0',
-      tokenAddress: '63611e69143b8def9c4843dd',
+      amount: '1000000000000000000',
+      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      tokenAddress: '63611e69143b8def9c4843dd',
+      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
       _id: '6367be0422ca99a33946949d',
     },
   ],
@@ -48,15 +48,15 @@ export const mongoBuiltUpdatedCampaign = {
   status: '63611e68143b8def9c4843cf',
   goal: [
     {
-      amount: '0',
-      tokenAddress: '63611e69143b8def9c4843dd',
+      amount: '1000000000000000000',
+      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      tokenAddress: '63611e69143b8def9c4843dd',
+      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
       _id: '6367be0422ca99a33946949d',
     },
   ],
