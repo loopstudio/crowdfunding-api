@@ -6,7 +6,10 @@ import {
   IsArray,
   ArrayNotEmpty,
   ValidateNested,
+  MaxDate,
+  MinDate,
 } from 'class-validator';
+import { maxCampaignDurationInMs } from '../constants';
 
 import { TokenAmount } from '../schemas/campaign.schema';
 
@@ -22,15 +25,13 @@ export class CreateCampaignDto {
   story = '';
 
   @IsDefined()
-  // FIXME
-  //@MinDate(new Date(Date.now()))
+  @MinDate(new Date(Date.now()))
   @Type(() => Date)
   startDate: Date;
 
   @IsDefined()
-  // FIXME
-  //@MinDate(new Date(Date.now() + 1))
-  //@MaxDate(new Date(Date.now() + maxCampaignDurationInMs))
+  @MinDate(new Date(Date.now() + 1))
+  @MaxDate(new Date(Date.now() + maxCampaignDurationInMs))
   @Type(() => Date)
   endDate: Date;
 
