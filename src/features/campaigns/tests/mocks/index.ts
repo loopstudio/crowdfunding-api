@@ -110,8 +110,6 @@ export const launchEventData = [
   '1636246496',
 ];
 
-const [onchainId, goal, creator, startDate, endDate] = launchEventData;
-
 export const mongoLaunchedCampaign = {
   _id: '6367be0422ca99a33946949b',
   title: 'My campaign',

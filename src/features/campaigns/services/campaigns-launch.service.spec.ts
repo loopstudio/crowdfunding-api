@@ -18,10 +18,7 @@ import {
 import { mongoBuiltToken } from 'src/features/tokens/tests/mocks';
 
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
-import {
-  mongoBuiltCampaingStatus,
-  mongoLaunchedCampaingStatus,
-} from 'src/features/campaign-statuses/tests/mocks';
+import { mongoLaunchedCampaingStatus } from 'src/features/campaign-statuses/tests/mocks';
 
 describe('Campaign Launch Service', () => {
   let campaignLaunchService: CampaignLaunchService;
