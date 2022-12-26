@@ -10,17 +10,23 @@ import { MongoError } from 'mongodb';
 
 import { MONGO_DUPLICATED_KEYS_ERROR_CODE } from 'src/common/constants';
 
+const { NODE_ENV } = process.env;
+const isProductionEnv = NODE_ENV === 'production';
+
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
 
   catch(exception: unknown, host: ArgumentsHost): void {
     const { httpAdapter } = this.httpAdapterHost;
-
     const ctx = host.switchToHttp();
 
     const statusCode = this.getHttpStatusCode(exception);
     const message = this.getHttpStatusMessage(exception);
+
+    if (!isProductionEnv) {
+      console.log(exception);
+    }
 
     const responseBody = {
       statusCode,
