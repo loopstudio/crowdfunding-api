@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 import { CampaignsService } from './campaigns.service';
 import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
@@ -230,6 +230,39 @@ describe('UsersService', () => {
         startDate,
         endDate,
       );
+    });
+    it('Should throw NotFoundException if creator is not an user', async () => {
+      jest.spyOn(usersRepository, 'findByAddress').mockResolvedValue(null);
+
+      await expect(
+        campaignService.findByLaunchEvent(
+          ownerId,
+          amount,
+          tokenAddress,
+          startDate,
+          endDate,
+        ),
+      ).rejects.toThrowError(NotFoundException);
+    });
+
+    it('Should throw NotFoundException if pending status is not present', async () => {
+      jest
+        .spyOn(usersRepository, 'findByAddress')
+        .mockResolvedValue({ _id: ownerId } as any);
+
+      jest
+        .spyOn(campaignStatusService, 'getStatusByCode')
+        .mockResolvedValue(null);
+
+      await expect(
+        campaignService.findByLaunchEvent(
+          ownerId,
+          amount,
+          tokenAddress,
+          startDate,
+          endDate,
+        ),
+      ).rejects.toThrowError(NotFoundException);
     });
   });
 });

@@ -52,12 +52,12 @@ export class CampaignLaunchService {
       };
 
       await this.campaignService.update({
-        id: pendingCampaign.campaign.id,
+        id: pendingCampaign.campaign._id,
         updateCampaignDto: updateStatusDto,
       });
 
       await this.campaignLaunchMongoRepository.create(
-        pendingCampaign.campaign.id,
+        pendingCampaign.campaign._id,
         onchainId,
       );
 

@@ -71,6 +71,7 @@ export class EventsService
   ) {
     switch (event) {
       case CrowdfundingEvent.Launch:
+        console.log('The data', data);
         await this.campaignLaunchService.create(data);
     }
 
