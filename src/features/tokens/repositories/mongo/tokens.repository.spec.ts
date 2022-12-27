@@ -60,6 +60,18 @@ describe('Token Repository', () => {
     });
   });
 
+  describe('getByDefault method', () => {
+    it('should call getByDefault method without errors', async () => {
+      jest.spyOn(tokenModel, 'findOne').mockReturnValue({
+        lean: jest.fn().mockResolvedValue(mongoBuiltToken),
+      } as any);
+
+      const response = await tokensRepository.getByDefault();
+
+      expect(response).toStrictEqual(mongoBuiltToken);
+    });
+  });
+
   describe('findAll method', () => {
     it('should call findAll method without errors', async () => {
       jest.spyOn(tokenModel, 'find').mockResolvedValue([mongoBuiltToken]);

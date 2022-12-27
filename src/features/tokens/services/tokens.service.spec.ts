@@ -21,6 +21,7 @@ describe('Token Service', () => {
           provide: TokenRepository,
           useValue: {
             getById: jest.fn(),
+            getByDefault: jest.fn(),
             getByAddress: jest.fn(),
             findAll: jest.fn(),
             getByDefault: jest.fn(),
@@ -48,6 +49,32 @@ describe('Token Service', () => {
       const response = await tokenService.areTokensValid([tokenId]);
 
       expect(response).toStrictEqual(true);
+    });
+  });
+
+  describe('getByAddress method', () => {
+    it('should call getByAddress without errors', async () => {
+      jest
+        .spyOn(tokenRepository, 'getByAddress')
+        .mockResolvedValue(mongoBuiltToken);
+
+      const response = await tokenService.getByAddress(
+        createUserDTO.publicAddress,
+      );
+
+      expect(response).toStrictEqual(mongoBuiltToken);
+    });
+  });
+
+  describe('getByDefault method', () => {
+    it('should call getByDefault without errors', async () => {
+      jest
+        .spyOn(tokenRepository, 'getByDefault')
+        .mockResolvedValue(mongoBuiltToken);
+
+      const response = await tokenService.getByDefault();
+
+      expect(response).toStrictEqual(mongoBuiltToken);
     });
   });
 

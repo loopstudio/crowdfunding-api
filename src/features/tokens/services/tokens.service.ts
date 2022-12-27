@@ -18,11 +18,6 @@ export class TokensService {
     return !someNullToken;
   }
 
-  async findAll() {
-    const tokens = await this.tokenRepository.findAll();
-    return { tokens };
-  }
-
   async getByAddress(address: string): Promise<Token> {
     const token = this.tokenRepository.getByAddress(address);
     return token;
@@ -33,5 +28,10 @@ export class TokensService {
   async getByDefault(): Promise<Token> {
     const token = this.tokenRepository.getByDefault();
     return token;
+  }
+
+  async findAll() {
+    const tokens = await this.tokenRepository.findAll();
+    return { tokens };
   }
 }
