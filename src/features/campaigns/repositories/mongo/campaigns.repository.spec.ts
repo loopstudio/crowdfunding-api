@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { BigNumber } from 'ethers';
 
 import { CampaignsMongoRepository } from './campaigns.repository';
 import { Campaign } from '../../schemas/campaign.schema';
@@ -181,6 +182,27 @@ describe('Campaign Statuses Repository', () => {
           endDate,
         ),
       ).rejects.toThrowError(NotFoundException);
+    });
+  });
+
+  describe('updateTokenAmount', () => {
+    it('Should update campign currentAmount data', async () => {
+      jest.spyOn(campaignModel, 'save' as any).mockResolvedValue(null);
+      jest.spyOn(campaignModel, 'findOne').mockResolvedValue({
+        ...mongoBuiltCampaign,
+        save: jest.fn(),
+      });
+
+      const { onchainId, goal } = mongoBuiltCampaign;
+
+      await expect(() =>
+        campaignsRepository.updateTokenAmount({
+          campaignId: onchainId,
+          amountToChange: BigNumber.from('1'),
+          tokenAddress: goal[0].tokenAddress,
+          action: 'INCREASE',
+        }),
+      ).not.toThrowError();
     });
   });
 });

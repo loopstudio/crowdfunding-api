@@ -24,7 +24,6 @@ describe('Token Service', () => {
             getByDefault: jest.fn(),
             getByAddress: jest.fn(),
             findAll: jest.fn(),
-            getByDefault: jest.fn(),
           },
         },
       ],
