@@ -7,9 +7,10 @@ import mongoose from 'mongoose';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './middlewares/filters/exception.filter';
 
-const { API_PORT, DEBUG } = process.env;
+const { API_PORT, NODE_ENV } = process.env;
 
 async function bootstrap() {
+  const isProductionEnv = NODE_ENV === 'production';
   const app = await NestFactory.create(AppModule);
   const adapterHost = app.get(HttpAdapterHost);
 
@@ -20,7 +21,7 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(adapterHost));
   app.useGlobalPipes(
     new ValidationPipe({
-      disableErrorMessages: true,
+      disableErrorMessages: isProductionEnv,
     }),
   );
   app.enableShutdownHooks();
@@ -31,7 +32,7 @@ async function bootstrap() {
   });
 
   try {
-    mongoose.set('debug', !!DEBUG);
+    mongoose.set('debug', !isProductionEnv);
 
     await app.listen(API_PORT);
     console.log(`NestJS API listening on port ${API_PORT}`);
