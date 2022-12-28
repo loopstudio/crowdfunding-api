@@ -1,3 +1,5 @@
+import { mongoBuiltToken } from 'src/features/tokens/tests/mocks';
+
 export const mongoCampaignLaunch = {
   _id: '6367be0422ca99a33946949b',
   onchainId: '2',
@@ -21,14 +23,14 @@ export const mongoBuiltCampaign = {
   goal: [
     {
       amount: '1000000000000000000',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
@@ -56,14 +58,14 @@ export const mongoBuiltUpdatedCampaign = {
   goal: [
     {
       amount: '1000000000000000000',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
@@ -126,14 +128,14 @@ export const mongoLaunchedCampaign = {
   goal: [
     {
       amount: '1000000000000000000',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
@@ -143,4 +145,18 @@ export const mongoLaunchedCampaign = {
   updated: '2022-11-06T14:00:36.947+0000',
   __v: 0,
   save: jest.fn().mockReturnValue(null),
+};
+
+export const campaignLaunchEventDto = {
+  creator: launchEventData[2],
+  goal: launchEventData[1],
+  tokenAddress: mongoBuiltToken.address,
+  startDate: launchEventData[3],
+  endDate: launchEventData[4],
+};
+
+export const findCampaignToLaunchData = {
+  campaignLaunchEventDto,
+  pendingStatusId: '63611e68143b8def9c4843cf',
+  ownerId: '634dd92c34361cf5a21fb96b',
 };

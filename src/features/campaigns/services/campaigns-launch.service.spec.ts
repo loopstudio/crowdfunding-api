@@ -10,6 +10,7 @@ import { CampaignLaunchService } from './campaign-launch.service';
 import { CampaignLaunchMongoRepository } from '../repositories/mongo/campaign-launch.repository';
 import { CampaignStatusRepository } from 'src/features/campaign-statuses/repositories/mongo/campaign-status.repository';
 import {
+  campaignLaunchEventDto,
   launchEventData,
   mongoBuiltCampaign,
   mongoCampaignLaunch,
@@ -115,14 +116,10 @@ describe('Campaign Launch Service', () => {
 
       await campaignLaunchService.create(launchEventData);
 
-      const [onchainId, goal, creator, startDate, endDate] = launchEventData;
+      const [onchainId] = launchEventData;
 
       expect(campaignService.findByLaunchEvent).toBeCalledWith(
-        creator,
-        goal,
-        mongoBuiltToken._id,
-        startDate,
-        endDate,
+        campaignLaunchEventDto,
       );
 
       const updateCampaignDto: UpdateCampaignDto = {

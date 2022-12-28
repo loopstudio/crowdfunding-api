@@ -10,6 +10,7 @@ import { activeStatusCode } from 'src/features/campaign-statuses/types';
 import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
 import { TokenRepository } from 'src/features/tokens/repositories/mongo/tokens.repository';
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
+import { CampaignLaunchEventDto } from '../dto/campaign-launch-event-dto';
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { CampaignLaunchMongoRepository } from '../repositories/mongo/campaign-launch.repository';
 
@@ -35,12 +36,16 @@ export class CampaignLaunchService {
     try {
       const token =
         (await this.tokenRepository.getByDefault()) as TokenDocument; // FIXME can we make standard the promises returned by the repositories? Documents?
-      const pendingCampaign = await this.campaignService.findByLaunchEvent(
+
+      const campaignLaunchEventDto: CampaignLaunchEventDto = {
         creator,
         goal,
-        token._id,
+        tokenAddress: token.address,
         startDate,
         endDate,
+      };
+      const pendingCampaign = await this.campaignService.findByLaunchEvent(
+        campaignLaunchEventDto,
       );
 
       const activeStatus = await this.campaignStatusRepository.getStatusByCode(

@@ -16,6 +16,7 @@ import {
   generalCategoryCode,
 } from '../../campaign-statuses/types/index';
 import { UsersRepository } from 'src/features/users/repositories/mongo/users.repository';
+import { CampaignLaunchEventDto } from '../dto/campaign-launch-event-dto';
 
 @Injectable()
 export class CampaignsService {
@@ -76,20 +77,17 @@ export class CampaignsService {
     return { campaign };
   }
 
-  async findByLaunchEvent(
-    address: string,
-    goal: string,
-    tokenAddress: string,
-    startDate: string,
-    endDate: string,
-  ) {
-    const user = await this.usersMongoRepository.findByAddress(address);
+  async findByLaunchEvent(campaignLaunchEventDto: CampaignLaunchEventDto) {
+    const user = await this.usersMongoRepository.findByAddress(
+      campaignLaunchEventDto.creator,
+    );
     if (!user) {
       throw new NotFoundException(
         'User not found when processing launch event. Address: ',
-        address,
+        campaignLaunchEventDto.creator,
       );
     }
+
     const pendingStatus = await this.campaignStatusService.getStatusByCode(
       pendingStatusCode,
     );
@@ -99,14 +97,11 @@ export class CampaignsService {
       );
     }
 
-    const campaign = await this.campaignsMongoRepository.findByLaunchEvent(
-      user._id,
-      goal,
-      tokenAddress,
-      pendingStatus._id,
-      startDate,
-      endDate,
-    );
+    const campaign = await this.campaignsMongoRepository.findByLaunchEvent({
+      campaignLaunchEventDto,
+      pendingStatusId: pendingStatus._id,
+      ownerId: user._id,
+    });
 
     return { campaign };
   }

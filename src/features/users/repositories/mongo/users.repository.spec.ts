@@ -2,12 +2,12 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
+import { NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 
 import { UsersRepository } from './users.repository';
 import { User } from '../../schemas/user.schema';
 import { createUserDTO, mongoBuiltUser } from '../../tests/mocks';
-import { NotFoundException } from '@nestjs/common';
 
 describe('UsersRepository', () => {
   let usersRepository: UsersRepository;

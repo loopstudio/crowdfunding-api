@@ -10,6 +10,7 @@ import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
 import { campaignFieldsToModify } from '../../constants';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
+import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
 
 @Injectable()
 export class CampaignsMongoRepository {
@@ -51,22 +52,24 @@ export class CampaignsMongoRepository {
     TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This 
     _id could be emmited on Launch event to map the correct campaign
    */
-  async findByLaunchEvent(
-    ownerId: string,
-    amount: string,
-    tokenAddress: string,
-    pendingStatusId: string,
-    startDate: string,
-    endDate: string,
-  ) {
+  async findByLaunchEvent(findCampaignToLaunchData: {
+    campaignLaunchEventDto: CampaignLaunchEventDto;
+    pendingStatusId: string;
+    ownerId: string;
+  }) {
     const campaing = await this.campaignModel
       .findOne({
-        owner: ownerId,
-        status: pendingStatusId,
-        'goal.amount': amount,
-        'goal.token': tokenAddress,
-        startDate: new Date(Number(startDate)),
-        endDate: new Date(Number(endDate)),
+        owner: findCampaignToLaunchData.ownerId,
+        status: findCampaignToLaunchData.pendingStatusId,
+        'goal.amount': findCampaignToLaunchData.campaignLaunchEventDto.goal,
+        'goal.tokenAddress':
+          findCampaignToLaunchData.campaignLaunchEventDto.tokenAddress,
+        startDate: new Date(
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.startDate),
+        ),
+        endDate: new Date(
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.endDate),
+        ),
       })
       .sort({ created: 'ascending' });
 

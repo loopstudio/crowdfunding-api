@@ -9,6 +9,7 @@ import { CampaignsMongoRepository } from './campaigns.repository';
 import { Campaign } from '../../schemas/campaign.schema';
 import {
   createCampaignDtoMock,
+  findCampaignToLaunchData,
   mongoBuiltCampaign,
   mongoBuiltUpdatedCampaign,
   updateCampaignDtoMock,
@@ -19,13 +20,8 @@ describe('Campaign Statuses Repository', () => {
   let campaignModel: Model<Campaign>;
 
   const campaignId = '1';
-  const pendingStatusId = '63611e68143b8def9c4843cf';
   const generalCategoryId = 'abc123';
-  const amount = '1000000000000000000';
-  const ownerId = '634dd92c34361cf5a21fb96b';
-  const tokenAddress = '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C';
-  const startDate = '1667754096';
-  const endDate = '1667757636';
+  const pendingStatusId = '63611e68143b8def9c4843cf';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -158,12 +154,7 @@ describe('Campaign Statuses Repository', () => {
       } as any);
 
       const response = await campaignsRepository.findByLaunchEvent(
-        ownerId,
-        amount,
-        tokenAddress,
-        pendingStatusId,
-        startDate,
-        endDate,
+        findCampaignToLaunchData,
       );
 
       expect(response).toStrictEqual(mongoBuiltCampaign);
@@ -174,14 +165,7 @@ describe('Campaign Statuses Repository', () => {
       } as any);
 
       await expect(
-        campaignsRepository.findByLaunchEvent(
-          ownerId,
-          amount,
-          tokenAddress,
-          pendingStatusId,
-          startDate,
-          endDate,
-        ),
+        campaignsRepository.findByLaunchEvent(findCampaignToLaunchData),
       ).rejects.toThrowError(NotFoundException);
     });
   });
