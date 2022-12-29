@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { TokenRepository } from '../repositories/mongo/tokens.repository';
+import { Token } from '../schemas/token.schema';
 
 @Injectable()
 export class TokensService {
@@ -15,6 +16,18 @@ export class TokensService {
     const someNullToken = tokens.some((token) => token === null);
 
     return !someNullToken;
+  }
+
+  async getByAddress(address: string): Promise<Token> {
+    const token = this.tokenRepository.getByAddress(address);
+    return token;
+  }
+
+  // TODO: This method will be changed once we handle different tokens
+  // TODO: Right now, we are just returning the only one we have in our DB
+  async getByDefault(): Promise<Token> {
+    const token = this.tokenRepository.getByDefault();
+    return token;
   }
 
   async findAll() {

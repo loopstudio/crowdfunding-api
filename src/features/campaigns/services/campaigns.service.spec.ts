@@ -18,7 +18,7 @@ import {
 } from '../tests/mocks';
 import { mongoBuiltCampaingStatus } from 'src/features/campaign-statuses/tests/mocks';
 import { mongoBuiltCampaingCategory } from 'src/features/campaign-categories/tests/mocks';
-import { UsersRepository } from 'src/features/users/repositories/mongo/users.repository';
+import { UsersRepository } from 'src/features/users/repositories/users/mongo/users.repository';
 
 describe('UsersService', () => {
   let campaignService: CampaignsService;

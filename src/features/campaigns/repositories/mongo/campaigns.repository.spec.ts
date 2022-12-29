@@ -4,6 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { NotFoundException } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { BigNumber } from 'ethers';
 
 import { CampaignsMongoRepository } from './campaigns.repository';
 import { Campaign } from '../../schemas/campaign.schema';
@@ -79,9 +80,7 @@ describe('Campaign Statuses Repository', () => {
 
   describe('findOne method', () => {
     it('should call findOne and throw NotFoundException', async () => {
-      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
-        lean: jest.fn().mockResolvedValue(null),
-      } as any);
+      jest.spyOn(campaignModel, 'findOne').mockResolvedValue(null);
 
       await expect(
         campaignsRepository.findOne(campaignId),
@@ -89,9 +88,9 @@ describe('Campaign Statuses Repository', () => {
     });
 
     it('should call findAll and return related campaign', async () => {
-      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
-        lean: jest.fn().mockResolvedValue(mongoBuiltCampaign),
-      } as any);
+      jest
+        .spyOn(campaignModel, 'findOne')
+        .mockResolvedValue(mongoBuiltCampaign);
 
       const response = await campaignsRepository.findOne(campaignId);
 
@@ -167,6 +166,27 @@ describe('Campaign Statuses Repository', () => {
       await expect(
         campaignsRepository.findByLaunchEvent(findCampaignToLaunchData),
       ).rejects.toThrowError(NotFoundException);
+    });
+  });
+
+  describe('updateTokenAmount', () => {
+    it('Should update campign currentAmount data', async () => {
+      jest.spyOn(campaignModel, 'save' as any).mockResolvedValue(null);
+      jest.spyOn(campaignModel, 'findOne').mockResolvedValue({
+        ...mongoBuiltCampaign,
+        save: jest.fn(),
+      });
+
+      const { onchainId, goal } = mongoBuiltCampaign;
+
+      await expect(() =>
+        campaignsRepository.updateTokenAmount({
+          campaignId: onchainId,
+          amountToChange: BigNumber.from('1'),
+          tokenAddress: goal[0].tokenAddress,
+          action: 'INCREASE',
+        }),
+      ).not.toThrowError();
     });
   });
 });

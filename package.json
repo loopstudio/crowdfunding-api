@@ -97,7 +97,8 @@
       "database",
       "schema.ts",
       "dto.ts",
-      "events.service.ts"
+      "events.service.ts",
+      "common/contracts/index.ts"
     ],
     "testEnvironment": "node",
     "moduleNameMapper": {

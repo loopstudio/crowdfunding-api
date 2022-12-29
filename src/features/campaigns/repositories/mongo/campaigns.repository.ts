@@ -5,9 +5,15 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { BigNumber } from 'ethers';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
-import { campaignFieldsToModify } from '../../constants';
+import {
+  campaignFieldsToModify,
+  movementType,
+  movementTypeEnum,
+} from '../../constants';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
@@ -32,9 +38,7 @@ export class CampaignsMongoRepository {
   }
 
   async findOne(onchainId: string) {
-    const campaing = await this.campaignModel
-      .findOne({ onchainId: onchainId })
-      .lean();
+    const campaing = await this.campaignModel.findOne({ onchainId: onchainId });
     if (!campaing) {
       throw new NotFoundException();
     }
@@ -49,7 +53,7 @@ export class CampaignsMongoRepository {
     = Start and end date
     - Sorted by created at asc
     This way, if a user creates N campaings with the same parameters, are processed secuentially.
-    TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This 
+    TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This
     _id could be emmited on Launch event to map the correct campaign
    */
   async findByLaunchEvent(findCampaignToLaunchData: {
@@ -145,5 +149,35 @@ export class CampaignsMongoRepository {
 
     await existingCampaign.save();
     return existingCampaign;
+  }
+
+  async updateTokenAmount({
+    campaignId,
+    amountToChange,
+    tokenAddress,
+    action,
+  }: {
+    campaignId: string;
+    amountToChange: BigNumber;
+    tokenAddress: string;
+    action: movementType;
+  }): Promise<void> {
+    const campaign = await this.findOne(campaignId);
+    const tokenIndex = campaign.currentAmount.findIndex(
+      (token) => token.tokenAddress === tokenAddress,
+    );
+
+    if (tokenIndex >= 0) {
+      const currentValue = parseEther(
+        campaign.currentAmount[tokenIndex].amount,
+      );
+
+      campaign.currentAmount[tokenIndex].amount =
+        action === movementTypeEnum.INCREASE
+          ? formatEther(currentValue.add(amountToChange))
+          : formatEther(currentValue.sub(amountToChange));
+
+      await campaign.save();
+    }
   }
 }
