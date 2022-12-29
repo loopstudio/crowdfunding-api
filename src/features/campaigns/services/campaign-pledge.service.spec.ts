@@ -63,7 +63,7 @@ describe('CampaignPledgeService', () => {
         {
           provide: UserCampaignsRepository,
           useValue: {
-            updateUserCampaign: jest.fn(),
+            updateUserCampaignByPledge: jest.fn(),
           },
         },
       ],
