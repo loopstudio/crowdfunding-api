@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 import { CampaignsService } from './campaigns.service';
 import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
@@ -9,13 +9,16 @@ import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { CampaignCategoriesService } from 'src/features/campaign-categories/services/campaign-category.service';
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
 import {
+  campaignLaunchEventDto,
   createCampaignDtoMock,
+  findCampaignToLaunchData,
   mongoBuiltCampaign,
   mongoBuiltUpdatedCampaign,
   updateCampaignDtoMock,
 } from '../tests/mocks';
 import { mongoBuiltCampaingStatus } from 'src/features/campaign-statuses/tests/mocks';
 import { mongoBuiltCampaingCategory } from 'src/features/campaign-categories/tests/mocks';
+import { UsersRepository } from 'src/features/users/repositories/mongo/users.repository';
 
 describe('UsersService', () => {
   let campaignService: CampaignsService;
@@ -23,8 +26,11 @@ describe('UsersService', () => {
   let tokenService: TokensService;
   let campaignStatusService: CampaignStatusService;
   let campaignCategoriesService: CampaignCategoriesService;
+  let usersRepository: UsersRepository;
 
   const campaignId = '1';
+  const pendingStatusId = '63611e68143b8def9c4843cf';
+  const ownerId = '634dd92c34361cf5a21fb96b';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,6 +43,13 @@ describe('UsersService', () => {
             findOne: jest.fn(),
             create: jest.fn(),
             update: jest.fn(),
+            findByLaunchEvent: jest.fn(),
+          },
+        },
+        {
+          provide: UsersRepository,
+          useValue: {
+            findByAddress: jest.fn(),
           },
         },
         {
@@ -71,6 +84,7 @@ describe('UsersService', () => {
     campaignCategoriesService = module.get<CampaignCategoriesService>(
       CampaignCategoriesService,
     );
+    usersRepository = module.get<UsersRepository>(UsersRepository);
   });
 
   it('campaignService should be defined', () => {
@@ -180,6 +194,52 @@ describe('UsersService', () => {
         id: campaignId,
         updateCampaignDto: updateCampaignDtoMock,
       });
+    });
+  });
+
+  describe('findByLaunchEvent method', () => {
+    it('Should find by launch event succesfully', async () => {
+      jest
+        .spyOn(campaignsRepository, 'findByLaunchEvent')
+        .mockResolvedValue([mongoBuiltCampaign] as any);
+
+      jest
+        .spyOn(usersRepository, 'findByAddress')
+        .mockResolvedValue({ _id: ownerId } as any);
+
+      jest
+        .spyOn(campaignStatusService, 'getStatusByCode')
+        .mockResolvedValue({ _id: pendingStatusId } as any);
+
+      const response = await campaignService.findByLaunchEvent(
+        campaignLaunchEventDto,
+      );
+
+      expect(response).toStrictEqual({ campaign: [mongoBuiltCampaign] });
+      expect(campaignsRepository.findByLaunchEvent).toBeCalledWith(
+        findCampaignToLaunchData,
+      );
+    });
+    it('Should throw NotFoundException if creator is not an user', async () => {
+      jest.spyOn(usersRepository, 'findByAddress').mockResolvedValue(null);
+
+      await expect(
+        campaignService.findByLaunchEvent(campaignLaunchEventDto),
+      ).rejects.toThrowError(NotFoundException);
+    });
+
+    it('Should throw NotFoundException if pending status is not present', async () => {
+      jest
+        .spyOn(usersRepository, 'findByAddress')
+        .mockResolvedValue({ _id: ownerId } as any);
+
+      jest
+        .spyOn(campaignStatusService, 'getStatusByCode')
+        .mockResolvedValue(null);
+
+      await expect(
+        campaignService.findByLaunchEvent(campaignLaunchEventDto),
+      ).rejects.toThrowError(NotFoundException);
     });
   });
 });

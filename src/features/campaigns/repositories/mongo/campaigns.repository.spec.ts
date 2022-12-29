@@ -9,6 +9,7 @@ import { CampaignsMongoRepository } from './campaigns.repository';
 import { Campaign } from '../../schemas/campaign.schema';
 import {
   createCampaignDtoMock,
+  findCampaignToLaunchData,
   mongoBuiltCampaign,
   mongoBuiltUpdatedCampaign,
   updateCampaignDtoMock,
@@ -19,8 +20,8 @@ describe('Campaign Statuses Repository', () => {
   let campaignModel: Model<Campaign>;
 
   const campaignId = '1';
-  const pendingStatusId = 'abc123';
   const generalCategoryId = 'abc123';
+  const pendingStatusId = '63611e68143b8def9c4843cf';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -143,6 +144,29 @@ describe('Campaign Statuses Repository', () => {
       delete response.save;
 
       expect(response).toStrictEqual(mongoBuiltUpdatedCampaign);
+    });
+  });
+
+  describe('findByLaunchEvent', () => {
+    it('Should find by launch event', async () => {
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        sort: jest.fn().mockResolvedValue(mongoBuiltCampaign),
+      } as any);
+
+      const response = await campaignsRepository.findByLaunchEvent(
+        findCampaignToLaunchData,
+      );
+
+      expect(response).toStrictEqual(mongoBuiltCampaign);
+    });
+    it('Should throw NotFoundException', async () => {
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        sort: jest.fn().mockResolvedValue(null),
+      } as any);
+
+      await expect(
+        campaignsRepository.findByLaunchEvent(findCampaignToLaunchData),
+      ).rejects.toThrowError(NotFoundException);
     });
   });
 });

@@ -2,6 +2,7 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
+import { NotFoundException } from '@nestjs/common';
 import { Model } from 'mongoose';
 
 import { UsersRepository } from './users.repository';
@@ -22,6 +23,8 @@ describe('UsersRepository', () => {
             count: jest.fn(),
             exec: jest.fn(),
             create: jest.fn(),
+            findOne: jest.fn(),
+            lean: jest.fn(),
           },
         },
       ],
@@ -41,6 +44,30 @@ describe('UsersRepository', () => {
       const response = await usersRepository.createUser(createUserDTO);
 
       expect(response).toStrictEqual(mongoBuiltUser);
+    });
+  });
+
+  describe('findByAddress method', () => {
+    it('should get user by public address', async () => {
+      jest.spyOn(userModel, 'findOne').mockReturnValue({
+        lean: jest.fn().mockResolvedValue(mongoBuiltUser),
+      } as any);
+
+      const response = await usersRepository.findByAddress(
+        mongoBuiltUser.publicAddress,
+      );
+
+      expect(response).toStrictEqual(mongoBuiltUser);
+    });
+
+    it('should throw NotFoundException', async () => {
+      jest.spyOn(userModel, 'findOne').mockReturnValue({
+        lean: jest.fn().mockResolvedValue(null),
+      } as any);
+
+      await expect(
+        usersRepository.findByAddress(mongoBuiltUser.publicAddress),
+      ).rejects.toThrowError(new NotFoundException());
     });
   });
 });

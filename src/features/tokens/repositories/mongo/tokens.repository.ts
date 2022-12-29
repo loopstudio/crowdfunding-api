@@ -24,4 +24,9 @@ export class TokenRepository {
     const token = await this.tokenModel.findOne({ address }).lean();
     return token;
   }
+
+  async getByDefault(): Promise<Token> {
+    const token = await this.tokenModel.findOne({}).lean();
+    return token;
+  }
 }

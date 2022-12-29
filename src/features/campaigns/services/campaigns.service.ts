@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { CreateCampaignDto } from '../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
@@ -11,11 +15,14 @@ import {
   pendingStatusCode,
   generalCategoryCode,
 } from '../../campaign-statuses/types/index';
+import { UsersRepository } from 'src/features/users/repositories/mongo/users.repository';
+import { CampaignLaunchEventDto } from '../dto/campaign-launch-event-dto';
 
 @Injectable()
 export class CampaignsService {
   constructor(
     private readonly campaignsMongoRepository: CampaignsMongoRepository,
+    private readonly usersMongoRepository: UsersRepository,
     private readonly tokensService: TokensService,
     private readonly campaignCategoriesService: CampaignCategoriesService,
     private readonly campaignStatusService: CampaignStatusService,
@@ -23,7 +30,6 @@ export class CampaignsService {
 
   async create(createCampaignDto: CreateCampaignDto) {
     const { goal } = createCampaignDto;
-
     const tokenAddresses = goal.map((tokenGoal) => {
       return tokenGoal.tokenAddress as unknown as string;
     });
@@ -68,6 +74,35 @@ export class CampaignsService {
 
   async findOne(id: string) {
     const campaign = await this.campaignsMongoRepository.findOne(id);
+    return { campaign };
+  }
+
+  async findByLaunchEvent(campaignLaunchEventDto: CampaignLaunchEventDto) {
+    const user = await this.usersMongoRepository.findByAddress(
+      campaignLaunchEventDto.creator,
+    );
+    if (!user) {
+      throw new NotFoundException(
+        'User not found when processing launch event. Address: ',
+        campaignLaunchEventDto.creator,
+      );
+    }
+
+    const pendingStatus = await this.campaignStatusService.getStatusByCode(
+      pendingStatusCode,
+    );
+    if (!pendingStatus) {
+      throw new NotFoundException(
+        'Pending status not found when processing launch event',
+      );
+    }
+
+    const campaign = await this.campaignsMongoRepository.findByLaunchEvent({
+      campaignLaunchEventDto,
+      pendingStatusId: pendingStatus._id,
+      ownerId: user._id,
+    });
+
     return { campaign };
   }
 

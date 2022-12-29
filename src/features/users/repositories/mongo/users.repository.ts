@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -19,6 +19,17 @@ export class UsersRepository {
       publicAddress,
       nonce: getNonce(),
     });
+
+    return user;
+  }
+
+  async findByAddress(address: string) {
+    const user = await this.userModel
+      .findOne({ publicAddress: address })
+      .lean();
+    if (!user) {
+      throw new NotFoundException();
+    }
 
     return user;
   }

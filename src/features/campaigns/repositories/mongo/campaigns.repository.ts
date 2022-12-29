@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
@@ -6,6 +10,7 @@ import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
 import { campaignFieldsToModify } from '../../constants';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
+import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
 
 @Injectable()
 export class CampaignsMongoRepository {
@@ -26,8 +31,48 @@ export class CampaignsMongoRepository {
     return campaings;
   }
 
-  async findOne(id: string) {
-    const campaing = await this.campaignModel.findOne({ _id: id }).lean();
+  async findOne(onchainId: string) {
+    const campaing = await this.campaignModel
+      .findOne({ onchainId: onchainId })
+      .lean();
+    if (!campaing) {
+      throw new NotFoundException();
+    }
+    return campaing;
+  }
+
+  /*
+   Finds campaign based on contract event, considering
+    - Same creator address
+    - Same goal
+    - Pending status
+    = Start and end date
+    - Sorted by created at asc
+    This way, if a user creates N campaings with the same parameters, are processed secuentially.
+    TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This 
+    _id could be emmited on Launch event to map the correct campaign
+   */
+  async findByLaunchEvent(findCampaignToLaunchData: {
+    campaignLaunchEventDto: CampaignLaunchEventDto;
+    pendingStatusId: string;
+    ownerId: string;
+  }) {
+    const campaing = await this.campaignModel
+      .findOne({
+        owner: findCampaignToLaunchData.ownerId,
+        status: findCampaignToLaunchData.pendingStatusId,
+        'goal.amount': findCampaignToLaunchData.campaignLaunchEventDto.goal,
+        'goal.tokenAddress':
+          findCampaignToLaunchData.campaignLaunchEventDto.tokenAddress,
+        startDate: new Date(
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.startDate),
+        ),
+        endDate: new Date(
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.endDate),
+        ),
+      })
+      .sort({ created: 'ascending' });
+
     if (!campaing) {
       throw new NotFoundException();
     }
@@ -40,7 +85,7 @@ export class CampaignsMongoRepository {
     pendingStatusId: string;
     generalCategoryId: string;
   }) {
-    // TODO: Assign logged in user
+    // FIXME: Assign logged in user
     const owner = '634dd92c34361cf5a21fb96b';
 
     const {
@@ -58,8 +103,8 @@ export class CampaignsMongoRepository {
       title,
       subtitle,
       story,
-      startDate,
-      endDate,
+      startDate: new Date(Number(startDate)),
+      endDate: new Date(Number(endDate)),
       image,
       video,
       status: pendingStatusId,
@@ -90,11 +135,15 @@ export class CampaignsMongoRepository {
     for (const [key, value] of Object.entries(updateCampaignDto)) {
       if (campaignFieldsToModify.includes(key)) {
         existingCampaign[key] = value;
+      } else {
+        throw new InternalServerErrorException(
+          'Trying to update an unaccepted campaign field: ',
+          key,
+        );
       }
     }
 
     await existingCampaign.save();
-
     return existingCampaign;
   }
 }

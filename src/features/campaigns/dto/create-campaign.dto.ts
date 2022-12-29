@@ -3,15 +3,15 @@ import {
   IsString,
   IsDefined,
   IsOptional,
-  MaxDate,
-  MinDate,
   IsArray,
   ArrayNotEmpty,
   ValidateNested,
+  MaxDate,
+  MinDate,
 } from 'class-validator';
 
-import { TokenAmount } from '../schemas/campaign.schema';
 import { maxCampaignDurationInMs } from '../constants';
+import { TokenAmount } from '../schemas/campaign.schema';
 
 export class CreateCampaignDto {
   @IsDefined()
@@ -48,4 +48,10 @@ export class CreateCampaignDto {
   @ArrayNotEmpty()
   @ValidateNested()
   goal: TokenAmount[];
+
+  @IsOptional()
+  status: string;
+
+  @IsOptional()
+  onchainId: string;
 }

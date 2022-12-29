@@ -10,6 +10,7 @@ import { Contract, getDefaultProvider } from 'ethers';
 import { contractsToHandle, eventsToHandle } from 'src/common/contracts';
 import { EventsMongoRepository } from '../repositories/mongo/events.repository';
 import { CrowdfundingEvent } from '../types';
+import { CampaignLaunchService } from 'src/features/campaigns/services/campaign-launch.service';
 
 @Injectable()
 export class EventsService
@@ -21,6 +22,7 @@ export class EventsService
   constructor(
     private configService: ConfigService,
     private eventsMongoRepository: EventsMongoRepository,
+    private campaignLaunchService: CampaignLaunchService,
   ) {}
 
   onApplicationShutdown() {
@@ -67,8 +69,15 @@ export class EventsService
     contract: Contract,
     data: unknown,
   ) {
-    // TODO: Call features services to handle the event
+    switch (event) {
+      case CrowdfundingEvent.Launch:
+        await this.campaignLaunchService.create(data);
+    }
 
+    this.storeRawEvent(data, event); //FIXME could process repetead events. storeRawEvent does not distinguish.
+  }
+
+  private async storeRawEvent(data: unknown, event: CrowdfundingEvent) {
     if (Array.isArray(data) && data.length) {
       try {
         const transactionData = data[data.length - 1];
