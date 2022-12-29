@@ -41,15 +41,15 @@ describe('UserCampaignsRepository', () => {
     );
   });
 
-  describe('updateUserCampaign method', () => {
-    it('should call updateUserCampaign usersCampaignRepository method without errors for an non existing document', async () => {
+  describe('updateUserCampaignByPledge method', () => {
+    it('should call updateUserCampaignByPledge usersCampaignRepository method without errors for an non existing document', async () => {
       jest.spyOn(userCampaignModel, 'findOne').mockReturnValue(null);
       jest.spyOn(userCampaignModel, 'create').mockReturnValue({
         save: jest.fn(),
       } as any);
 
       await expect(() =>
-        userCampaignsRepository.updateUserCampaign({
+        userCampaignsRepository.updateUserCampaignByPledge({
           campaign: campaignMock,
           user: userMock,
           token: tokenMock,
@@ -58,13 +58,13 @@ describe('UserCampaignsRepository', () => {
       ).not.toThrow();
     });
 
-    it('should call updateUserCampaign usersCampaignRepository method without errors for an existing document', async () => {
+    it('should call updateUserCampaignByPledge usersCampaignRepository method without errors for an existing document', async () => {
       jest
         .spyOn(userCampaignModel, 'findOne')
         .mockReturnValue(userCampaignMock as any);
 
       await expect(() =>
-        userCampaignsRepository.updateUserCampaign({
+        userCampaignsRepository.updateUserCampaignByPledge({
           campaign: campaignMock,
           user: userMock,
           token: tokenMock,

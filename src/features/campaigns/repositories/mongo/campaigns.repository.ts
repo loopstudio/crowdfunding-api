@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BigNumber, ethers } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
+import { BigNumber } from 'ethers';
+import { formatEther, parseEther } from 'ethers/lib/utils';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
 import {
@@ -16,8 +16,7 @@ import {
 } from '../../constants';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
-
-const etherUtils = ethers.utils;
+import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
 
 @Injectable()
 export class CampaignsMongoRepository {
@@ -57,22 +56,24 @@ export class CampaignsMongoRepository {
     TODO: In a feature, to improve this mechanism, the contract could receive the backend _id at launch method. This
     _id could be emmited on Launch event to map the correct campaign
    */
-  async findByLaunchEvent(
-    ownerId: string,
-    amount: string,
-    tokenAddress: string,
-    pendingStatusId: string,
-    startDate: string,
-    endDate: string,
-  ) {
+  async findByLaunchEvent(findCampaignToLaunchData: {
+    campaignLaunchEventDto: CampaignLaunchEventDto;
+    pendingStatusId: string;
+    ownerId: string;
+  }) {
     const campaing = await this.campaignModel
       .findOne({
-        owner: ownerId,
-        status: pendingStatusId,
-        'goal.amount': amount,
-        'goal.token': tokenAddress,
-        startDate: new Date(Number(startDate)),
-        endDate: new Date(Number(endDate)),
+        owner: findCampaignToLaunchData.ownerId,
+        status: findCampaignToLaunchData.pendingStatusId,
+        'goal.amount': findCampaignToLaunchData.campaignLaunchEventDto.goal,
+        'goal.tokenAddress':
+          findCampaignToLaunchData.campaignLaunchEventDto.tokenAddress,
+        startDate: new Date(
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.startDate),
+        ),
+        endDate: new Date(
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.endDate),
+        ),
       })
       .sort({ created: 'ascending' });
 
@@ -167,7 +168,7 @@ export class CampaignsMongoRepository {
     );
 
     if (tokenIndex >= 0) {
-      const currentValue = etherUtils.parseEther(
+      const currentValue = parseEther(
         campaign.currentAmount[tokenIndex].amount,
       );
 

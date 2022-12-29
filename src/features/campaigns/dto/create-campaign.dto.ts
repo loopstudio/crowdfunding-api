@@ -9,8 +9,8 @@ import {
   MaxDate,
   MinDate,
 } from 'class-validator';
-import { maxCampaignDurationInMs } from '../constants';
 
+import { maxCampaignDurationInMs } from '../constants';
 import { TokenAmount } from '../schemas/campaign.schema';
 
 export class CreateCampaignDto {

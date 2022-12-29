@@ -9,7 +9,9 @@ import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { CampaignCategoriesService } from 'src/features/campaign-categories/services/campaign-category.service';
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
 import {
+  campaignLaunchEventDto,
   createCampaignDtoMock,
+  findCampaignToLaunchData,
   mongoBuiltCampaign,
   mongoBuiltUpdatedCampaign,
   updateCampaignDtoMock,
@@ -28,11 +30,7 @@ describe('UsersService', () => {
 
   const campaignId = '1';
   const pendingStatusId = '63611e68143b8def9c4843cf';
-  const amount = '1000000000000000000';
   const ownerId = '634dd92c34361cf5a21fb96b';
-  const tokenAddress = '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C';
-  const startDate = '1667754096';
-  const endDate = '1667757636';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -214,34 +212,19 @@ describe('UsersService', () => {
         .mockResolvedValue({ _id: pendingStatusId } as any);
 
       const response = await campaignService.findByLaunchEvent(
-        ownerId,
-        amount,
-        tokenAddress,
-        startDate,
-        endDate,
+        campaignLaunchEventDto,
       );
 
       expect(response).toStrictEqual({ campaign: [mongoBuiltCampaign] });
       expect(campaignsRepository.findByLaunchEvent).toBeCalledWith(
-        ownerId,
-        amount,
-        tokenAddress,
-        pendingStatusId,
-        startDate,
-        endDate,
+        findCampaignToLaunchData,
       );
     });
     it('Should throw NotFoundException if creator is not an user', async () => {
       jest.spyOn(usersRepository, 'findByAddress').mockResolvedValue(null);
 
       await expect(
-        campaignService.findByLaunchEvent(
-          ownerId,
-          amount,
-          tokenAddress,
-          startDate,
-          endDate,
-        ),
+        campaignService.findByLaunchEvent(campaignLaunchEventDto),
       ).rejects.toThrowError(NotFoundException);
     });
 
@@ -255,13 +238,7 @@ describe('UsersService', () => {
         .mockResolvedValue(null);
 
       await expect(
-        campaignService.findByLaunchEvent(
-          ownerId,
-          amount,
-          tokenAddress,
-          startDate,
-          endDate,
-        ),
+        campaignService.findByLaunchEvent(campaignLaunchEventDto),
       ).rejects.toThrowError(NotFoundException);
     });
   });

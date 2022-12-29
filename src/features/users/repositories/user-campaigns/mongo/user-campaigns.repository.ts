@@ -19,7 +19,8 @@ export class UserCampaignsRepository {
     private userCampaignModel: Model<UserCampaignDocument>,
   ) {}
 
-  async updateUserCampaign({
+  // TODO: Consider to refactor this method once we add new events handlers
+  async updateUserCampaignByPledge({
     campaign,
     user,
     token,

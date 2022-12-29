@@ -1,3 +1,5 @@
+import { mongoBuiltToken } from 'src/features/tokens/tests/mocks';
+
 const onchainId = 1;
 const userAddress = '0xBB9bc244D798123fDe783fCc1C72d3Bb8C189123';
 const amount = 1;
@@ -25,14 +27,14 @@ export const mongoBuiltCampaign = {
   goal: [
     {
       amount: '1000000000000000000',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
@@ -60,14 +62,14 @@ export const mongoBuiltUpdatedCampaign = {
   goal: [
     {
       amount: '1000000000000000000',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
@@ -130,14 +132,14 @@ export const mongoLaunchedCampaign = {
   goal: [
     {
       amount: '1000000000000000000',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
   currentAmount: [
     {
       amount: '0',
-      tokenAddress: '0xF2f5C73fa04406b1995e397B55c24aB1f3eA726C',
+      tokenAddress: mongoBuiltToken.address,
       _id: '6367be0422ca99a33946949d',
     },
   ],
@@ -182,4 +184,18 @@ export const campaignPledgeMock = {
   created: '2022-12-15T21:50:11.072+0000',
   updated: '2022-12-15T21:50:11.072+0000',
   __v: 0,
+};
+
+export const campaignLaunchEventDto = {
+  creator: launchEventData[2],
+  goal: launchEventData[1],
+  tokenAddress: mongoBuiltToken.address,
+  startDate: launchEventData[3],
+  endDate: launchEventData[4],
+};
+
+export const findCampaignToLaunchData = {
+  campaignLaunchEventDto,
+  pendingStatusId: '63611e68143b8def9c4843cf',
+  ownerId: '634dd92c34361cf5a21fb96b',
 };

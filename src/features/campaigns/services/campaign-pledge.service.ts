@@ -49,7 +49,7 @@ export class CampaignPledgeService {
       action: movementTypeEnum.INCREASE,
     });
 
-    await this.userCampaignsMongoRepository.updateUserCampaign({
+    await this.userCampaignsMongoRepository.updateUserCampaignByPledge({
       campaign,
       user,
       token,
