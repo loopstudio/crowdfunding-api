@@ -33,4 +33,16 @@ export class UsersRepository {
 
     return user;
   }
+
+  async updateUserNonce(publicAddress: string): Promise<User> {
+    const user = await this.userModel.findOne({ publicAddress });
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    user.nonce = getNonce();
+    await user.save();
+
+    return user;
+  }
 }
