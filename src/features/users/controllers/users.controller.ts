@@ -21,19 +21,15 @@ export class UsersController {
     return { data: user.nonce };
   }
 
-  // TODO: Consider moving this route to a Public module
-  // TODO: Improve body type
   @Post('/access')
   async loginUser(
     @Body() body: ValidateUserSignatureDto,
   ): Promise<APIResponse> {
-    // TODO: Generate JTW
-    // TODO: User user id
     // TODO: Add authentication middleware and decorators
+    // TODO: Use user id from request.user
 
-    // TODO: Somehow validate user nonce and address
-    const userJWT = await this.userService.validateUserSignature(body);
+    const { accessToken } = await this.userService.generateJWT(body);
 
-    return { data: userJWT };
+    return { data: { accessToken } };
   }
 }

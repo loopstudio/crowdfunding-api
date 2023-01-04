@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { verifyMessage as ethersVerifyMessage } from 'ethers/lib/utils';
 
 import { UsersRepository } from '../repositories/users/mongo/users.repository';
@@ -24,27 +28,28 @@ export class UsersService {
     return user;
   }
 
-  async validateUserSignature(body: ValidateUserSignatureDto): Promise<null> {
+  async generateJWT(
+    body: ValidateUserSignatureDto,
+  ): Promise<{ accessToken: string }> {
     const { publicAddress, signature } = body;
 
     const user = await this.findUserByAddress(publicAddress);
+    // TODO: Change this message?
     const message = `I am signing my one-time nonce: ${user.nonce}`;
 
-    const isSignatureValid = this.isSignatureValid({
+    this.checkSignatureValidity({
       message,
       signature,
       userAddress: publicAddress,
     });
 
-    console.log(`isSignatureValid >> ${isSignatureValid}`);
+    await user.updateNonce();
+    const userJWT = await user.generateJWT();
 
-    // TODO: We can improve this update process
-    await this.userRepository.updateUserNonce(publicAddress);
-
-    return null;
+    return { accessToken: userJWT };
   }
 
-  isSignatureValid({
+  private checkSignatureValidity({
     message,
     signature,
     userAddress,
@@ -53,10 +58,12 @@ export class UsersService {
     signature: string;
     userAddress: string;
   }): boolean {
-    // TODO: Pending work here!
+    // TODO: Uncomment once the feature is done!
     return true;
 
     const signerAddress = ethersVerifyMessage(message, signature);
-    return userAddress === signerAddress;
+    if (userAddress !== signerAddress) {
+      throw new UnauthorizedException();
+    }
   }
 }

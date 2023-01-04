@@ -1,7 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import * as jwt from 'jsonwebtoken';
 
-export type UserDocument = User & Document;
+import { getNonce } from 'src/common/utils';
+import { TOKEN_EXPIRATION_TIME } from 'src/common/constants';
+
+const { JWT_PRIVATE_KEY } = process.env;
+
+interface UserMethods {
+  updateNonce: () => void;
+  generateJWT: () => string;
+}
+
+export type UserDocument = User & Document & UserMethods;
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
 export class User {
@@ -16,6 +27,21 @@ export class User {
 
   @Prop({ required: true, unique: true, index: true })
   publicAddress: string;
+
+  updateNonce: () => void;
+  generateJWT: () => string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.methods.updateNonce = async function (this: UserDocument) {
+  this.nonce = getNonce();
+  await this.save();
+};
+
+UserSchema.methods.generateJWT = async function (this: UserDocument) {
+  return await jwt.sign(this.toJSON(), JWT_PRIVATE_KEY, {
+    expiresIn: TOKEN_EXPIRATION_TIME,
+    algorithm: 'HS256',
+  });
+};
