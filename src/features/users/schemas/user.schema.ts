@@ -39,6 +39,7 @@ UserSchema.methods.updateNonce = async function (this: UserDocument) {
   await this.save();
 };
 
+// TODO: Once we have the auth module, move this section there
 UserSchema.methods.generateJWT = async function (this: UserDocument) {
   return await jwt.sign(this.toJSON(), JWT_PRIVATE_KEY, {
     expiresIn: TOKEN_EXPIRATION_TIME,

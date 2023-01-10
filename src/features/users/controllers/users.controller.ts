@@ -25,9 +25,6 @@ export class UsersController {
   async loginUser(
     @Body() body: ValidateUserSignatureDto,
   ): Promise<APIResponse> {
-    // TODO: Add authentication middleware and decorators
-    // TODO: Use user id from request.user
-
     const { accessToken } = await this.userService.generateJWT(body);
 
     return { data: { accessToken } };

@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BigNumber } from 'ethers';
@@ -126,6 +129,22 @@ describe('Campaign Statuses Repository', () => {
           updateCampaignDto: updateCampaignDtoMock,
         }),
       ).rejects.toThrowError(NotFoundException);
+    });
+
+    it('should call update method and fails because I want to update an unallowed property', async () => {
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mongoBuiltCampaign),
+      } as any);
+
+      await expect(
+        campaignsRepository.update({
+          id: campaignId,
+          updateCampaignDto: {
+            ...updateCampaignDtoMock,
+            unallowedPropery: '123',
+          },
+        } as any),
+      ).rejects.toThrowError(InternalServerErrorException);
     });
 
     it('should call update method and return an updated campaign', async () => {

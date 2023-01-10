@@ -34,8 +34,7 @@ export class UsersService {
     const { publicAddress, signature } = body;
 
     const user = await this.findUserByAddress(publicAddress);
-    // TODO: Change this message?
-    const message = `I am signing my one-time nonce: ${user.nonce}`;
+    const message = `Signing login nonce: ${user.nonce}`;
 
     this.checkSignatureValidity({
       message,
@@ -57,10 +56,7 @@ export class UsersService {
     message: string;
     signature: string;
     userAddress: string;
-  }): boolean {
-    // TODO: Uncomment once the feature is done!
-    return true;
-
+  }) {
     const signerAddress = ethersVerifyMessage(message, signature);
     if (userAddress !== signerAddress) {
       throw new UnauthorizedException();

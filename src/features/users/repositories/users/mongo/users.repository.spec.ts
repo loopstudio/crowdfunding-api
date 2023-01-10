@@ -7,7 +7,11 @@ import { Model } from 'mongoose';
 
 import { UsersRepository } from './users.repository';
 import { User } from '../../../schemas/user.schema';
-import { createUserDTO, mongoBuiltUser } from '../../../tests/mocks';
+import {
+  createUserDTO,
+  mongoBuiltUser,
+  mongoUserWithFunctions,
+} from '../../../tests/mocks';
 
 describe('UsersRepository', () => {
   let usersRepository: UsersRepository;
@@ -63,6 +67,28 @@ describe('UsersRepository', () => {
 
       await expect(
         usersRepository.findByAddress(mongoBuiltUser.publicAddress),
+      ).rejects.toThrowError(new NotFoundException());
+    });
+  });
+
+  describe('updateUserNonce method', () => {
+    it("should update user's nonce", async () => {
+      jest
+        .spyOn(userModel, 'findOne')
+        .mockResolvedValue(mongoUserWithFunctions as any);
+
+      const response = await usersRepository.updateUserNonce(
+        mongoUserWithFunctions.publicAddress,
+      );
+
+      expect(response).toStrictEqual(mongoUserWithFunctions);
+    });
+
+    it('should throw NotFoundException', async () => {
+      jest.spyOn(userModel, 'findOne').mockResolvedValue(null);
+
+      await expect(
+        usersRepository.updateUserNonce(mongoBuiltUser.publicAddress),
       ).rejects.toThrowError(new NotFoundException());
     });
   });
