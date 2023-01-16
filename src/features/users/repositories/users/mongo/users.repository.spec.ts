@@ -49,9 +49,7 @@ describe('UsersRepository', () => {
 
   describe('findByAddress method', () => {
     it('should get user by public address', async () => {
-      jest.spyOn(userModel, 'findOne').mockReturnValue({
-        lean: jest.fn().mockResolvedValue(mongoBuiltUser),
-      } as any);
+      jest.spyOn(userModel, 'findOne').mockResolvedValue(mongoBuiltUser as any);
 
       const response = await usersRepository.findByAddress(
         mongoBuiltUser.publicAddress,
@@ -61,9 +59,7 @@ describe('UsersRepository', () => {
     });
 
     it('should throw NotFoundException', async () => {
-      jest.spyOn(userModel, 'findOne').mockReturnValue({
-        lean: jest.fn().mockResolvedValue(null),
-      } as any);
+      jest.spyOn(userModel, 'findOne').mockResolvedValue(null);
 
       await expect(
         usersRepository.findByAddress(mongoBuiltUser.publicAddress),

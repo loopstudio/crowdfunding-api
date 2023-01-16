@@ -97,12 +97,14 @@
     "coveragePathIgnorePatterns": [
       "module.ts",
       "filter.ts",
+      "guard.ts",
       "main.ts",
       "constants",
       "database",
       "schema.ts",
       "dto.ts",
       "events.service.ts",
+      "jwt.strategy.ts",
       "common/contracts/index.ts"
     ],
     "testEnvironment": "node",

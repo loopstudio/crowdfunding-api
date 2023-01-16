@@ -13,8 +13,4 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKey: JWT_PRIVATE_KEY,
     });
   }
-
-  // async validate(payload: any) {
-  //   return { userId: payload.sub, username: payload.username };
-  // }
 }
