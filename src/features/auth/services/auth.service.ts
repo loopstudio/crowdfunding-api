@@ -41,13 +41,6 @@ export class AuthService {
     signature: string;
     userAddress: string;
   }) {
-    // TODO: DELETE THIS!
-    // TODO: DELETE THIS!
-    // TODO: DELETE THIS!
-    // TODO: DELETE THIS!
-    // TODO: DELETE THIS!
-    return true;
-
     const signerAddress = ethersVerifyMessage(message, signature);
     if (userAddress !== signerAddress) {
       throw new UnauthorizedException();
