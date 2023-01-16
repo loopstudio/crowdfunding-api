@@ -23,10 +23,8 @@ export class UsersRepository {
     return user;
   }
 
-  async findByAddress(address: string) {
-    const user = await this.userModel
-      .findOne({ publicAddress: address })
-      .lean();
+  async findByAddress(address: string): Promise<UserDocument> {
+    const user = await this.userModel.findOne({ publicAddress: address });
     if (!user) {
       throw new NotFoundException();
     }
