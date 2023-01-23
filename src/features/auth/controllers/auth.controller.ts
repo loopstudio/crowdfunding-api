@@ -4,6 +4,7 @@ import { APIResponse } from 'src/common/types';
 import { AuthService } from '../services/auth.service';
 import { UsersService } from '../../../features/users/services/users.service';
 import { ValidateUserSignatureDto } from '../dtos/validate-user-signature.dto';
+import { Public } from '../decorators';
 
 @Controller('auth')
 export class AuthController {
@@ -12,12 +13,14 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
+  @Public()
   @Get('/:address/nonce')
   async getUserNonce(@Param('address') address: string): Promise<APIResponse> {
     const user = await this.userService.findUserByAddress(address);
     return { data: user.nonce };
   }
 
+  @Public()
   @Post('/login')
   async loginUser(
     @Body() body: ValidateUserSignatureDto,
