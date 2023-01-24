@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Test, TestingModule } from '@nestjs/testing';
-import { NotFoundException } from '@nestjs/common';
+import {
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BigNumber } from 'ethers';
@@ -128,6 +131,22 @@ describe('Campaign Statuses Repository', () => {
       ).rejects.toThrowError(NotFoundException);
     });
 
+    it('should call update method and fails because I want to update an unallowed property', async () => {
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(mongoBuiltCampaign),
+      } as any);
+
+      await expect(
+        campaignsRepository.update({
+          id: campaignId,
+          updateCampaignDto: {
+            ...updateCampaignDtoMock,
+            unallowedPropery: '123',
+          },
+        } as any),
+      ).rejects.toThrowError(InternalServerErrorException);
+    });
+
     it('should call update method and return an updated campaign', async () => {
       const modifiedMongoBuiltUpdatedCampaign = mongoBuiltUpdatedCampaign;
       delete modifiedMongoBuiltUpdatedCampaign.save;
@@ -170,7 +189,7 @@ describe('Campaign Statuses Repository', () => {
   });
 
   describe('updateTokenAmount', () => {
-    it('Should update campign currentAmount data', async () => {
+    it('Should update campign currentAmount data with increase movement', async () => {
       jest.spyOn(campaignModel, 'save' as any).mockResolvedValue(null);
       jest.spyOn(campaignModel, 'findOne').mockResolvedValue({
         ...mongoBuiltCampaign,
@@ -185,6 +204,25 @@ describe('Campaign Statuses Repository', () => {
           amountToChange: BigNumber.from('1'),
           tokenAddress: goal[0].tokenAddress,
           action: 'INCREASE',
+        }),
+      ).not.toThrowError();
+    });
+
+    it('Should update campign currentAmount data with decrease movement', async () => {
+      jest.spyOn(campaignModel, 'save' as any).mockResolvedValue(null);
+      jest.spyOn(campaignModel, 'findOne').mockResolvedValue({
+        ...mongoBuiltCampaign,
+        save: jest.fn(),
+      });
+
+      const { onchainId, goal } = mongoBuiltCampaign;
+
+      await expect(() =>
+        campaignsRepository.updateTokenAmount({
+          campaignId: onchainId,
+          amountToChange: BigNumber.from('1'),
+          tokenAddress: goal[0].tokenAddress,
+          action: 'DECREASE',
         }),
       ).not.toThrowError();
     });

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { UsersRepository } from '../repositories/users/mongo/users.repository';
 import { User } from '../schemas/user.schema';
@@ -15,6 +15,10 @@ export class UsersService {
 
   async findUserByAddress(address: string): Promise<User> {
     const user = await this.userRepository.findByAddress(address);
+    if (!user) {
+      throw new NotFoundException();
+    }
+
     return user;
   }
 }

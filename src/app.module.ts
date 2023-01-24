@@ -11,6 +11,7 @@ import { CampaignsModule } from './features/campaigns/campaigns.module';
 import { TokensModule } from './features/tokens/tokens.module';
 import { CampaignStatusesModule } from './features/campaign-statuses/campaign-statuses.module';
 import { CampaignCategoriesModule } from './features/campaign-categories/campaign-categories.module';
+import { AuthModule } from './features/auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { CampaignCategoriesModule } from './features/campaign-categories/campaig
     TokensModule,
     CampaignStatusesModule,
     CampaignCategoriesModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

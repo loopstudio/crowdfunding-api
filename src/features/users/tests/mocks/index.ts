@@ -47,3 +47,21 @@ export const userCampaignMock = {
   pledges: [pledgeMock._id],
   save: jest.fn(),
 } as unknown as UserCampaign;
+
+export const userLoginData = {
+  signature:
+    '0x27876c5cc1be67e8313633ab0f72ace790886c88a664df1ca0b858c1834782002a0ae1e44fdb3fe7586eec431c115205a36a05bbd31c6c2bce04605825e91cfe1b',
+  publicAddress: '0xE0dEc290373abd36164C61A7d737f4e309d0Ec41',
+};
+
+export const generatedJWT = {
+  accessToken:
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c',
+};
+
+export const mongoUserWithFunctions = {
+  ...mongoBuiltUser,
+  updateNonce: jest.fn().mockResolvedValue(null),
+  generateJWT: jest.fn().mockResolvedValue(generatedJWT.accessToken),
+  save: jest.fn().mockResolvedValue(null),
+};
