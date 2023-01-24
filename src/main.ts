@@ -1,4 +1,4 @@
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import * as morgan from 'morgan';
@@ -6,6 +6,7 @@ import mongoose from 'mongoose';
 
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './middlewares/filters/exception.filter';
+import { JwtAuthGuard } from './features/auth/guards/auth.guard';
 
 const { API_PORT, NODE_ENV } = process.env;
 
@@ -24,6 +25,7 @@ async function bootstrap() {
       disableErrorMessages: isProductionEnv,
     }),
   );
+  app.useGlobalGuards(new JwtAuthGuard(new Reflector()));
   app.enableShutdownHooks();
   app.enableCors({
     // TODO: To be updated once we upload it to production
