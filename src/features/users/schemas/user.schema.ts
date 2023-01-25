@@ -9,6 +9,15 @@ interface UserMethods {
   toJSON: () => Record<string, unknown>;
 }
 
+export interface IUser {
+  username: string;
+  email: string;
+  nonce: string;
+  publicAddress: string;
+  _id: string;
+  __v: number;
+}
+
 export type UserDocument = User & Document & UserMethods;
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })

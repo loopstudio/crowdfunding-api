@@ -10,7 +10,7 @@ import { CampaignCategoriesService } from 'src/features/campaign-categories/serv
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
 import {
   campaignLaunchEventDto,
-  createCampaignDtoMock,
+  createCampaignDtoWithOwnerMock,
   findCampaignToLaunchData,
   mongoBuiltCampaign,
   mongoBuiltUpdatedCampaign,
@@ -124,7 +124,7 @@ describe('UsersService', () => {
       jest.spyOn(tokenService, 'areTokensValid').mockResolvedValue(false);
 
       await expect(
-        campaignService.create(createCampaignDtoMock),
+        campaignService.create(createCampaignDtoWithOwnerMock),
       ).rejects.toThrowError(BadRequestException);
     });
 
@@ -135,7 +135,7 @@ describe('UsersService', () => {
         .mockResolvedValue(null);
 
       await expect(
-        campaignService.create(createCampaignDtoMock),
+        campaignService.create(createCampaignDtoWithOwnerMock),
       ).rejects.toThrowError(BadRequestException);
     });
 
@@ -149,11 +149,11 @@ describe('UsersService', () => {
         .mockResolvedValue(null);
 
       await expect(
-        campaignService.create(createCampaignDtoMock),
+        campaignService.create(createCampaignDtoWithOwnerMock),
       ).rejects.toThrowError(BadRequestException);
     });
 
-    it('should call create and fails with BadRequestException because category is not valid', async () => {
+    it('should call create and create a new campaing without errors', async () => {
       jest.spyOn(tokenService, 'areTokensValid').mockResolvedValue(true);
       jest
         .spyOn(campaignStatusService, 'getStatusByCode')
@@ -165,15 +165,19 @@ describe('UsersService', () => {
         .spyOn(campaignsRepository, 'create')
         .mockResolvedValue(mongoBuiltCampaign as any);
 
-      const response = await campaignService.create(createCampaignDtoMock);
+      const response = await campaignService.create(
+        createCampaignDtoWithOwnerMock,
+      );
 
       expect(response).toStrictEqual({ campaign: mongoBuiltCampaign });
       expect(tokenService.areTokensValid).toBeCalledTimes(1);
       expect(campaignStatusService.getStatusByCode).toBeCalledTimes(1);
       expect(campaignCategoriesService.getByIdOrCode).toBeCalledTimes(1);
       expect(campaignsRepository.create).toBeCalledWith({
-        dto: createCampaignDtoMock,
+        dto: createCampaignDtoWithOwnerMock,
+        owner: createCampaignDtoWithOwnerMock.owner,
         pendingStatusId: mongoBuiltCampaingStatus._id,
+        generalCategoryId: mongoBuiltCampaingCategory._id,
       });
     });
   });

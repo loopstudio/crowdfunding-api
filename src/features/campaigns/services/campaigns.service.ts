@@ -28,8 +28,8 @@ export class CampaignsService {
     private readonly campaignStatusService: CampaignStatusService,
   ) {}
 
-  async create(createCampaignDto: CreateCampaignDto) {
-    const { goal } = createCampaignDto;
+  async create(createCampaignDto: CreateCampaignDto & { owner: string }) {
+    const { goal, owner } = createCampaignDto;
     const tokenAddresses = goal.map((tokenGoal) => {
       return tokenGoal.tokenAddress as unknown as string;
     });
@@ -55,6 +55,7 @@ export class CampaignsService {
     }
 
     const campaign = await this.campaignsMongoRepository.create({
+      owner,
       dto: createCampaignDto,
       pendingStatusId: pendingStatus._id,
       generalCategoryId: generalCategory._id,

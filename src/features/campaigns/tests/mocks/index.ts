@@ -1,3 +1,5 @@
+import { Request } from 'express';
+
 import { mongoBuiltToken } from 'src/features/tokens/tests/mocks';
 
 const onchainId = 1;
@@ -100,12 +102,22 @@ export const createCampaignDtoMock = {
   onchainId: '',
 };
 
+export const createCampaignDtoWithOwnerMock = {
+  ...createCampaignDtoMock,
+  owner: '63611e69143b8def9c484310',
+};
+
 export const updateCampaignDtoMock = {
   title: 'My updated campaign',
   subtitle: 'An amazing updated campaign',
   story: 'This is the long short story: We need the money updated ',
   image: 'updatedImage.png',
   video: 'updatedVideo.mp4',
+};
+
+export const updateCampaignDtoWithOwnerMock = {
+  ...updateCampaignDtoMock,
+  owner: '63611e69143b8def9c484310',
 };
 
 export const launchEventData = [
@@ -199,3 +211,7 @@ export const findCampaignToLaunchData = {
   pendingStatusId: '63611e68143b8def9c4843cf',
   ownerId: '634dd92c34361cf5a21fb96b',
 };
+
+export const requestWithUser = {
+  user: { ...userMock },
+} as unknown as Request;

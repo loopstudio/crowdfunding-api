@@ -18,6 +18,7 @@ import {
   mongoBuiltUpdatedCampaign,
   updateCampaignDtoMock,
 } from '../../tests/mocks';
+import { createCampaignDtoWithOwnerMock } from './../../tests/mocks/index';
 
 describe('Campaign Statuses Repository', () => {
   let campaignsRepository: CampaignsMongoRepository;
@@ -109,6 +110,7 @@ describe('Campaign Statuses Repository', () => {
 
       const response = await campaignsRepository.create({
         dto: createCampaignDtoMock,
+        owner: createCampaignDtoWithOwnerMock.owner,
         pendingStatusId,
         generalCategoryId,
       });

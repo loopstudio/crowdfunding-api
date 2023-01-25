@@ -71,6 +71,16 @@
 				{
 					"name": "/campaigns",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -101,10 +111,20 @@
 				{
 					"name": "/campaigns/:id",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{protocol}}://{{host}}/api/v1/campaigns/63611e69143b8def9c4843d9",
+							"raw": "{{protocol}}://{{host}}/api/v1/campaigns/1",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{host}}"
@@ -113,7 +133,7 @@
 								"api",
 								"v1",
 								"campaigns",
-								"63611e69143b8def9c4843d9"
+								"1"
 							]
 						}
 					},
@@ -126,8 +146,6 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"var moment = require('moment');",
-									"",
 									"const nextMinute = Date.now() + (1000 * 60);",
 									"const nextHour = Date.now() + (1000 * 60 * 60);",
 									"",
@@ -139,6 +157,16 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -185,11 +213,21 @@
 						}
 					],
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"My campaign\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\"\n}",
+							"raw": "{\n    \"title\": \"My campaign 2\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -197,7 +235,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{protocol}}://{{host}}/api/v1/campaigns/6367be0422ca99a33946949b",
+							"raw": "{{protocol}}://{{host}}/api/v1/campaigns/63d1243393e04bd06f0b6900",
 							"protocol": "{{protocol}}",
 							"host": [
 								"{{host}}"
@@ -206,7 +244,7 @@
 								"api",
 								"v1",
 								"campaigns",
-								"6367be0422ca99a33946949b"
+								"63d1243393e04bd06f0b6900"
 							]
 						}
 					},
@@ -220,6 +258,16 @@
 				{
 					"name": "/tokens",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -232,6 +280,88 @@
 								"api",
 								"v1",
 								"tokens"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "/auth/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = JSON.parse(responseBody);",
+									"pm.collectionVariables.set('accessToken', jsonData.data.accessToken);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"publicAddress\": \"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266\",\n    \"signature\": \"123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/v1/auth/login",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/auth/:address/nonce",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"publicAddress\": \"0xD890357F631d209FB3eFabc116cE21233A624651\",\n    \"username\": \"facu\",\n    \"email\": \"facu@loopstudio.dev\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{protocol}}://{{host}}/api/v1/auth/0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266/nonce",
+							"protocol": "{{protocol}}",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+								"nonce"
 							]
 						}
 					},
@@ -273,12 +403,17 @@
 		},
 		{
 			"key": "startDate",
-			"value": "",
+			"value": "2023-01-25T12:09:17.923Z",
 			"type": "string"
 		},
 		{
 			"key": "endDate",
-			"value": "",
+			"value": "2023-01-25T13:08:17.923Z",
+			"type": "string"
+		},
+		{
+			"key": "accessToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzRkZDkyYzM0MzYxY2Y1YTIxZmI5NmIiLCJ1c2VybmFtZSI6InJjYXJnbmVsdXR0aSIsImVtYWlsIjoicmNhcmduZWx1dHRpQGxvb3BzdHVkaW8uZGV2Iiwibm9uY2UiOiJiY2M2NzQ2MS04NDZlLTRkNzctODJjOS02MGQxNGI4MzhkMTIiLCJwdWJsaWNBZGRyZXNzIjoiMHhmMzlGZDZlNTFhYWQ4OEY2RjRjZTZhQjg4MjcyNzljZmZGYjkyMjY2IiwiY3JlYXRlZCI6IjIwMjItMTAtMTdUMjI6Mzc6MzIuMDk1WiIsInVwZGF0ZWQiOiIyMDIzLTAxLTI1VDEyOjA0OjU3LjQ0MVoiLCJfX3YiOjAsImlhdCI6MTY3NDY0ODI5NywiZXhwIjoxNjc3MjQwMjk3fQ.AIgwu18K1QRiTIzkaH9iyuR0NJz723NzK6EOqdi1iHM",
 			"type": "string"
 		}
 	]
