@@ -33,6 +33,8 @@ async function bootstrap() {
     methods: ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'],
   });
 
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
   try {
     mongoose.set('debug', !isProductionEnv);
 

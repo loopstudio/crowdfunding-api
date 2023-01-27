@@ -72,10 +72,7 @@ export class CampaignLaunchService {
     creator: ${creator}, startDate: ${startDate}, endDate: ${endDate},`);
     } catch (err) {
       if (err.status === HttpStatus.NOT_FOUND) {
-        const errorMsg =
-          'Pending campaing doesnt exists for event: ' +
-          JSON.stringify(eventData);
-        this.logger.error(errorMsg);
+        this.logger.error('Pending campaign not found' + err);
       } else {
         throw new InternalServerErrorException(err);
       }

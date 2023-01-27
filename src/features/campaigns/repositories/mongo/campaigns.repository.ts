@@ -69,10 +69,12 @@ export class CampaignsMongoRepository {
         'goal.tokenAddress':
           findCampaignToLaunchData.campaignLaunchEventDto.tokenAddress,
         startDate: new Date(
-          Number(findCampaignToLaunchData.campaignLaunchEventDto.startDate),
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.startDate) *
+            1000,
         ),
         endDate: new Date(
-          Number(findCampaignToLaunchData.campaignLaunchEventDto.endDate),
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.endDate) *
+            1000,
         ),
       })
       .sort({ created: 'ascending' });
@@ -90,7 +92,7 @@ export class CampaignsMongoRepository {
     generalCategoryId: string;
   }) {
     // FIXME: Assign logged in user
-    const owner = '634dd92c34361cf5a21fb96b';
+    const owner = '638781a5202848998b9dbf56';
 
     const {
       dto: { title, subtitle, story, startDate, endDate, image, video, goal },
