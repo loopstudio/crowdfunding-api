@@ -6,7 +6,9 @@ import {
   Body,
   Param,
   Query,
+  Request,
 } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
 
 import { CampaignsService } from '../services/campaigns.service';
 import { CreateCampaignDto } from '../dto/create-campaign.dto';
@@ -20,9 +22,18 @@ export class CampaignsController {
 
   @Post()
   async create(
+    @Request() request: ExpressRequest,
     @Body() createCampaignDto: CreateCampaignDto,
   ): Promise<APIResponse> {
-    const { campaign } = await this.campaignsService.create(createCampaignDto);
+    const {
+      user: { _id: owner },
+    } = request;
+
+    const { campaign } = await this.campaignsService.create({
+      owner,
+      ...createCampaignDto,
+    });
+
     return { data: campaign };
   }
 

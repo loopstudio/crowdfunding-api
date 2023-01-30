@@ -103,6 +103,7 @@
       "database",
       "schema.ts",
       "dto.ts",
+      ".d.ts",
       "events.service.ts",
       "jwt.strategy.ts",
       "common/contracts/index.ts"
