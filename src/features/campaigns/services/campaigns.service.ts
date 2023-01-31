@@ -64,10 +64,19 @@ export class CampaignsService {
     return { campaign };
   }
 
-  async findAll({ page, size }: { page: number; size: number }) {
+  async findAll({
+    page,
+    size,
+    ownerId,
+  }: {
+    page: number;
+    size: number;
+    ownerId: string | null;
+  }) {
     const campaigns = await this.campaignsMongoRepository.findAll({
       page,
       size,
+      ownerId,
     });
 
     return { campaigns };
