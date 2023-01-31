@@ -93,7 +93,11 @@ describe('UsersService', () => {
 
   describe('findAll method', () => {
     it('should call findAll and return an array of campaigns', async () => {
-      const findAllArguments = { page: 0, size: 1 };
+      const findAllArguments = {
+        page: 0,
+        size: 1,
+        ownerId: '634dd92c34361cf5a21fb96b',
+      };
 
       jest
         .spyOn(campaignsRepository, 'findAll')

@@ -63,7 +63,11 @@ describe('Campaign Statuses Repository', () => {
         lean: jest.fn().mockResolvedValue([mongoBuiltCampaign]),
       } as any);
 
-      const response = await campaignsRepository.findAll({ page: 0, size: 1 });
+      const response = await campaignsRepository.findAll({
+        page: 0,
+        size: 1,
+        ownerId: '634dd92c34361cf5a21fb96b',
+      });
 
       expect(response).toStrictEqual([mongoBuiltCampaign]);
     });
@@ -76,7 +80,11 @@ describe('Campaign Statuses Repository', () => {
         lean: jest.fn().mockResolvedValue([mongoBuiltCampaign]),
       } as any);
 
-      const response = await campaignsRepository.findAll({ page: 1, size: 1 });
+      const response = await campaignsRepository.findAll({
+        page: 1,
+        size: 1,
+        ownerId: '634dd92c34361cf5a21fb96b',
+      });
 
       expect(response).toStrictEqual([mongoBuiltCampaign]);
     });
