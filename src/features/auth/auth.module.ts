@@ -6,9 +6,7 @@ import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from '../auth/strategies/jwt.strategy';
-import { TOKEN_EXPIRATION_TIME } from '../../common/constants/index';
-
-const { JWT_PRIVATE_KEY } = process.env;
+import { authInitializationFactory } from 'src/common/auth';
 
 @Module({
   providers: [AuthService, JwtStrategy],
@@ -16,10 +14,7 @@ const { JWT_PRIVATE_KEY } = process.env;
   imports: [
     UsersModule,
     PassportModule,
-    JwtModule.register({
-      secret: JWT_PRIVATE_KEY,
-      signOptions: { expiresIn: TOKEN_EXPIRATION_TIME },
-    }),
+    JwtModule.registerAsync(authInitializationFactory),
   ],
 })
 export class AuthModule {}
