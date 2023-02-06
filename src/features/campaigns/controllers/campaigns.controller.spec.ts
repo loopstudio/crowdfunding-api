@@ -9,6 +9,7 @@ import {
   createCampaignDtoMock,
   updateCampaignDtoMock,
   mongoBuiltUpdatedCampaign,
+  requestWithUser,
 } from '../tests/mocks';
 
 describe('Campaigns Controller', () => {
@@ -71,10 +72,16 @@ describe('Campaigns Controller', () => {
         .spyOn(campaignsService, 'create')
         .mockResolvedValue({ campaign: mongoBuiltCampaign } as any);
 
-      const response = await campaignsController.create(createCampaignDtoMock);
+      const response = await campaignsController.create(
+        requestWithUser,
+        createCampaignDtoMock,
+      );
 
       expect(response).toStrictEqual({ data: mongoBuiltCampaign });
-      expect(campaignsService.create).toBeCalledWith(createCampaignDtoMock);
+      expect(campaignsService.create).toBeCalledWith({
+        ...createCampaignDtoMock,
+        owner: requestWithUser.user._id,
+      });
     });
   });
 

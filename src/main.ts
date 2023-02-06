@@ -24,6 +24,7 @@ async function bootstrap() {
     new ValidationPipe({
       disableErrorMessages: isProductionEnv,
     }),
+    new ValidationPipe({ transform: true }),
   );
   app.useGlobalGuards(new JwtAuthGuard(new Reflector()));
   app.enableShutdownHooks();
@@ -32,8 +33,6 @@ async function bootstrap() {
     origin: '*',
     methods: ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'],
   });
-
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   try {
     mongoose.set('debug', !isProductionEnv);

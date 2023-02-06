@@ -17,6 +17,7 @@ import {
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
+import { getDateFromTimestampOrISO } from 'src/common/utils';
 
 @Injectable()
 export class CampaignsMongoRepository {
@@ -90,16 +91,17 @@ export class CampaignsMongoRepository {
     dto: CreateCampaignDto;
     pendingStatusId: string;
     generalCategoryId: string;
+    owner: string;
   }) {
-    // FIXME: Assign logged in user
-    const owner = '638781a5202848998b9dbf56';
-
     const {
-      dto: { title, subtitle, story, startDate, endDate, image, video, goal },
-      pendingStatusId,
       generalCategoryId,
+      owner,
+      pendingStatusId,
+      dto: { title, subtitle, story, startDate, endDate, image, video, goal },
     } = createCampaignData;
 
+    const transformedStartDate = getDateFromTimestampOrISO(startDate);
+    const transformedEndDate = getDateFromTimestampOrISO(endDate);
     const currentAmount = goal.map((tokenAmount) => ({
       token: tokenAmount.tokenAddress,
       amount: 0,
@@ -109,15 +111,15 @@ export class CampaignsMongoRepository {
       title,
       subtitle,
       story,
-      startDate: new Date(Number(startDate)),
-      endDate: new Date(Number(endDate)),
       image,
       video,
-      status: pendingStatusId,
       goal,
+      owner,
+      startDate: transformedStartDate,
+      endDate: transformedEndDate,
+      status: pendingStatusId,
       currentAmount,
       category: generalCategoryId,
-      owner,
     });
 
     return campaign;

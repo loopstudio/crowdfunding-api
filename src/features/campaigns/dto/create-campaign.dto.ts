@@ -33,7 +33,7 @@ export class CreateCampaignDto {
     },
   )
   @Type(() => Date)
-  @MinDate(new Date(Date.now()))
+  @MinDate(new Date())
   startDate: Date;
 
   @Transform(
