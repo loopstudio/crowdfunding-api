@@ -39,10 +39,21 @@ export class CampaignsController {
 
   @Get()
   async findAll(
+    @Request() request: ExpressRequest,
     @Query('size') size = DEFAULT_PAGE_SIZE,
     @Query('page') page = DEFAULT_PAGE,
+    @Query('own') own = false,
   ): Promise<APIResponse> {
-    const { campaigns } = await this.campaignsService.findAll({ page, size });
+    const {
+      user: { _id: owner },
+    } = request;
+    const ownerId = own ? owner : null;
+
+    const { campaigns } = await this.campaignsService.findAll({
+      page,
+      size,
+      ownerId,
+    });
     return { data: campaigns };
   }
 

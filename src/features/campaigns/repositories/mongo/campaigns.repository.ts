@@ -25,11 +25,22 @@ export class CampaignsMongoRepository {
     @InjectModel(Campaign.name) private campaignModel: Model<CampaignDocument>,
   ) {}
 
-  async findAll({ page, size }: { page: number; size: number }) {
+  async findAll({
+    page,
+    size,
+    ownerId,
+  }: {
+    page: number;
+    size: number;
+    ownerId: string | null;
+  }) {
     const skipValue = page > 0 ? (page - 1) * size : 0;
+    const filters = {
+      ...(ownerId && { owner: ownerId }),
+    };
 
     const campaings = await this.campaignModel
-      .find()
+      .find(filters)
       .sort({ created: -1 })
       .skip(skipValue)
       .limit(size)

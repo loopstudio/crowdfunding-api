@@ -48,7 +48,7 @@ describe('Campaigns Controller', () => {
         .spyOn(campaignsService, 'findAll')
         .mockResolvedValue({ campaigns: [mongoBuiltCampaign] } as any);
 
-      const response = await campaignsController.findAll();
+      const response = await campaignsController.findAll(requestWithUser);
 
       expect(response).toStrictEqual({ data: [mongoBuiltCampaign] });
     });
