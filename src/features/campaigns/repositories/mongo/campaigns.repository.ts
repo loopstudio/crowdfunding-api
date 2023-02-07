@@ -17,7 +17,6 @@ import {
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
-import { getDateFromTimestampOrISO } from 'src/common/utils';
 
 @Injectable()
 export class CampaignsMongoRepository {
@@ -109,8 +108,6 @@ export class CampaignsMongoRepository {
       dto: { title, subtitle, story, startDate, endDate, image, video, goal },
     } = createCampaignData;
 
-    const transformedStartDate = getDateFromTimestampOrISO(startDate);
-    const transformedEndDate = getDateFromTimestampOrISO(endDate);
     const currentAmount = goal.map((tokenAmount) => ({
       token: tokenAmount.tokenAddress,
       amount: 0,
@@ -124,8 +121,8 @@ export class CampaignsMongoRepository {
       video,
       goal,
       owner,
-      startDate: transformedStartDate,
-      endDate: transformedEndDate,
+      startDate,
+      endDate,
       status: pendingStatusId,
       currentAmount,
       category: generalCategoryId,

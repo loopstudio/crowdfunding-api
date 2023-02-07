@@ -54,6 +54,7 @@ export class CampaignsController {
       size,
       ownerId,
     });
+
     return { data: campaigns };
   }
 

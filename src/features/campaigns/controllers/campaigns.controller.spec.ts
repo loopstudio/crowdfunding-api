@@ -12,6 +12,9 @@ import {
   requestWithUser,
 } from '../tests/mocks';
 
+const PAGE_SIZE = 10;
+const PAGE = 1;
+
 describe('Campaigns Controller', () => {
   let campaignsController: CampaignsController;
   let campaignsService: CampaignsService;
@@ -49,6 +52,21 @@ describe('Campaigns Controller', () => {
         .mockResolvedValue({ campaigns: [mongoBuiltCampaign] } as any);
 
       const response = await campaignsController.findAll(requestWithUser);
+
+      expect(response).toStrictEqual({ data: [mongoBuiltCampaign] });
+    });
+
+    it('should call findAll campaignsService method without errors', async () => {
+      jest
+        .spyOn(campaignsService, 'findAll')
+        .mockResolvedValue({ campaigns: [mongoBuiltCampaign] } as any);
+
+      const response = await campaignsController.findAll(
+        requestWithUser,
+        PAGE_SIZE,
+        PAGE,
+        true,
+      );
 
       expect(response).toStrictEqual({ data: [mongoBuiltCampaign] });
     });
