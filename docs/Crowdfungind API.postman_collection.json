@@ -148,9 +148,11 @@
 								"exec": [
 									"const nextMinute = Date.now() + (1000 * 60);",
 									"const nextHour = Date.now() + (1000 * 60 * 60);",
+									"const nextMinuteInSeconds = nextMinute / 1000;",
+									"const nextHourInSeconds = nextHour / 1000;",
 									"",
-									"pm.collectionVariables.set('startDate', new Date(nextMinute));",
-									"pm.collectionVariables.set('endDate', new Date(nextHour));"
+									"pm.collectionVariables.set('startDate', nextMinuteInSeconds);",
+									"pm.collectionVariables.set('endDate', nextHourInSeconds);"
 								],
 								"type": "text/javascript"
 							}
@@ -171,7 +173,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"title\": \"My campaign\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"startDate\": \"{{startDate}}\",\n    \"endDate\": \"{{endDate}}\",\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\",\n    \"goal\": [{\n        \"tokenAddress\": \"0x5FbDB2315678afecb367f032d93F642f64180aa3\",\n        \"amount\": \"100\"\n    }]\n}",
+							"raw": "{\n    \"title\": \"My campaign\",\n    \"subtitle\": \"An amazing campaign\",\n    \"story\": \"This is the long short story: We need the money\",\n    \"startDate\": {{startDate}},\n    \"endDate\": {{endDate}},\n    \"image\": \"image.png\",\n    \"video\": \"video.mp4\",\n    \"goal\": [{\n        \"tokenAddress\": \"0x5FbDB2315678afecb367f032d93F642f64180aa3\",\n        \"amount\": \"100\"\n    }]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
