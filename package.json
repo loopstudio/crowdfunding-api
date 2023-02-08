@@ -106,7 +106,7 @@
       ".d.ts",
       "events.service.ts",
       "jwt.strategy.ts",
-      "common/contracts/index.ts"
+      "common"
     ],
     "testEnvironment": "node",
     "moduleNameMapper": {
