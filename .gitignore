@@ -36,6 +36,7 @@ lerna-debug.log*
 
 # mongodb
 database/data
+db
 
 # env vars
 .env
