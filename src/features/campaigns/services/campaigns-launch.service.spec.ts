@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Test, TestingModule } from '@nestjs/testing';
+import { HttpStatus, InternalServerErrorException } from '@nestjs/common';
 
 import { CampaignsService } from './campaigns.service';
 import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
@@ -97,7 +98,7 @@ describe('Campaign Launch Service', () => {
       ).rejects.toThrowError();
     });
 
-    it('Sould update status and onchainId succesfully', async () => {
+    it('Should update status and onchainId succesfully', async () => {
       jest
         .spyOn(campaignLaunchMongoRepository, 'create')
         .mockReturnValue(mongoCampaignLaunch as any);
@@ -131,6 +132,32 @@ describe('Campaign Launch Service', () => {
         id: mongoBuiltCampaign._id,
         updateCampaignDto,
       });
+    });
+
+    it('Should fail because it cannot find the related campaing', async () => {
+      jest
+        .spyOn(tokenRepository, 'getByDefault')
+        .mockReturnValue(mongoBuiltToken as any);
+      jest
+        .spyOn(campaignService, 'findByLaunchEvent')
+        .mockRejectedValue({ status: HttpStatus.NOT_FOUND });
+
+      const response = await campaignLaunchService.create(launchEventData);
+
+      expect(response).toBe(undefined);
+    });
+
+    it('Should fail with a 500 error code because something unexpected happended', async () => {
+      jest
+        .spyOn(tokenRepository, 'getByDefault')
+        .mockReturnValue(mongoBuiltToken as any);
+      jest
+        .spyOn(campaignService, 'findByLaunchEvent')
+        .mockRejectedValue(new InternalServerErrorException());
+
+      await expect(() =>
+        campaignLaunchService.create(launchEventData),
+      ).rejects.toThrowError(InternalServerErrorException);
     });
   });
 });

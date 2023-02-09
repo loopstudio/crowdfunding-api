@@ -17,7 +17,6 @@ import {
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
-import { getDateFromTimestampOrISO } from 'src/common/utils';
 
 @Injectable()
 export class CampaignsMongoRepository {
@@ -25,11 +24,22 @@ export class CampaignsMongoRepository {
     @InjectModel(Campaign.name) private campaignModel: Model<CampaignDocument>,
   ) {}
 
-  async findAll({ page, size }: { page: number; size: number }) {
+  async findAll({
+    page,
+    size,
+    ownerId,
+  }: {
+    page: number;
+    size: number;
+    ownerId: string | null;
+  }) {
     const skipValue = page > 0 ? (page - 1) * size : 0;
+    const filters = {
+      ...(ownerId && { owner: ownerId }),
+    };
 
     const campaings = await this.campaignModel
-      .find()
+      .find(filters)
       .sort({ created: -1 })
       .skip(skipValue)
       .limit(size)
@@ -100,8 +110,6 @@ export class CampaignsMongoRepository {
       dto: { title, subtitle, story, startDate, endDate, image, video, goal },
     } = createCampaignData;
 
-    const transformedStartDate = getDateFromTimestampOrISO(startDate);
-    const transformedEndDate = getDateFromTimestampOrISO(endDate);
     const currentAmount = goal.map((tokenAmount) => ({
       token: tokenAmount.tokenAddress,
       amount: 0,
@@ -115,8 +123,8 @@ export class CampaignsMongoRepository {
       video,
       goal,
       owner,
-      startDate: transformedStartDate,
-      endDate: transformedEndDate,
+      startDate,
+      endDate,
       status: pendingStatusId,
       currentAmount,
       category: generalCategoryId,
