@@ -23,6 +23,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       disableErrorMessages: isProductionEnv,
+      transform: true,
     }),
   );
   app.useGlobalGuards(new JwtAuthGuard(new Reflector()));

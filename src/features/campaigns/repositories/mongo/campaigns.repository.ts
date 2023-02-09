@@ -80,10 +80,12 @@ export class CampaignsMongoRepository {
         'goal.tokenAddress':
           findCampaignToLaunchData.campaignLaunchEventDto.tokenAddress,
         startDate: new Date(
-          Number(findCampaignToLaunchData.campaignLaunchEventDto.startDate),
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.startDate) *
+            1000,
         ),
         endDate: new Date(
-          Number(findCampaignToLaunchData.campaignLaunchEventDto.endDate),
+          Number(findCampaignToLaunchData.campaignLaunchEventDto.endDate) *
+            1000,
         ),
       })
       .sort({ created: 'ascending' });
