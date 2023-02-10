@@ -2,17 +2,17 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { CampaignsService } from './campaigns.service';
-import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
+import { CampaignsService } from '.././campaigns.service';
+import { CampaignsMongoRepository } from '../../repositories/mongo/campaigns.repository';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import {
   campaignPledgeArgumentMock,
   campaignPledgeMock,
   tokenMock,
   userMock,
-} from '../tests/mocks';
+} from '../../tests/mocks';
 import { UsersService } from 'src/features/users/services/users.service';
-import { CampaignPledgeMongoRepository } from '../repositories/mongo/campaign-pledge.repository';
+import { CampaignPledgeMongoRepository } from '../../repositories/mongo/campaign-pledge/campaign-pledge.repository';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 import { CampaignPledgeService } from './campaign-pledge.service';
 import { campaignMock } from 'src/features/users/tests/mocks';

@@ -5,8 +5,8 @@ import { getModelToken } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 
 import { CampaignPledgeMongoRepository } from './campaign-pledge.repository';
-import { CampaignPledge } from '../../schemas/campaign-pledge.schema';
-import { campaignPledgeMock } from '../../tests/mocks';
+import { CampaignPledge } from '../../../schemas/campaign-pledge.schema';
+import { campaignPledgeMock } from '../../../tests/mocks';
 
 describe('Campaign Statuses Repository', () => {
   let campaignPledgeRepository: CampaignPledgeMongoRepository;
