@@ -6,9 +6,10 @@ import { Model, ObjectId } from 'mongoose';
 
 import { CampaignPledgeMongoRepository } from './campaign-pledge.repository';
 import { CampaignPledge } from '../../../schemas/campaign-pledge.schema';
+import { IUser } from 'src/features/users/schemas/user.schema';
 import { campaignPledgeMock } from '../../../tests/mocks';
 
-describe('Campaign Statuses Repository', () => {
+describe('Campaign Pledge Repository', () => {
   let campaignPledgeRepository: CampaignPledgeMongoRepository;
   let campaignPledgeModel: Model<CampaignPledge>;
 
@@ -32,6 +33,9 @@ describe('Campaign Statuses Repository', () => {
             lean: jest.fn(),
             create: jest.fn(),
             save: jest.fn(),
+            aggregate: jest
+              .fn()
+              .mockReturnValue([{ campaigns: [{ _id: 'campaign-id' }] }]),
           },
         },
       ],
@@ -59,6 +63,75 @@ describe('Campaign Statuses Repository', () => {
       });
 
       expect(response).toStrictEqual(campaignPledgeMock);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should call aggregate with the correct parameters', async () => {
+      const user: IUser = {
+        _id: 'user-id',
+        username: 'username',
+        email: 'username@test.com',
+        nonce: '9633a903-5459-4b5d-95b2-3d7f94073101',
+        publicAddress: '0xD890357F631d209FB3eFabc116cE21233A624511',
+        __v: 0,
+      };
+      const page = 1;
+      const size = 10;
+      const expectedAggregateParams = [
+        {
+          $match: { user: user._id },
+        },
+        { $sort: { created: -1 } },
+        { $skip: 0 },
+        { $limit: size },
+        {
+          $group: {
+            _id: null,
+            campaigns: {
+              $addToSet: '$campaign',
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            campaigns: 1,
+          },
+        },
+        {
+          $lookup: {
+            from: 'campaigns',
+            localField: 'campaigns',
+            foreignField: '_id',
+            as: 'campaigns',
+          },
+        },
+      ];
+      await campaignPledgeRepository.findAll({ page, size, user });
+      expect(campaignPledgeModel.aggregate).toHaveBeenCalledWith(
+        expectedAggregateParams,
+      );
+    });
+
+    it('should return the result of aggregate', async () => {
+      const user: IUser = {
+        _id: 'user-id',
+        username: 'username',
+        email: 'username@test.com',
+        nonce: '9633a903-5459-4b5d-95b2-3d7f94073101',
+        publicAddress: '0xD890357F631d209FB3eFabc116cE21233A624511',
+        __v: 0,
+      };
+      const page = 1;
+      const size = 10;
+      const expectedResult = [{ campaigns: [{ _id: 'campaign-id' }] }];
+      const result = await campaignPledgeRepository.findAll({
+        page,
+        size,
+        user,
+      });
+      expect(result).toEqual(expectedResult);
     });
   });
 });
