@@ -49,7 +49,9 @@ export class CampaignsMongoRepository {
   }
 
   async findOne(onchainId: string) {
-    const campaing = await this.campaignModel.findOne({ onchainId: onchainId });
+    // TODO: remove this
+    // const campaing = await this.campaignModel.findOne({ onchainId: onchainId });
+    const campaing = await this.campaignModel.findOne();
     if (!campaing) {
       throw new NotFoundException();
     }
@@ -141,7 +143,7 @@ export class CampaignsMongoRepository {
     updateCampaignDto: UpdateCampaignDto;
   }) {
     const existingCampaign = await this.campaignModel
-      .findOne({ _id: id })
+      .findOne({ onchainId: id })
       .exec();
     if (!existingCampaign) {
       throw new NotFoundException();

@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
+import { CrowdfundingEvent } from 'src/features/events/types/index';
 import { CampaignPledgeDocument } from 'src/features/campaigns/schemas/campaign-pledge.schema';
 import { CampaignDocument } from 'src/features/campaigns/schemas/campaign.schema';
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
@@ -19,49 +20,72 @@ export class UserCampaignsRepository {
     private userCampaignModel: Model<UserCampaignDocument>,
   ) {}
 
-  // TODO: Consider to refactor this method once we add new events handlers
-  async updateUserCampaignByPledge({
+  async updateUserCampaignByEvent({
     campaign,
     user,
     token,
-    pledge,
+    eventType,
+    event,
   }: {
     campaign: CampaignDocument;
     user: UserDocument;
     token: TokenDocument;
-    pledge: CampaignPledgeDocument;
+    eventType: CrowdfundingEvent;
+    event: CampaignPledgeDocument | CampaignPledgeDocument;
   }): Promise<void> {
-    const existingUserCampaign = await this.userCampaignModel.findOne({
+    let associatedUserCampaign = await this.userCampaignModel.findOne({
       campaign: campaign._id,
       user: user._id,
       token: token._id,
     });
 
-    if (existingUserCampaign) {
-      existingUserCampaign.pledges.push(pledge._id);
-      existingUserCampaign.totalPledged = formatEther(
-        parseEther(existingUserCampaign.totalPledged).add(
-          parseEther(pledge.amount),
-        ),
-      );
-
-      await existingUserCampaign.save();
-    } else {
-      const newUserCampaign = await this.userCampaignModel.create({
+    if (!associatedUserCampaign) {
+      associatedUserCampaign = await this.userCampaignModel.create({
         campaign: campaign._id,
         user: user._id,
         token: token._id,
-        totalPledged: formatEther(pledge.amount),
+        totalPledged: 0,
         totalUnpledged: 0,
         totalClaimed: 0,
         totalRefunded: 0,
-        pledges: [pledge._id],
+        pledges: [],
         unpledges: [],
         claims: [],
         refunds: [],
       });
-
-      await newUserCampaign.save();
     }
+
+    const userCampignToSave = this.getUserCampaignUpdated({
+      event,
+      eventType,
+      userCampaign: associatedUserCampaign,
+    });
+
+    await userCampignToSave.save();
+  }
+
+  private getUserCampaignUpdated({
+    userCampaign,
+    eventType,
+    event,
+  }: {
+    userCampaign: UserCampaignDocument;
+    eventType: CrowdfundingEvent;
+    event: CampaignPledgeDocument | CampaignPledgeDocument;
+  }): UserCampaignDocument {
+    switch (eventType) {
+      case CrowdfundingEvent.Pledge:
+        userCampaign.pledges.push(event._id);
+        userCampaign.totalPledged = formatEther(
+          parseEther(userCampaign.totalPledged).add(parseEther(event.amount)),
+        );
+        break;
+      case CrowdfundingEvent.Claim:
+        userCampaign.claims.push(event._id);
+        userCampaign.totalClaimed = formatEther(parseEther(event.amount));
+        break;
+    }
+
+    return userCampaign;
   }
 }

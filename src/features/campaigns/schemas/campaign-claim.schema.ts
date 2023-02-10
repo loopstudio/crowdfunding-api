@@ -5,10 +5,10 @@ import { User } from 'src/features/users/schemas/user.schema';
 import { Campaign } from 'src/features/campaigns/schemas/campaign.schema';
 import { Token } from 'src/features/tokens/schemas/token.schema';
 
-export type ClaimDocument = Claim & Document;
+export type CampaignClaimDocument = CampaignClaim & Document;
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
-export class Claim {
+export class CampaignClaim {
   @Prop({ index: true, type: MongooseSchema.Types.ObjectId, ref: 'Campaign' })
   campaign: Campaign;
 
@@ -25,4 +25,4 @@ export class Claim {
   date: Date;
 }
 
-export const ClaimSchema = SchemaFactory.createForClass(Claim);
+export const CampaignClaimSchema = SchemaFactory.createForClass(CampaignClaim);

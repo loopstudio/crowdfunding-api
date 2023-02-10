@@ -12,6 +12,7 @@ import { EventsMongoRepository } from '../repositories/mongo/events.repository';
 import { CrowdfundingEvent } from '../types';
 import { CampaignLaunchService } from 'src/features/campaigns/services/campaign-launch.service';
 import { CampaignPledgeService } from 'src/features/campaigns/services/campaign-pledge.service';
+import { CampaignClaimService } from 'src/features/campaigns/services/campaign-claim/campaign-claim.service';
 
 @Injectable()
 export class EventsService
@@ -25,6 +26,7 @@ export class EventsService
     private eventsMongoRepository: EventsMongoRepository,
     private campaignLaunchService: CampaignLaunchService,
     private campaignPledgeService: CampaignPledgeService,
+    private campaignClaimService: CampaignClaimService,
   ) {}
 
   onApplicationShutdown() {
@@ -77,6 +79,9 @@ export class EventsService
         break;
       case CrowdfundingEvent.Pledge:
         await this.campaignPledgeService.create(data);
+        break;
+      case CrowdfundingEvent.Claim:
+        await this.campaignClaimService.create(data);
         break;
     }
 

@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
 
 import { Campaign } from 'src/features/campaigns/schemas/campaign.schema';
-import { Claim } from 'src/features/campaigns/schemas/claim.schema';
+import { CampaignClaim } from 'src/features/campaigns/schemas/campaign-claim.schema';
 import { CampaignPledge } from 'src/features/campaigns/schemas/campaign-pledge.schema';
 import { Refund } from 'src/features/campaigns/schemas/refund.schema';
 import { Unpledge } from 'src/features/campaigns/schemas/unpledge.schema';
@@ -51,8 +51,8 @@ export class UserCampaign {
   @Prop([Unpledge])
   unpledges: Unpledge[];
 
-  @Prop([Claim])
-  claims: Claim[];
+  @Prop([CampaignClaim])
+  claims: CampaignClaim[];
 
   @Prop([Refund])
   refunds: Refund[];
