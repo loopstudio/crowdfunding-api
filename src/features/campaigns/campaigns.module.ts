@@ -4,7 +4,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { CampaignsService } from './services/campaigns.service';
 import { CampaignsController } from './controllers/campaigns.controller';
 import { CampaignsPledgeController } from './controllers/campaign-pledge/campaigns-pledge.controller';
-
 import { CampaignsMongoRepository } from './repositories/mongo/campaigns.repository';
 import { Campaign, CampaignSchema } from './schemas/campaign.schema';
 import { TokensModule } from '../tokens/tokens.module';
