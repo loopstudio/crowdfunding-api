@@ -40,7 +40,7 @@ describe('CampaignsPledge Controller', () => {
     const expectedParams = {
       page,
       size,
-      user,
+      userId: user._id,
     };
 
     await controller.findAllByUser(request, size, page);
@@ -54,7 +54,7 @@ describe('CampaignsPledge Controller', () => {
     const expectedParams = {
       page: DEFAULT_PAGE,
       size: DEFAULT_PAGE_SIZE,
-      user,
+      userId: user._id,
     };
 
     await controller.findAllByUser(request);

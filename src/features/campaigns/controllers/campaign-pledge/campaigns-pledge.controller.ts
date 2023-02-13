@@ -15,11 +15,13 @@ export class CampaignsPledgeController {
     @Query('size') size: number = DEFAULT_PAGE_SIZE,
     @Query('page') page: number = DEFAULT_PAGE,
   ): Promise<APIResponse> {
-    const { user } = request;
+    const {
+      user: { _id: userId },
+    } = request;
     const campaigns = await this.campaignPledgeService.findAllByUser({
       page,
       size,
-      user,
+      userId,
     });
     return { data: campaigns };
   }

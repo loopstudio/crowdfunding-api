@@ -6,7 +6,7 @@ import { UsersService } from 'src/features/users/services/users.service';
 import { CampaignPledgeMongoRepository } from '../../repositories/mongo/campaign-pledge/campaign-pledge.repository';
 import { CampaignsMongoRepository } from '../../repositories/mongo/campaigns.repository';
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
-import { IUser, UserDocument } from 'src/features/users/schemas/user.schema';
+import { UserDocument } from 'src/features/users/schemas/user.schema';
 import { CampaignDocument } from '../../schemas/campaign.schema';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 import { movementTypeEnum } from '../../constants';
@@ -89,16 +89,16 @@ export class CampaignPledgeService {
   async findAllByUser({
     page,
     size,
-    user,
+    userId,
   }: {
     page: number;
     size: number;
-    user: IUser;
+    userId: string;
   }) {
     const campaigns = await this.campaignPledgeMongoRepository.findAll({
       page,
       size,
-      user,
+      userId,
     });
 
     return campaigns;

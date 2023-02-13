@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
-import { IUser } from 'src/features/users/schemas/user.schema';
 
 import {
   CampaignPledge,
@@ -38,16 +37,16 @@ export class CampaignPledgeMongoRepository {
   async findAll({
     page,
     size,
-    user,
+    userId,
   }: {
     page: number;
     size: number;
-    user: IUser;
+    userId: string;
   }) {
     const skipValue = page > 0 ? (page - 1) * size : 0;
     const campaings = await this.campaignPledgeModel.aggregate([
       {
-        $match: { user: user._id },
+        $match: { user: userId },
       },
       { $sort: { created: -1 } },
       { $skip: skipValue },
