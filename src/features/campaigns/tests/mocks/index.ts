@@ -176,6 +176,15 @@ export const userMock = {
   __v: 0,
 };
 
+export const userMock2 = {
+  username: 'rcargnelutti',
+  email: 'rcargnelutti@loopstudio.dev',
+  nonce: '721102917354423900',
+  publicAddress: '0xD890357F631d209FB3eFabc116cE211111111111',
+  _id: '634f3292a486274ca2f3d47f',
+  __v: 0,
+};
+
 export const tokenMock = {
   _id: '63611e69143b8def9c4843dd',
   name: 'LoopToken',

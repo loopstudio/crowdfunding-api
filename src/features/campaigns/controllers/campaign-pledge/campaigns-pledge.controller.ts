@@ -11,8 +11,7 @@ export class CampaignsPledgeController {
 
   @Get()
   async findAllByUser(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    @Request() request: ExpressRequest | any,
+    @Request() request: ExpressRequest,
     @Query('size') size: number = DEFAULT_PAGE_SIZE,
     @Query('page') page: number = DEFAULT_PAGE,
   ): Promise<APIResponse> {
