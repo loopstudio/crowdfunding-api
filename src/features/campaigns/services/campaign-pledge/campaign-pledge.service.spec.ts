@@ -52,6 +52,7 @@ describe('CampaignPledgeService', () => {
           provide: CampaignPledgeMongoRepository,
           useValue: {
             create: jest.fn(),
+            findAll: jest.fn(),
           },
         },
         {
@@ -138,6 +139,34 @@ describe('CampaignPledgeService', () => {
       expect(campaignService.findOne).toBeCalledTimes(1);
       expect(usersService.findUserByAddress).toBeCalledTimes(1);
       expect(tokensService.getByDefault).toBeCalledTimes(1);
+    });
+  });
+
+  describe('findAllByUser', () => {
+    it('should return campaigns', async () => {
+      const campaigns = [
+        {
+          _id: '63e3cf5e686d726c68efa3fa',
+          title: 'My campaign',
+          userId: 'user-1',
+        },
+        {
+          _id: '63e3cf5e686d726c68efa3fb',
+          title: 'My campaign2',
+          userId: 'user-1',
+        },
+      ];
+      jest
+        .spyOn(campaignPledgeMongoRepository, 'findAll')
+        .mockResolvedValue(campaigns);
+
+      const result = await campaignPledgeService.findAllByUser({
+        page: 1,
+        size: 10,
+        userId: 'user-1',
+      });
+
+      expect(result).toEqual(campaigns);
     });
   });
 });
