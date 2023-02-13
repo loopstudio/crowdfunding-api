@@ -36,9 +36,7 @@ describe('Campaign Pledge Repository', () => {
             lean: jest.fn(),
             create: jest.fn(),
             save: jest.fn(),
-            aggregate: jest
-              .fn()
-              .mockReturnValue([{ campaigns: [{ _id: 'campaign-id' }] }]),
+            aggregate: jest.fn(),
           },
         },
       ],
@@ -71,6 +69,10 @@ describe('Campaign Pledge Repository', () => {
 
   describe('findAll', () => {
     it('should call aggregate with the correct parameters', async () => {
+      jest
+        .spyOn(campaignPledgeModel, 'aggregate')
+        .mockReturnValue([{ campaigns: [{ _id: 'campaign-id' }] }] as any);
+
       const expectedAggregateParams = [
         {
           $match: { user: user._id },
@@ -108,6 +110,10 @@ describe('Campaign Pledge Repository', () => {
     });
 
     it('should return the result of aggregate', async () => {
+      jest
+        .spyOn(campaignPledgeModel, 'aggregate')
+        .mockReturnValue([{ campaigns: [{ _id: 'campaign-id' }] }] as any);
+
       const expectedResult = [{ campaigns: [{ _id: 'campaign-id' }] }];
       const result = await campaignPledgeRepository.findAll({
         page,
