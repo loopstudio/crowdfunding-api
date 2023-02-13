@@ -1,12 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { formatEther } from 'ethers/lib/utils';
 
-import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
-import { UserDocument } from 'src/features/users/schemas/user.schema';
-import { CampaignDocument } from '../../schemas/campaign.schema';
 import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { UsersService } from 'src/features/users/services/users.service';
+import { CampaignEventService } from '../common/campaign-event.service';
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
 import { CampaignClaimMongoRepository } from 'src/features/campaigns/repositories/mongo/campaign-claim/campaign-claim.repository';
 import { CampaignsMongoRepository } from 'src/features/campaigns/repositories/mongo/campaigns.repository';
@@ -14,19 +11,21 @@ import { UserCampaignsRepository } from 'src/features/users/repositories/user-ca
 import { CrowdfundingEvent } from 'src/features/events/types';
 
 @Injectable()
-export class CampaignClaimService {
+export class CampaignClaimService extends CampaignEventService {
   private readonly logger = new Logger(CampaignClaimService.name);
   private readonly claimStatusCode = 'claimed';
 
   constructor(
-    private readonly campaignService: CampaignsService,
-    private readonly usersService: UsersService,
-    private readonly tokensService: TokensService,
+    readonly campaignService: CampaignsService,
+    readonly usersService: UsersService,
+    readonly tokensService: TokensService,
     private readonly campaignClaimMongoRepository: CampaignClaimMongoRepository,
     private readonly campaignMongoRepository: CampaignsMongoRepository,
     private readonly userCampaignsMongoRepository: UserCampaignsRepository,
     private readonly campaignStatusService: CampaignStatusService,
-  ) {}
+  ) {
+    super(campaignService, usersService, tokensService);
+  }
 
   async create(eventData: unknown) {
     if (!Array.isArray(eventData)) {
@@ -70,36 +69,5 @@ export class CampaignClaimService {
       event: savedClaim,
       eventType: CrowdfundingEvent.Claim,
     });
-  }
-
-  // TODO: This method is already used on pledge event.
-  // TODO: Refactor this method to be used on both pledge and claim events.
-  private async getMetadata({
-    onchainId,
-    userAddress,
-  }: {
-    onchainId: string;
-    userAddress: string;
-  }): Promise<{
-    campaign: CampaignDocument;
-    user: UserDocument;
-    token: TokenDocument;
-  }> {
-    const promises = [
-      this.campaignService.findOne(onchainId),
-      this.usersService.findUserByAddress(userAddress),
-      this.tokensService.getByDefault(),
-    ];
-
-    const promiseResults = await Promise.all<unknown>(promises);
-    if (promiseResults.some((result) => !result)) {
-      throw new Error('No metadata associated');
-    }
-
-    const { campaign } = promiseResults[0] as { campaign: CampaignDocument };
-    const user = promiseResults[1] as UserDocument;
-    const token = promiseResults[2] as TokenDocument;
-
-    return { campaign, user, token };
   }
 }

@@ -49,9 +49,7 @@ export class CampaignsMongoRepository {
   }
 
   async findOne(onchainId: string) {
-    // TODO: remove this
-    // const campaing = await this.campaignModel.findOne({ onchainId: onchainId });
-    const campaing = await this.campaignModel.findOne();
+    const campaing = await this.campaignModel.findOne({ onchainId });
     if (!campaing) {
       throw new NotFoundException();
     }

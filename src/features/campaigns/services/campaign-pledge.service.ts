@@ -59,6 +59,7 @@ export class CampaignPledgeService {
     });
   }
 
+  // TODO: Use abstract class as in CampaignClaimService
   private async getMetadata({
     onchainId,
     userAddress,
