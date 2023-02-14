@@ -6,7 +6,11 @@ import { Model, ObjectId } from 'mongoose';
 
 import { CampaignPledgeMongoRepository } from './campaign-pledge.repository';
 import { CampaignPledge } from '../../../schemas/campaign-pledge.schema';
-import { campaignPledgeMock, userMock2 } from '../../../tests/mocks';
+import {
+  campaignPledgeMock,
+  userMock2,
+  aggregateCampaignMock,
+} from '../../../tests/mocks';
 
 const user = userMock2;
 const page = 1;
@@ -71,7 +75,7 @@ describe('Campaign Pledge Repository', () => {
     it('should call aggregate with the correct parameters', async () => {
       jest
         .spyOn(campaignPledgeModel, 'aggregate')
-        .mockReturnValue([{ campaigns: [{ _id: 'campaign-id' }] }] as any);
+        .mockReturnValue([{ campaigns: [aggregateCampaignMock] }] as any);
 
       const expectedAggregateParams = [
         {
@@ -112,9 +116,9 @@ describe('Campaign Pledge Repository', () => {
     it('should return the result of aggregate', async () => {
       jest
         .spyOn(campaignPledgeModel, 'aggregate')
-        .mockReturnValue([{ campaigns: [{ _id: 'campaign-id' }] }] as any);
+        .mockReturnValue([{ campaigns: [aggregateCampaignMock] }] as any);
 
-      const expectedResult = [{ campaigns: [{ _id: 'campaign-id' }] }];
+      const expectedResult = [{ campaigns: [aggregateCampaignMock] }];
       const result = await campaignPledgeRepository.findAll({
         page,
         size,

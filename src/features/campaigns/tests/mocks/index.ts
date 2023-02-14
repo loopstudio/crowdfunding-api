@@ -185,6 +185,39 @@ export const userMock2 = {
   __v: 0,
 };
 
+export const aggregateCampaignMock = {
+  _id: '63e3cf5e686d726c68efa3fa',
+  title: 'My campaign',
+  subtitle: 'An amazing campaign',
+  story: 'This is the long short story: We need the money',
+  startDate: '2023-02-08T16:36:22.533Z',
+  endDate: '2023-02-08T17:35:22.533Z',
+  onchainId: null,
+  fiatAmount: 0,
+  image: 'image.png',
+  video: 'video.mp4',
+  backers: [],
+  status: '63dbc2df5c10658a2d65877c',
+  goal: [
+    {
+      amount: '100',
+      tokenAddress: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
+      _id: '63e3cf5e686d726c68efa3fb',
+    },
+  ],
+  currentAmount: [
+    {
+      amount: '0',
+      _id: '63e3cf5e686d726c68efa3fc',
+    },
+  ],
+  category: '63dbc2df5c10658a2d658789',
+  owner: '63dbba0551b0303e137fd1b4',
+  created: '2023-02-08T16:35:42.339Z',
+  updated: '2023-02-08T16:35:42.339Z',
+  __v: 0,
+};
+
 export const tokenMock = {
   _id: '63611e69143b8def9c4843dd',
   name: 'LoopToken',
