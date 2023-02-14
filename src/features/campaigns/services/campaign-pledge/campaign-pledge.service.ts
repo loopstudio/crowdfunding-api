@@ -3,13 +3,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { UsersService } from 'src/features/users/services/users.service';
-import { CampaignPledgeMongoRepository } from '../repositories/mongo/campaign-pledge.repository';
-import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
+import { CampaignPledgeMongoRepository } from '../../repositories/mongo/campaign-pledge/campaign-pledge.repository';
+import { CampaignsMongoRepository } from '../../repositories/mongo/campaigns.repository';
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
 import { UserDocument } from 'src/features/users/schemas/user.schema';
-import { CampaignDocument } from '../schemas/campaign.schema';
+import { CampaignDocument } from '../../schemas/campaign.schema';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
-import { movementTypeEnum } from '../constants';
+import { movementTypeEnum } from '../../constants';
 
 @Injectable()
 export class CampaignPledgeService {
@@ -84,5 +84,23 @@ export class CampaignPledgeService {
     const token = promiseResults[2] as TokenDocument;
 
     return { campaign, user, token };
+  }
+
+  async findAllByUser({
+    page,
+    size,
+    userId,
+  }: {
+    page: number;
+    size: number;
+    userId: string;
+  }) {
+    const campaigns = await this.campaignPledgeMongoRepository.findAll({
+      page,
+      size,
+      userId,
+    });
+
+    return campaigns;
   }
 }
