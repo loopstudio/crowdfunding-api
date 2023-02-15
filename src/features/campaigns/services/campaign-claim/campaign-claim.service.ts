@@ -48,13 +48,6 @@ export class CampaignClaimService extends CampaignEventService {
     const { _id: claimStatusId } =
       await this.campaignStatusService.getStatusByCode(this.claimStatusCode);
 
-    console.log('data > ', {
-      id: parseInt(onchainId).toString(),
-      updateCampaignDto: {
-        status: claimStatusId,
-      },
-    });
-
     await this.campaignMongoRepository.update({
       id: parseInt(onchainId).toString(),
       updateCampaignDto: {

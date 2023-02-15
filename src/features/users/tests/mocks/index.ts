@@ -1,3 +1,4 @@
+import { CampaignClaimDocument } from './../../../campaigns/schemas/campaign-claim.schema';
 import { CampaignPledgeDocument } from 'src/features/campaigns/schemas/campaign-pledge.schema';
 import { CampaignDocument } from 'src/features/campaigns/schemas/campaign.schema';
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
@@ -41,10 +42,17 @@ export const pledgeMock = {
   amount: '1',
 } as CampaignPledgeDocument;
 
+export const claimMock = {
+  _id: '634f3292a486274ca2f3d47f',
+  amount: '1',
+} as CampaignClaimDocument;
+
 export const userCampaignMock = {
   _id: '634f3292a486274ca2f3d47f',
-  totalPledged: '1',
+  claims: [claimMock._id],
   pledges: [pledgeMock._id],
+  totalPledged: '1',
+  totalClaimed: '1',
   save: jest.fn(),
 } as unknown as UserCampaign;
 

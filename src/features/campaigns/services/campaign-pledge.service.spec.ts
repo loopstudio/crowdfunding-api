@@ -63,7 +63,7 @@ describe('CampaignPledgeService', () => {
         {
           provide: UserCampaignsRepository,
           useValue: {
-            updateUserCampaignByPledge: jest.fn(),
+            updateUserCampaignByEvent: jest.fn(),
           },
         },
       ],
@@ -110,7 +110,7 @@ describe('CampaignPledgeService', () => {
         .spyOn(campaignMongoRepository, 'updateTokenAmount')
         .mockResolvedValue(null);
       jest
-        .spyOn(userCampaignsMongoRepository, 'updateUserCampaignByPledge')
+        .spyOn(userCampaignsMongoRepository, 'updateUserCampaignByEvent')
         .mockResolvedValue(null);
 
       await expect(() =>
