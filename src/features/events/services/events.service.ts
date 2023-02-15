@@ -11,8 +11,8 @@ import { contractsToHandle, eventsToHandle } from 'src/common/contracts';
 import { EventsMongoRepository } from '../repositories/mongo/events.repository';
 import { CrowdfundingEvent } from '../types';
 import { CampaignLaunchService } from 'src/features/campaigns/services/campaign-launch.service';
-import { CampaignPledgeService } from 'src/features/campaigns/services/campaign-pledge.service';
 import { CampaignClaimService } from 'src/features/campaigns/services/campaign-claim/campaign-claim.service';
+import { CampaignPledgeService } from 'src/features/campaigns/services/campaign-pledge/campaign-pledge.service';
 
 @Injectable()
 export class EventsService

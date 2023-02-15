@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { CampaignsService } from './services/campaigns.service';
 import { CampaignsController } from './controllers/campaigns.controller';
+import { CampaignsPledgeController } from './controllers/campaign-pledge/campaigns-pledge.controller';
 import { CampaignsMongoRepository } from './repositories/mongo/campaigns.repository';
 import { Campaign, CampaignSchema } from './schemas/campaign.schema';
 import { TokensModule } from '../tokens/tokens.module';
@@ -10,8 +11,8 @@ import { CampaignStatusesModule } from '../campaign-statuses/campaign-statuses.m
 import { CampaignCategoriesModule } from '../campaign-categories/campaign-categories.module';
 import { CampaignLaunchService } from './services/campaign-launch.service';
 import { CampaignLaunchMongoRepository } from './repositories/mongo/campaign-launch.repository';
-import { CampaignPledgeService } from './services/campaign-pledge.service';
-import { CampaignPledgeMongoRepository } from './repositories/mongo/campaign-pledge.repository';
+import { CampaignPledgeService } from './services/campaign-pledge/campaign-pledge.service';
+import { CampaignPledgeMongoRepository } from './repositories/mongo/campaign-pledge/campaign-pledge.repository';
 import {
   CampaignLaunch,
   CampaignLaunchSchema,
@@ -59,7 +60,7 @@ import { CampaignClaimMongoRepository } from './repositories/mongo/campaign-clai
     CampaignCategoriesModule,
     UsersModule,
   ],
-  controllers: [CampaignsController],
+  controllers: [CampaignsController, CampaignsPledgeController],
   providers: [
     CampaignsService,
     CampaignsMongoRepository,
