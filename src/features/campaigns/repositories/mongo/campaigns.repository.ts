@@ -38,8 +38,10 @@ export class CampaignsMongoRepository {
       ...(ownerId && { owner: ownerId }),
     };
 
+    // TODO: I think we can use aggregate here
     const campaings = await this.campaignModel
       .find(filters)
+      .populate('owner')
       .sort({ created: -1 })
       .skip(skipValue)
       .limit(size)
@@ -49,7 +51,11 @@ export class CampaignsMongoRepository {
   }
 
   async findOne(onchainId: string) {
-    const campaing = await this.campaignModel.findOne({ onchainId: onchainId });
+    // TODO: I think we can use aggregate here
+    const campaing = await this.campaignModel
+      .findOne({ onchainId: onchainId })
+      .populate('owner');
+
     if (!campaing) {
       throw new NotFoundException();
     }
