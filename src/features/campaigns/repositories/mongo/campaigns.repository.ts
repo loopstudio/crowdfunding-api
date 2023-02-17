@@ -38,7 +38,6 @@ export class CampaignsMongoRepository {
       ...(ownerId && { owner: ownerId }),
     };
 
-    // TODO: I think we can use aggregate here
     const campaings = await this.campaignModel
       .find(filters)
       .populate('owner')
@@ -51,7 +50,6 @@ export class CampaignsMongoRepository {
   }
 
   async findOne(onchainId: string) {
-    // TODO: I think we can use aggregate here
     const campaing = await this.campaignModel
       .findOne({ onchainId: onchainId })
       .populate('owner');
