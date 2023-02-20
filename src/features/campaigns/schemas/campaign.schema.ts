@@ -18,19 +18,19 @@ export class TokenAmount {
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
 export class Campaign {
-  @Prop({ index: true })
+  @Prop({ index: true, required: true })
   title: string;
 
-  @Prop()
+  @Prop({ required: true })
   subtitle: string;
 
   @Prop()
   story: string;
 
-  @Prop()
+  @Prop({ required: true })
   startDate: Date;
 
-  @Prop()
+  @Prop({ required: true })
   endDate: Date;
 
   @Prop({
@@ -40,6 +40,7 @@ export class Campaign {
       partialFilterExpression: { onchainId: { $type: 'string' } },
     },
   })
+  @Prop({ required: true })
   onchainId: string;
 
   @Prop({ default: 0 })
@@ -61,6 +62,7 @@ export class Campaign {
     index: true,
     type: MongooseSchema.Types.ObjectId,
     ref: 'CampaignStatus',
+    required: true,
   })
   status: CampaignStatus;
 
@@ -74,6 +76,7 @@ export class Campaign {
     index: true,
     type: MongooseSchema.Types.ObjectId,
     ref: 'CampaignCategory',
+    required: true,
   })
   category: CampaignCategory;
 
@@ -81,7 +84,9 @@ export class Campaign {
     index: true,
     type: MongooseSchema.Types.ObjectId,
     ref: 'User',
+    required: true,
   })
+  @Prop({ required: true })
   owner: User;
 }
 
