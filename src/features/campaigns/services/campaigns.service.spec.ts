@@ -97,6 +97,7 @@ describe('UsersService', () => {
         page: 0,
         size: 1,
         ownerId: '634dd92c34361cf5a21fb96b',
+        search: null,
       };
 
       jest
