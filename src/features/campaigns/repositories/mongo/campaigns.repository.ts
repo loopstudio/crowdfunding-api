@@ -39,8 +39,8 @@ export class CampaignsMongoRepository {
     const filters = {
       owner: ownerId,
       $or: [
-        { title: { $regex: `${search}`, $options: 'i' } },
-        { subtitle: { $regex: `${search}`, $options: 'i' } },
+        { title: { $regex: search, $options: 'i' } },
+        { subtitle: { $regex: search, $options: 'i' } },
       ],
     };
 
