@@ -5,10 +5,10 @@ export type CampaignStatusDocument = CampaignStatus & Document;
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
 export class CampaignStatus {
-  @Prop({ index: true })
+  @Prop({ index: true, required: true })
   name: string;
 
-  @Prop({ unique: true, index: true })
+  @Prop({ unique: true, index: true, required: true })
   code: string;
 }
 
