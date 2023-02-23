@@ -7,7 +7,12 @@ export type CampaignLaunchDocument = CampaignLaunch & Document;
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
 export class CampaignLaunch {
-  @Prop({ index: true, type: MongooseSchema.Types.ObjectId, ref: 'Campaign' })
+  @Prop({
+    index: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Campaign',
+    required: true,
+  })
   campaign: Campaign;
 
   @Prop()

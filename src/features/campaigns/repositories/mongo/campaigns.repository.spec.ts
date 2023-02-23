@@ -69,6 +69,7 @@ describe('Campaign Statuses Repository', () => {
         page: 0,
         size: 1,
         ownerId: '634dd92c34361cf5a21fb96b',
+        search: null,
       });
 
       expect(response).toStrictEqual([mongoBuiltCampaign]);
@@ -87,6 +88,7 @@ describe('Campaign Statuses Repository', () => {
         page: 1,
         size: 1,
         ownerId: '634dd92c34361cf5a21fb96b',
+        search: null,
       });
 
       expect(response).toStrictEqual([mongoBuiltCampaign]);

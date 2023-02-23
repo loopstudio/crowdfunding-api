@@ -46,6 +46,7 @@ export class CampaignsController {
     @Query('size') size = DEFAULT_PAGE_SIZE,
     @Query('page') page = DEFAULT_PAGE,
     @Query('own') own: string | boolean = false,
+    @Query('search') search = null,
   ): Promise<APIResponse> {
     let ownerId: string | null = null;
     const isOwn = own === 'true';
@@ -59,6 +60,7 @@ export class CampaignsController {
       page,
       size,
       ownerId,
+      search,
     });
 
     return { data: campaigns };

@@ -68,15 +68,18 @@ export class CampaignsService {
     page,
     size,
     ownerId,
+    search,
   }: {
     page: number;
     size: number;
     ownerId: string | null;
+    search: string | null;
   }) {
     const campaigns = await this.campaignsMongoRepository.findAll({
       page,
       size,
       ownerId,
+      search,
     });
 
     return { campaigns };
