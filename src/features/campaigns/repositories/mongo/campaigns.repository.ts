@@ -13,6 +13,7 @@ import {
   campaignFieldsToModify,
   movementType,
   movementTypeEnum,
+  searchFilters,
 } from '../../constants';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
@@ -36,13 +37,18 @@ export class CampaignsMongoRepository {
     search: string | null;
   }) {
     const skipValue = page > 0 ? (page - 1) * size : 0;
-    const filters = {
-      owner: ownerId,
-      $or: [
+    const filters: searchFilters = {};
+
+    if (ownerId) {
+      filters.owner = ownerId;
+    }
+
+    if (search) {
+      filters.$or = [
         { title: { $regex: search, $options: 'i' } },
         { subtitle: { $regex: search, $options: 'i' } },
-      ],
-    };
+      ];
+    }
 
     const campaings = await this.campaignModel
       .find(filters)
