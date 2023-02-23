@@ -56,6 +56,16 @@ describe('Campaigns Controller', () => {
       expect(response).toStrictEqual({ data: [mongoBuiltCampaign] });
     });
 
+    it('should call findAll campaignsService method without user', async () => {
+      jest
+        .spyOn(campaignsService, 'findAll')
+        .mockResolvedValue({ campaigns: [mongoBuiltCampaign] } as any);
+
+      const response = await campaignsController.findAll(null);
+
+      expect(response).toStrictEqual({ data: [mongoBuiltCampaign] });
+    });
+
     it('should call findAll campaignsService method without errors', async () => {
       jest
         .spyOn(campaignsService, 'findAll')
