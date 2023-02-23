@@ -64,6 +64,7 @@ export class CampaignsController {
     return { data: campaigns };
   }
 
+  @Public()
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<APIResponse> {
     const { campaign } = await this.campaignsService.findOne(id);
