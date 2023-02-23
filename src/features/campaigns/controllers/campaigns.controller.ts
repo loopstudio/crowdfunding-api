@@ -15,6 +15,8 @@ import { CreateCampaignDto } from '../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { APIResponse } from 'src/common/types';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from 'src/common/constants';
+import { Public } from 'src/features/auth/decorators';
+import { decodeJwt } from 'src/common/utils';
 
 @Controller('campaigns')
 export class CampaignsController {
@@ -37,17 +39,21 @@ export class CampaignsController {
     return { data: campaign };
   }
 
+  @Public()
   @Get()
   async findAll(
     @Request() request: ExpressRequest,
     @Query('size') size = DEFAULT_PAGE_SIZE,
     @Query('page') page = DEFAULT_PAGE,
-    @Query('own') own = false,
+    @Query('own') own: string | boolean = false,
   ): Promise<APIResponse> {
-    const {
-      user: { _id: owner },
-    } = request;
-    const ownerId = own ? owner : null;
+    let ownerId: string | null = null;
+    const isOwn = own === 'true';
+    if (isOwn && request.headers.authorization) {
+      const token = request.headers.authorization.split(' ')[1];
+      const user = decodeJwt(token);
+      ownerId = user._id;
+    }
 
     const { campaigns } = await this.campaignsService.findAll({
       page,
