@@ -28,18 +28,25 @@ export class CampaignsMongoRepository {
     page,
     size,
     ownerId,
+    search,
   }: {
     page: number;
     size: number;
     ownerId: string | null;
+    search: string | null;
   }) {
     const skipValue = page > 0 ? (page - 1) * size : 0;
     const filters = {
-      ...(ownerId && { owner: ownerId }),
+      owner: ownerId,
+      $or: [
+        { title: { $regex: search, $options: 'i' } },
+        { subtitle: { $regex: search, $options: 'i' } },
+      ],
     };
 
     const campaings = await this.campaignModel
       .find(filters)
+      .populate('owner')
       .sort({ created: -1 })
       .skip(skipValue)
       .limit(size)
@@ -49,7 +56,10 @@ export class CampaignsMongoRepository {
   }
 
   async findOne(onchainId: string) {
-    const campaing = await this.campaignModel.findOne({ onchainId });
+    const campaing = await this.campaignModel
+      .findOne({ onchainId: onchainId })
+      .populate('owner');
+
     if (!campaing) {
       throw new NotFoundException();
     }

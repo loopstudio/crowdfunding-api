@@ -43,6 +43,7 @@ export class CampaignsController {
     @Query('size') size = DEFAULT_PAGE_SIZE,
     @Query('page') page = DEFAULT_PAGE,
     @Query('own') own = false,
+    @Query('search') search = null,
   ): Promise<APIResponse> {
     const {
       user: { _id: owner },
@@ -53,6 +54,7 @@ export class CampaignsController {
       page,
       size,
       ownerId,
+      search,
     });
 
     return { data: campaigns };

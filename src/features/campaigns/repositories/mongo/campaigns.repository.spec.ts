@@ -43,6 +43,7 @@ describe('Campaign Statuses Repository', () => {
             lean: jest.fn(),
             create: jest.fn(),
             save: jest.fn(),
+            populate: jest.fn(),
           },
         },
       ],
@@ -57,6 +58,7 @@ describe('Campaign Statuses Repository', () => {
   describe('findAll method', () => {
     it('should call findAll method with page 0 and size 1', async () => {
       jest.spyOn(campaignModel, 'find').mockReturnValue({
+        populate: jest.fn().mockReturnThis(),
         sort: jest.fn().mockReturnThis(),
         skip: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
@@ -67,6 +69,7 @@ describe('Campaign Statuses Repository', () => {
         page: 0,
         size: 1,
         ownerId: '634dd92c34361cf5a21fb96b',
+        search: null,
       });
 
       expect(response).toStrictEqual([mongoBuiltCampaign]);
@@ -74,6 +77,7 @@ describe('Campaign Statuses Repository', () => {
 
     it('should call findAll method with page 1 and size 1', async () => {
       jest.spyOn(campaignModel, 'find').mockReturnValue({
+        populate: jest.fn().mockReturnThis(),
         sort: jest.fn().mockReturnThis(),
         skip: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
@@ -84,6 +88,7 @@ describe('Campaign Statuses Repository', () => {
         page: 1,
         size: 1,
         ownerId: '634dd92c34361cf5a21fb96b',
+        search: null,
       });
 
       expect(response).toStrictEqual([mongoBuiltCampaign]);
@@ -92,7 +97,9 @@ describe('Campaign Statuses Repository', () => {
 
   describe('findOne method', () => {
     it('should call findOne and throw NotFoundException', async () => {
-      jest.spyOn(campaignModel, 'findOne').mockResolvedValue(null);
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        populate: jest.fn().mockResolvedValue(null),
+      } as any);
 
       await expect(
         campaignsRepository.findOne(campaignId),
@@ -100,9 +107,9 @@ describe('Campaign Statuses Repository', () => {
     });
 
     it('should call findAll and return related campaign', async () => {
-      jest
-        .spyOn(campaignModel, 'findOne')
-        .mockResolvedValue(mongoBuiltCampaign);
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        populate: jest.fn().mockResolvedValue(mongoBuiltCampaign),
+      } as any);
 
       const response = await campaignsRepository.findOne(campaignId);
 
@@ -201,10 +208,12 @@ describe('Campaign Statuses Repository', () => {
   describe('updateTokenAmount', () => {
     it('Should update campign currentAmount data with increase movement', async () => {
       jest.spyOn(campaignModel, 'save' as any).mockResolvedValue(null);
-      jest.spyOn(campaignModel, 'findOne').mockResolvedValue({
-        ...mongoBuiltCampaign,
-        save: jest.fn(),
-      });
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        populate: jest.fn().mockResolvedValue({
+          ...mongoBuiltCampaign,
+          save: jest.fn(),
+        }),
+      } as any);
 
       const { onchainId, goal } = mongoBuiltCampaign;
 
@@ -220,10 +229,12 @@ describe('Campaign Statuses Repository', () => {
 
     it('Should update campign currentAmount data with decrease movement', async () => {
       jest.spyOn(campaignModel, 'save' as any).mockResolvedValue(null);
-      jest.spyOn(campaignModel, 'findOne').mockResolvedValue({
-        ...mongoBuiltCampaign,
-        save: jest.fn(),
-      });
+      jest.spyOn(campaignModel, 'findOne').mockReturnValue({
+        populate: jest.fn().mockResolvedValue({
+          ...mongoBuiltCampaign,
+          save: jest.fn(),
+        }),
+      } as any);
 
       const { onchainId, goal } = mongoBuiltCampaign;
 

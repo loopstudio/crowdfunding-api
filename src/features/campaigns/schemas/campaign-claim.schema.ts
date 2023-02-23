@@ -9,16 +9,26 @@ export type CampaignClaimDocument = CampaignClaim & Document;
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
 export class CampaignClaim {
-  @Prop({ index: true, type: MongooseSchema.Types.ObjectId, ref: 'Campaign' })
+  @Prop({
+    index: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'Campaign',
+    required: true,
+  })
   campaign: Campaign;
 
-  @Prop({ index: true, type: MongooseSchema.Types.ObjectId, ref: 'User' })
+  @Prop({
+    index: true,
+    type: MongooseSchema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
   user: User;
 
-  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Token' })
+  @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Token', required: true })
   token: Token;
 
-  @Prop()
+  @Prop({ required: true })
   amount: string;
 
   @Prop()
