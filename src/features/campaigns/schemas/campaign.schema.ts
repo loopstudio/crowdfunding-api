@@ -40,7 +40,6 @@ export class Campaign {
       partialFilterExpression: { onchainId: { $type: 'string' } },
     },
   })
-  @Prop({ required: true })
   onchainId: string;
 
   @Prop({ default: 0 })
@@ -86,7 +85,6 @@ export class Campaign {
     ref: 'User',
     required: true,
   })
-  @Prop({ required: true })
   owner: User;
 }
 
