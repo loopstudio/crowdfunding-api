@@ -45,16 +45,28 @@ export class UserCampaign {
   @Prop()
   totalRefunded: string;
 
-  @Prop([CampaignPledge])
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'CampaignPledge' }],
+    default: [],
+  })
   pledges: CampaignPledge[];
 
-  @Prop([Unpledge])
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Unpledge' }],
+    default: [],
+  })
   unpledges: Unpledge[];
 
-  @Prop([Claim])
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Claim' }],
+    default: [],
+  })
   claims: Claim[];
 
-  @Prop([Refund])
+  @Prop({
+    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Refund' }],
+    default: [],
+  })
   refunds: Refund[];
 }
 
