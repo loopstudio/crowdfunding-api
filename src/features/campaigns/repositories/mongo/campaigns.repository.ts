@@ -9,12 +9,8 @@ import { BigNumber } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
-import {
-  campaignFieldsToModify,
-  movementType,
-  movementTypeEnum,
-  searchFilters,
-} from '../../constants';
+import { campaignFieldsToModify, movementTypeEnum } from '../../constants';
+import { movementType, searchFilters } from '../../types';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';

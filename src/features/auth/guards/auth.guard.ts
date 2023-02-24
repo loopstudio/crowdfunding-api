@@ -23,8 +23,9 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       );
 
     const req = context.switchToHttp().getRequest();
-    const isAllowed = allowUnauthenticatedRequest && !req.headers.authorization;
-    if (isPublic || isAllowed) {
+    const isUnauthenticatedRequest =
+      allowUnauthenticatedRequest && !req.headers.authorization;
+    if (isPublic || isUnauthenticatedRequest) {
       return true;
     }
 
