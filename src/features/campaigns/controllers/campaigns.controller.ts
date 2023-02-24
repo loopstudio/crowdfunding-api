@@ -15,8 +15,10 @@ import { CreateCampaignDto } from '../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { APIResponse } from 'src/common/types';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from 'src/common/constants';
-import { Public } from 'src/features/auth/decorators';
-import { decodeJwt } from 'src/common/utils';
+import {
+  Public,
+  AllowUnauthenticatedRequest,
+} from 'src/features/auth/decorators';
 
 @Controller('campaigns')
 export class CampaignsController {
@@ -39,7 +41,7 @@ export class CampaignsController {
     return { data: campaign };
   }
 
-  @Public()
+  @AllowUnauthenticatedRequest()
   @Get()
   async findAll(
     @Request() request: ExpressRequest,
@@ -49,11 +51,11 @@ export class CampaignsController {
     @Query('search') search = null,
   ): Promise<APIResponse> {
     let ownerId: string | null = null;
-    const isOwn = own === 'true';
-    if (isOwn && request.headers.authorization) {
-      const token = request.headers.authorization.split(' ')[1];
-      const user = decodeJwt(token);
-      ownerId = user._id;
+    if (request.user && own === 'true') {
+      const {
+        user: { _id: owner },
+      } = request;
+      ownerId = owner;
     }
 
     const { campaigns } = await this.campaignsService.findAll({
