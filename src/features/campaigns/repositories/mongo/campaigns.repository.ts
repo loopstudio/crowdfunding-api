@@ -151,7 +151,7 @@ export class CampaignsMongoRepository {
     updateCampaignDto: UpdateCampaignDto;
   }) {
     const existingCampaign = await this.campaignModel
-      .findOne({ _id: id })
+      .findOne({ onchainId: id })
       .exec();
     if (!existingCampaign) {
       throw new NotFoundException();

@@ -10,6 +10,7 @@ import { UserDocument } from 'src/features/users/schemas/user.schema';
 import { CampaignDocument } from '../../schemas/campaign.schema';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 import { movementTypeEnum } from '../../constants';
+import { CrowdfundingEvent } from 'src/features/events/types';
 
 @Injectable()
 export class CampaignPledgeService {
@@ -49,14 +50,16 @@ export class CampaignPledgeService {
       action: movementTypeEnum.INCREASE,
     });
 
-    await this.userCampaignsMongoRepository.updateUserCampaignByPledge({
+    await this.userCampaignsMongoRepository.updateUserCampaignByEvent({
       campaign,
       user,
       token,
-      pledge: savedPledge,
+      event: savedPledge,
+      eventType: CrowdfundingEvent.Pledge,
     });
   }
 
+  // TODO: Use abstract class CampaignEventService
   private async getMetadata({
     onchainId,
     userAddress,

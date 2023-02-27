@@ -21,9 +21,15 @@ import {
   CampaignPledge,
   CampaignPledgeSchema,
 } from './schemas/campaign-pledge.schema';
+import {
+  CampaignClaim,
+  CampaignClaimSchema,
+} from './schemas/campaign-claim.schema';
 import { UsersRepository } from '../users/repositories/users/mongo/users.repository';
 import { UsersModule } from '../users/users.module';
 import { User, UserSchema } from '../users/schemas/user.schema';
+import { CampaignClaimService } from './services/campaign-claim/campaign-claim.service';
+import { CampaignClaimMongoRepository } from './repositories/mongo/campaign-claim/campaign-claim.repository';
 
 @Module({
   imports: [
@@ -39,6 +45,10 @@ import { User, UserSchema } from '../users/schemas/user.schema';
       {
         name: CampaignPledge.name,
         schema: CampaignPledgeSchema,
+      },
+      {
+        name: CampaignClaim.name,
+        schema: CampaignClaimSchema,
       },
       {
         name: User.name,
@@ -58,8 +68,10 @@ import { User, UserSchema } from '../users/schemas/user.schema';
     CampaignLaunchMongoRepository,
     CampaignPledgeService,
     CampaignPledgeMongoRepository,
+    CampaignClaimMongoRepository,
     UsersRepository,
+    CampaignClaimService,
   ],
-  exports: [CampaignLaunchService, CampaignPledgeService],
+  exports: [CampaignLaunchService, CampaignPledgeService, CampaignClaimService],
 })
 export class CampaignsModule {}

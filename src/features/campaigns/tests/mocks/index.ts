@@ -164,6 +164,7 @@ export const mongoLaunchedCampaign = {
 };
 
 export const campaignPledgeArgumentMock = [onchainId, userAddress, amount];
+export const campaignClaimArgumentMock = [onchainId, userAddress, amount];
 
 export const userMock = {
   username: 'rcargnelutti',
@@ -240,6 +241,18 @@ export const campaignPledgeMock = {
   __v: 0,
 };
 
+export const campaignClaimMock = {
+  _id: '639b969369bed1e35eeca7aa',
+  campaign: '638e605ab710197625b571ba',
+  user: '634dd92c34361cf5a21fb96a',
+  token: '63611e69143b8def9c4843da',
+  amount: '2000000000000000000',
+  date: '2023-01-15T21:50:11.066+0000',
+  created: '2023-01-12T21:50:11.072+0000',
+  updated: '2023-11-12T21:50:11.072+0000',
+  __v: 0,
+};
+
 export const campaignLaunchEventDto = {
   creator: launchEventData[2],
   goal: launchEventData[1],
@@ -257,3 +270,12 @@ export const findCampaignToLaunchData = {
 export const requestWithUser = {
   user: { ...userMock },
 } as unknown as Request;
+
+export const mongoClaimedCampaingStatus = {
+  _id: '73611e68143b8def9c4843de',
+  name: 'Claimed',
+  code: 'claimed',
+  created: '2022-10-18T23:11:14.611Z',
+  updated: '2022-10-18T23:11:14.611Z',
+  __v: 0,
+};

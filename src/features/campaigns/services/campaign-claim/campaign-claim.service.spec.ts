@@ -2,38 +2,48 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { CampaignsService } from '.././campaigns.service';
-import { CampaignsMongoRepository } from '../../repositories/mongo/campaigns.repository';
-import { TokensService } from 'src/features/tokens/services/tokens.service';
 import {
+  campaignClaimArgumentMock,
+  campaignClaimMock,
   campaignPledgeArgumentMock,
-  campaignPledgeMock,
+  mongoClaimedCampaingStatus,
   tokenMock,
   userMock,
 } from '../../tests/mocks';
-import { UsersService } from 'src/features/users/services/users.service';
-import { CampaignPledgeMongoRepository } from '../../repositories/mongo/campaign-pledge/campaign-pledge.repository';
-import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
-import { CampaignPledgeService } from './campaign-pledge.service';
 import { campaignMock } from 'src/features/users/tests/mocks';
+import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
+import { TokensService } from 'src/features/tokens/services/tokens.service';
+import { UsersService } from 'src/features/users/services/users.service';
+import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
+import { CampaignClaimService } from 'src/features/campaigns/services/campaign-claim/campaign-claim.service';
+import { CampaignsMongoRepository } from 'src/features/campaigns/repositories/mongo/campaigns.repository';
+import { CampaignClaimMongoRepository } from 'src/features/campaigns/repositories/mongo/campaign-claim/campaign-claim.repository';
+import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 
-describe('CampaignPledgeService', () => {
-  let campaignPledgeService: CampaignPledgeService;
+describe('CampaignClaimService', () => {
+  let campaignClaimService: CampaignClaimService;
   let campaignService: CampaignsService;
   let usersService: UsersService;
   let tokensService: TokensService;
-  let campaignPledgeMongoRepository: CampaignPledgeMongoRepository;
+  let campaignStatusService: CampaignStatusService;
+  let campaignClaimMongoRepository: CampaignClaimMongoRepository;
   let campaignMongoRepository: CampaignsMongoRepository;
   let userCampaignsMongoRepository: UserCampaignsRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        CampaignPledgeService,
+        CampaignClaimService,
         {
           provide: CampaignsService,
           useValue: {
             findOne: jest.fn(),
+          },
+        },
+        {
+          provide: CampaignStatusService,
+          useValue: {
+            getStatusByCode: jest.fn(),
           },
         },
         {
@@ -49,16 +59,15 @@ describe('CampaignPledgeService', () => {
           },
         },
         {
-          provide: CampaignPledgeMongoRepository,
+          provide: CampaignClaimMongoRepository,
           useValue: {
             create: jest.fn(),
-            findAll: jest.fn(),
           },
         },
         {
           provide: CampaignsMongoRepository,
           useValue: {
-            updateTokenAmount: jest.fn(),
+            update: jest.fn(),
           },
         },
         {
@@ -70,14 +79,16 @@ describe('CampaignPledgeService', () => {
       ],
     }).compile();
 
-    campaignPledgeService = module.get<CampaignPledgeService>(
-      CampaignPledgeService,
-    );
+    campaignClaimService =
+      module.get<CampaignClaimService>(CampaignClaimService);
     campaignService = module.get<CampaignsService>(CampaignsService);
     usersService = module.get<UsersService>(UsersService);
     tokensService = module.get<TokensService>(TokensService);
-    campaignPledgeMongoRepository = module.get<CampaignPledgeMongoRepository>(
-      CampaignPledgeMongoRepository,
+    campaignStatusService = module.get<CampaignStatusService>(
+      CampaignStatusService,
+    );
+    campaignClaimMongoRepository = module.get<CampaignClaimMongoRepository>(
+      CampaignClaimMongoRepository,
     );
     campaignMongoRepository = module.get<CampaignsMongoRepository>(
       CampaignsMongoRepository,
@@ -87,11 +98,33 @@ describe('CampaignPledgeService', () => {
     );
   });
 
+  it('should be defined', () => {
+    expect(campaignClaimService).toBeDefined();
+  });
+
   describe('create method', () => {
     it('should call create method and fails because arguments are not right', async () => {
       await expect(() =>
-        campaignPledgeService.create('WrongArgument'),
+        campaignClaimService.create('WrongArgument'),
       ).rejects.toThrow();
+    });
+
+    it('should call create method and fails because there is no associated campaign', async () => {
+      jest.spyOn(campaignService, 'findOne').mockResolvedValue(null as any);
+      jest
+        .spyOn(usersService, 'findUserByAddress')
+        .mockResolvedValue(userMock as any);
+      jest
+        .spyOn(tokensService, 'getByDefault')
+        .mockResolvedValue(tokenMock as any);
+
+      await expect(() =>
+        campaignClaimService.create(campaignClaimArgumentMock),
+      ).rejects.toThrow();
+
+      expect(campaignService.findOne).toBeCalledTimes(1);
+      expect(usersService.findUserByAddress).toBeCalledTimes(1);
+      expect(tokensService.getByDefault).toBeCalledTimes(1);
     });
 
     it('should call create method without errors', async () => {
@@ -105,68 +138,23 @@ describe('CampaignPledgeService', () => {
         .spyOn(tokensService, 'getByDefault')
         .mockResolvedValue(tokenMock as any);
       jest
-        .spyOn(campaignPledgeMongoRepository, 'create')
-        .mockResolvedValue(campaignPledgeMock as any);
+        .spyOn(campaignClaimMongoRepository, 'create')
+        .mockResolvedValue(campaignClaimMock as any);
       jest
-        .spyOn(campaignMongoRepository, 'updateTokenAmount')
-        .mockResolvedValue(null);
+        .spyOn(campaignStatusService, 'getStatusByCode')
+        .mockResolvedValue(mongoClaimedCampaingStatus as any);
+      jest.spyOn(campaignMongoRepository, 'update').mockResolvedValue(null);
       jest
         .spyOn(userCampaignsMongoRepository, 'updateUserCampaignByEvent')
         .mockResolvedValue(null);
 
       await expect(() =>
-        campaignPledgeService.create(campaignPledgeArgumentMock),
+        campaignClaimService.create(campaignPledgeArgumentMock),
       ).not.toThrow();
 
       expect(campaignService.findOne).toBeCalledTimes(1);
       expect(usersService.findUserByAddress).toBeCalledTimes(1);
       expect(tokensService.getByDefault).toBeCalledTimes(1);
-    });
-
-    it('should call create method and fails because there is no associated campaign', async () => {
-      jest.spyOn(campaignService, 'findOne').mockResolvedValue(null as any);
-      jest
-        .spyOn(usersService, 'findUserByAddress')
-        .mockResolvedValue(userMock as any);
-      jest
-        .spyOn(tokensService, 'getByDefault')
-        .mockResolvedValue(tokenMock as any);
-
-      await expect(() =>
-        campaignPledgeService.create(campaignPledgeArgumentMock),
-      ).rejects.toThrow();
-
-      expect(campaignService.findOne).toBeCalledTimes(1);
-      expect(usersService.findUserByAddress).toBeCalledTimes(1);
-      expect(tokensService.getByDefault).toBeCalledTimes(1);
-    });
-  });
-
-  describe('findAllByUser', () => {
-    it('should return campaigns', async () => {
-      const campaigns = [
-        {
-          _id: '63e3cf5e686d726c68efa3fa',
-          title: 'My campaign',
-          userId: 'user-1',
-        },
-        {
-          _id: '63e3cf5e686d726c68efa3fb',
-          title: 'My campaign2',
-          userId: 'user-1',
-        },
-      ];
-      jest
-        .spyOn(campaignPledgeMongoRepository, 'findAll')
-        .mockResolvedValue(campaigns);
-
-      const result = await campaignPledgeService.findAllByUser({
-        page: 1,
-        size: 10,
-        userId: 'user-1',
-      });
-
-      expect(result).toEqual(campaigns);
     });
   });
 });
