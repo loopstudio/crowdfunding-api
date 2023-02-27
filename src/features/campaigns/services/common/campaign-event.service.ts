@@ -1,5 +1,3 @@
-import { Injectable } from '@nestjs/common';
-
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
 import { UserDocument } from 'src/features/users/schemas/user.schema';
 import { CampaignDocument } from '../../schemas/campaign.schema';
@@ -7,7 +5,6 @@ import { CampaignsService } from 'src/features/campaigns/services/campaigns.serv
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { UsersService } from 'src/features/users/services/users.service';
 
-@Injectable()
 export abstract class CampaignEventService {
   constructor(
     readonly campaignService: CampaignsService,
