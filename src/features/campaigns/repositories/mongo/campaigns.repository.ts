@@ -39,12 +39,10 @@ export class CampaignsMongoRepository {
       filters.owner = ownerId;
     }
 
-    if (search) {
-      filters.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { subtitle: { $regex: search, $options: 'i' } },
-      ];
-    }
+    filters.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { subtitle: { $regex: search, $options: 'i' } },
+    ];
 
     const campaings = await this.campaignModel
       .find(filters)
