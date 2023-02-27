@@ -9,11 +9,8 @@ import { BigNumber } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
-import {
-  campaignFieldsToModify,
-  movementType,
-  movementTypeEnum,
-} from '../../constants';
+import { campaignFieldsToModify, movementTypeEnum } from '../../constants';
+import { movementType, searchFilters } from '../../types';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
@@ -36,13 +33,16 @@ export class CampaignsMongoRepository {
     search: string | null;
   }) {
     const skipValue = page > 0 ? (page - 1) * size : 0;
-    const filters = {
-      owner: ownerId,
-      $or: [
-        { title: { $regex: search, $options: 'i' } },
-        { subtitle: { $regex: search, $options: 'i' } },
-      ],
-    };
+    const filters: searchFilters = {};
+
+    if (ownerId) {
+      filters.owner = ownerId;
+    }
+
+    filters.$or = [
+      { title: { $regex: search, $options: 'i' } },
+      { subtitle: { $regex: search, $options: 'i' } },
+    ];
 
     const campaings = await this.campaignModel
       .find(filters)

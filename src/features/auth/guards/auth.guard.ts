@@ -2,7 +2,7 @@ import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
-import { IS_PUBLIC_KEY } from '../decorators';
+import { IS_PUBLIC_KEY, IS_ALLOW_UNAUTHENTICATE_REQUEST } from '../decorators';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -16,7 +16,16 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       context.getClass(),
     ]);
 
-    if (isPublic) {
+    const allowUnauthenticatedRequest =
+      this.reflector.getAllAndOverride<boolean>(
+        IS_ALLOW_UNAUTHENTICATE_REQUEST,
+        [context.getHandler(), context.getClass()],
+      );
+
+    const req = context.switchToHttp().getRequest();
+    const isUnauthenticatedRequest =
+      allowUnauthenticatedRequest && !req.headers.authorization;
+    if (isPublic || isUnauthenticatedRequest) {
       return true;
     }
 
