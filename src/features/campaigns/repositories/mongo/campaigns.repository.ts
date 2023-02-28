@@ -44,7 +44,7 @@ export class CampaignsMongoRepository {
       { subtitle: { $regex: search, $options: 'i' } },
     ];
 
-    const campaings = await this.campaignModel
+    const campaigns = await this.campaignModel
       .find(filters)
       .populate('owner')
       .sort({ created: -1 })
@@ -52,7 +52,9 @@ export class CampaignsMongoRepository {
       .limit(size)
       .lean();
 
-    return campaings;
+    const count = await this.campaignModel.find(filters).countDocuments();
+
+    return { campaigns, total: count };
   }
 
   async findOne(onchainId: string) {

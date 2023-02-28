@@ -62,6 +62,7 @@ describe('Campaign Statuses Repository', () => {
         sort: jest.fn().mockReturnThis(),
         skip: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
+        countDocuments: jest.fn().mockReturnValue(1),
         lean: jest.fn().mockResolvedValue([mongoBuiltCampaign]),
       } as any);
 
@@ -72,7 +73,10 @@ describe('Campaign Statuses Repository', () => {
         search: null,
       });
 
-      expect(response).toStrictEqual([mongoBuiltCampaign]);
+      expect(response).toStrictEqual({
+        campaigns: [mongoBuiltCampaign],
+        total: 1,
+      });
     });
 
     it('should call findAll method with page 1 and size 1', async () => {
@@ -81,6 +85,7 @@ describe('Campaign Statuses Repository', () => {
         sort: jest.fn().mockReturnThis(),
         skip: jest.fn().mockReturnThis(),
         limit: jest.fn().mockReturnThis(),
+        countDocuments: jest.fn().mockReturnValue(1),
         lean: jest.fn().mockResolvedValue([mongoBuiltCampaign]),
       } as any);
 
@@ -91,7 +96,10 @@ describe('Campaign Statuses Repository', () => {
         search: null,
       });
 
-      expect(response).toStrictEqual([mongoBuiltCampaign]);
+      expect(response).toStrictEqual({
+        campaigns: [mongoBuiltCampaign],
+        total: 1,
+      });
     });
   });
 
