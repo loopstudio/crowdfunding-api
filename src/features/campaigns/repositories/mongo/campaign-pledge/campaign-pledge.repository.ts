@@ -38,13 +38,16 @@ export class CampaignPledgeMongoRepository {
     page,
     size,
     userId,
+    search,
   }: {
     page: number;
     size: number;
     userId: string;
+    search: string;
   }) {
     const skipValue = page > 0 ? (page - 1) * size : 0;
-    const campaings = await this.campaignPledgeModel.aggregate([
+
+    const campaigns = await this.campaignPledgeModel.aggregate([
       {
         $match: { user: userId },
       },
@@ -73,8 +76,16 @@ export class CampaignPledgeMongoRepository {
           as: 'campaigns',
         },
       },
+      {
+        $match: {
+          $or: [
+            { 'campaigns.title': { $regex: search } },
+            { 'campaigns.subtitle': { $regex: search } },
+          ],
+        },
+      },
     ]);
 
-    return campaings;
+    return campaigns;
   }
 }
