@@ -73,7 +73,7 @@ export class CampaignsService {
     page: number;
     size: number;
     ownerId: string | null;
-    search: string | null;
+    search: string;
   }) {
     const campaigns = await this.campaignsMongoRepository.findAll({
       page,

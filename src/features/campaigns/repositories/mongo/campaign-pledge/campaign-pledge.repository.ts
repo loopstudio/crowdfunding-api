@@ -38,43 +38,95 @@ export class CampaignPledgeMongoRepository {
     page,
     size,
     userId,
+    search,
   }: {
     page: number;
     size: number;
     userId: string;
+    search: string;
   }) {
     const skipValue = page > 0 ? (page - 1) * size : 0;
-    const campaings = await this.campaignPledgeModel.aggregate([
+
+    const campaignsMongoResponse = await this.campaignPledgeModel.aggregate([
       {
-        $match: { user: userId },
-      },
-      { $sort: { created: -1 } },
-      { $skip: skipValue },
-      { $limit: size },
-      {
-        $group: {
-          _id: null,
-          campaigns: {
-            $addToSet: '$campaign',
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          campaigns: 1,
-        },
-      },
-      {
-        $lookup: {
-          from: 'campaigns',
-          localField: 'campaigns',
-          foreignField: '_id',
-          as: 'campaigns',
+        $facet: {
+          data: [
+            { $match: { user: userId } },
+            { $sort: { created_at: -1 } },
+            { $skip: skipValue },
+            { $limit: size },
+            {
+              $group: {
+                _id: null,
+                campaigns: {
+                  $addToSet: '$campaign',
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                campaigns: 1,
+              },
+            },
+            {
+              $lookup: {
+                from: 'campaigns',
+                localField: 'campaigns',
+                foreignField: '_id',
+                as: 'campaigns',
+              },
+            },
+            {
+              $match: {
+                $or: [
+                  { 'campaigns.title': { $regex: search } },
+                  { 'campaigns.subtitle': { $regex: search } },
+                ],
+              },
+            },
+          ],
+          count: [
+            { $match: { user: userId } },
+            {
+              $group: {
+                _id: null,
+                campaigns: {
+                  $addToSet: '$campaign',
+                },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                campaigns: 1,
+              },
+            },
+            {
+              $lookup: {
+                from: 'campaigns',
+                localField: 'campaigns',
+                foreignField: '_id',
+                as: 'campaigns',
+              },
+            },
+            {
+              $match: {
+                $or: [
+                  { 'campaigns.title': { $regex: search } },
+                  { 'campaigns.subtitle': { $regex: search } },
+                ],
+              },
+            },
+            { $count: 'total' },
+          ],
         },
       },
     ]);
 
-    return campaings;
+    const { campaigns } = campaignsMongoResponse[0].data[0];
+    const { total } = campaignsMongoResponse[0].count[0];
+
+    return { campaigns, total };
   }
 }

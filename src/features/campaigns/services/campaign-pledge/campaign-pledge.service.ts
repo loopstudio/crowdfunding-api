@@ -93,15 +93,18 @@ export class CampaignPledgeService {
     page,
     size,
     userId,
+    search,
   }: {
     page: number;
     size: number;
     userId: string;
+    search: string;
   }) {
     const campaigns = await this.campaignPledgeMongoRepository.findAll({
       page,
       size,
       userId,
+      search,
     });
 
     return campaigns;

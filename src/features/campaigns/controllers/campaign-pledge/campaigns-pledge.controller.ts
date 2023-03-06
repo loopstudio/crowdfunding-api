@@ -14,6 +14,7 @@ export class CampaignsPledgeController {
     @Request() request: ExpressRequest,
     @Query('size') size: number = DEFAULT_PAGE_SIZE,
     @Query('page') page: number = DEFAULT_PAGE,
+    @Query('search') search = '',
   ): Promise<APIResponse> {
     const {
       user: { _id: userId },
@@ -22,6 +23,7 @@ export class CampaignsPledgeController {
       page,
       size,
       userId,
+      search,
     });
     return { data: campaigns };
   }
