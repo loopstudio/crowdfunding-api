@@ -41,6 +41,7 @@ describe('CampaignsPledge Controller', () => {
       page,
       size,
       userId: user._id,
+      search: '',
     };
 
     await controller.findAllByUser(request, size, page);
@@ -55,6 +56,7 @@ describe('CampaignsPledge Controller', () => {
       page: DEFAULT_PAGE,
       size: DEFAULT_PAGE_SIZE,
       userId: user._id,
+      search: '',
     };
 
     await controller.findAllByUser(request);

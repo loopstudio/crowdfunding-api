@@ -21,7 +21,7 @@ describe('Campaign Pledge Repository', () => {
   let campaignPledgeModel: Model<CampaignPledge>;
 
   const campaignId = '634f3292a486274ca2f3d47f' as unknown as ObjectId;
-  const userId = '634f3292a486274ca2f3d47a' as unknown as ObjectId;
+  const userId = '634f3292a486274ca2f3d47f' as unknown as ObjectId;
   const tokenId = '634f3292a486274ca2f3d47b' as unknown as ObjectId;
   const amount = '1';
 
@@ -70,59 +70,126 @@ describe('Campaign Pledge Repository', () => {
       expect(response).toStrictEqual(campaignPledgeMock);
     });
   });
-
   describe('findAll', () => {
+    const mockReturnValue = [
+      {
+        data: [{ campaigns: [aggregateCampaignMock] }],
+        count: [{ total: 2 }],
+      },
+    ];
     it('should call aggregate with the correct parameters', async () => {
       jest
         .spyOn(campaignPledgeModel, 'aggregate')
-        .mockReturnValue([{ campaigns: [aggregateCampaignMock] }] as any);
+        .mockReturnValue(mockReturnValue as any);
 
+      const search = '';
       const expectedAggregateParams = [
         {
-          $match: { user: user._id },
-        },
-        { $sort: { created: -1 } },
-        { $skip: 0 },
-        { $limit: size },
-        {
-          $group: {
-            _id: null,
-            campaigns: {
-              $addToSet: '$campaign',
-            },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            campaigns: 1,
-          },
-        },
-        {
-          $lookup: {
-            from: 'campaigns',
-            localField: 'campaigns',
-            foreignField: '_id',
-            as: 'campaigns',
+          $facet: {
+            data: [
+              { $match: { user: user._id } },
+              { $sort: { created_at: -1 } },
+              { $skip: 0 },
+              { $limit: size },
+              {
+                $group: {
+                  _id: null,
+                  campaigns: {
+                    $addToSet: '$campaign',
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  campaigns: 1,
+                },
+              },
+              {
+                $lookup: {
+                  from: 'campaigns',
+                  localField: 'campaigns',
+                  foreignField: '_id',
+                  as: 'campaigns',
+                },
+              },
+              {
+                $match: {
+                  $or: [
+                    { 'campaigns.title': { $regex: search } },
+                    { 'campaigns.subtitle': { $regex: search } },
+                  ],
+                },
+              },
+            ],
+            count: [
+              { $match: { user: userId } },
+              {
+                $group: {
+                  _id: null,
+                  campaigns: {
+                    $addToSet: '$campaign',
+                  },
+                },
+              },
+              {
+                $project: {
+                  _id: 0,
+                  campaigns: 1,
+                },
+              },
+              {
+                $lookup: {
+                  from: 'campaigns',
+                  localField: 'campaigns',
+                  foreignField: '_id',
+                  as: 'campaigns',
+                },
+              },
+              {
+                $match: {
+                  $or: [
+                    { 'campaigns.title': { $regex: search } },
+                    { 'campaigns.subtitle': { $regex: search } },
+                  ],
+                },
+              },
+              { $count: 'total' },
+            ],
           },
         },
       ];
-      await campaignPledgeRepository.findAll({ page, size, userId: user._id });
+      await campaignPledgeRepository.findAll({
+        page,
+        size,
+        userId: user._id,
+        search: '',
+      });
       expect(campaignPledgeModel.aggregate).toHaveBeenCalledWith(
         expectedAggregateParams,
       );
     });
 
     it('should return the result of aggregate', async () => {
+      const mockReturnValue = [
+        {
+          data: [{ campaigns: [aggregateCampaignMock] }],
+          count: [{ total: 2 }],
+        },
+      ];
       jest
         .spyOn(campaignPledgeModel, 'aggregate')
-        .mockReturnValue([{ campaigns: [aggregateCampaignMock] }] as any);
+        .mockReturnValue(mockReturnValue as any);
 
-      const expectedResult = [{ campaigns: [aggregateCampaignMock] }];
+      const expectedResult = {
+        campaigns: [aggregateCampaignMock],
+        total: 2,
+      };
       const result = await campaignPledgeRepository.findAll({
         page,
         size,
         userId: user._id,
+        search: '',
       });
       expect(result).toEqual(expectedResult);
     });

@@ -156,17 +156,19 @@ describe('CampaignPledgeService', () => {
           userId: 'user-1',
         },
       ];
+      const total = 2;
       jest
         .spyOn(campaignPledgeMongoRepository, 'findAll')
-        .mockResolvedValue(campaigns);
+        .mockResolvedValue({ campaigns, total });
 
       const result = await campaignPledgeService.findAllByUser({
         page: 1,
         size: 10,
         userId: 'user-1',
+        search: '',
       });
 
-      expect(result).toEqual(campaigns);
+      expect(result).toEqual({ campaigns, total });
     });
   });
 });
