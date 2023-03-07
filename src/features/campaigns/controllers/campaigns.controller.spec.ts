@@ -9,11 +9,14 @@ import {
   createCampaignDtoMock,
   updateCampaignDtoMock,
   mongoBuiltUpdatedCampaign,
-  requestWithUser,
+  userMock,
 } from '../tests/mocks';
+import { CampaignQueryDto } from '../dto/campaigns-query-dto';
 
-const PAGE_SIZE = 10;
-const PAGE = 1;
+const query: CampaignQueryDto = {
+  size: 10,
+  page: 1,
+};
 
 describe('Campaigns Controller', () => {
   let campaignsController: CampaignsController;
@@ -51,7 +54,7 @@ describe('Campaigns Controller', () => {
         .spyOn(campaignsService, 'findAll')
         .mockResolvedValue({ campaigns: [mongoBuiltCampaign] } as any);
 
-      const response = await campaignsController.findAll(requestWithUser);
+      const response = await campaignsController.findAll(userMock, query);
 
       expect(response).toStrictEqual({ data: [mongoBuiltCampaign] });
     });
@@ -61,12 +64,7 @@ describe('Campaigns Controller', () => {
         .spyOn(campaignsService, 'findAll')
         .mockResolvedValue({ campaigns: [mongoBuiltCampaign] } as any);
 
-      const response = await campaignsController.findAll(
-        requestWithUser,
-        PAGE_SIZE,
-        PAGE,
-        true,
-      );
+      const response = await campaignsController.findAll(userMock, query);
 
       expect(response).toStrictEqual({ data: [mongoBuiltCampaign] });
     });
@@ -91,14 +89,14 @@ describe('Campaigns Controller', () => {
         .mockResolvedValue({ campaign: mongoBuiltCampaign } as any);
 
       const response = await campaignsController.create(
-        requestWithUser,
+        userMock,
         createCampaignDtoMock,
       );
 
       expect(response).toStrictEqual({ data: mongoBuiltCampaign });
       expect(campaignsService.create).toBeCalledWith({
         ...createCampaignDtoMock,
-        owner: requestWithUser.user._id,
+        owner: userMock._id,
       });
     });
   });

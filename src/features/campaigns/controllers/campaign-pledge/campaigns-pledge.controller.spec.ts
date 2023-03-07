@@ -1,13 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Request as ExpressRequest } from 'express';
 
 import { CampaignPledgeService } from '../../services/campaign-pledge/campaign-pledge.service';
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from 'src/common/constants';
 import { CampaignsPledgeController } from './campaigns-pledge.controller';
 import { userMock2 } from '../../tests/mocks/index';
+import { CampaignPledgeQueryDto } from '../../dto/campaigns-pledge-query-dto';
 
-const request = { user: userMock2 } as ExpressRequest;
 const user = userMock2;
+const query: CampaignPledgeQueryDto = {
+  size: 20,
+  page: 0,
+  search: '',
+};
 
 describe('CampaignsPledge Controller', () => {
   let controller: CampaignsPledgeController;
@@ -44,7 +48,7 @@ describe('CampaignsPledge Controller', () => {
       search: '',
     };
 
-    await controller.findAllByUser(request, size, page);
+    await controller.findAllByUser(userMock2, { size, page, search: '' });
 
     expect(campaignPledgeService.findAllByUser).toHaveBeenCalledWith(
       expectedParams,
@@ -59,7 +63,7 @@ describe('CampaignsPledge Controller', () => {
       search: '',
     };
 
-    await controller.findAllByUser(request);
+    await controller.findAllByUser(userMock2, query);
 
     expect(campaignPledgeService.findAllByUser).toHaveBeenCalledWith(
       expectedParams,

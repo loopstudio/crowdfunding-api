@@ -124,8 +124,13 @@ export class CampaignPledgeMongoRepository {
       },
     ]);
 
-    const { campaigns } = campaignsMongoResponse[0].data[0];
-    const { total } = campaignsMongoResponse[0].count[0];
+    let campaigns = [];
+    let total = 0;
+
+    if (campaignsMongoResponse[0].data.length) {
+      campaigns = campaignsMongoResponse[0].data[0].campaigns;
+      total = campaignsMongoResponse[0].count[0].total;
+    }
 
     return { campaigns, total };
   }
