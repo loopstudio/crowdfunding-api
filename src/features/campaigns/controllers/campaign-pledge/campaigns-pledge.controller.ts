@@ -14,10 +14,9 @@ export class CampaignsPledgeController {
     @CurrentUser() user,
     @Query() query: CampaignPledgeQueryDto,
   ): Promise<APIResponse> {
-    const { search } = query;
-    const page = query.page;
-    const size = query.size;
+    const { page, size, search } = query;
     const { _id: userId } = user;
+    console.log(query);
     const campaigns = await this.campaignPledgeService.findAllByUser({
       page,
       size,
