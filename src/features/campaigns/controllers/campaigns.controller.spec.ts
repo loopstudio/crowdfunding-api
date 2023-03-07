@@ -11,11 +11,12 @@ import {
   mongoBuiltUpdatedCampaign,
   userMock,
 } from '../tests/mocks';
-import { CampaignQueryDto } from '../dto/campaigns-query-dto';
 
-const query: CampaignQueryDto = {
+const query = {
   size: 10,
   page: 1,
+  own: true,
+  search: '',
 };
 
 describe('Campaigns Controller', () => {
