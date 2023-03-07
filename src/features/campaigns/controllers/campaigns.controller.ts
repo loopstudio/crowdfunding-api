@@ -45,7 +45,9 @@ export class CampaignsController {
     @CurrentUser() user,
     @Query() query: CampaignQueryDto,
   ): Promise<APIResponse> {
-    const { page, size, search, own } = query;
+    const page = query.page;
+    const size = query.size;
+    const { search, own } = query;
     let ownerId: string | null = null;
     if (user && own) {
       const { _id: owner } = user;
