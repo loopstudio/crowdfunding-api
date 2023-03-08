@@ -12,7 +12,6 @@ import { CampaignsService } from '../services/campaigns.service';
 import { CreateCampaignDto } from '../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
 import { CampaignQueryDto } from '../dto/campaigns-query-dto';
-
 import { APIResponse } from 'src/common/types';
 import {
   Public,

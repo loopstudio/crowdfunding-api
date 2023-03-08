@@ -16,7 +16,7 @@ export class CampaignsPledgeController {
   ): Promise<APIResponse> {
     const { page, size, search } = query;
     const { _id: userId } = user;
-    console.log(query);
+
     const campaigns = await this.campaignPledgeService.findAllByUser({
       page,
       size,
