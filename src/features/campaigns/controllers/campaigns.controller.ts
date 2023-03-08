@@ -6,19 +6,18 @@ import {
   Body,
   Param,
   Query,
-  Request,
 } from '@nestjs/common';
-import { Request as ExpressRequest } from 'express';
 
 import { CampaignsService } from '../services/campaigns.service';
 import { CreateCampaignDto } from '../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../dto/update-campaign.dto';
+import { CampaignQueryDto } from '../dto/campaigns-query-dto';
 import { APIResponse } from 'src/common/types';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from 'src/common/constants';
 import {
   Public,
   AllowUnauthenticatedRequest,
 } from 'src/features/auth/decorators';
+import { CurrentUser } from 'src/decorators/currentUser.decorator';
 
 @Controller('campaigns')
 export class CampaignsController {
@@ -26,12 +25,10 @@ export class CampaignsController {
 
   @Post()
   async create(
-    @Request() request: ExpressRequest,
+    @CurrentUser() user,
     @Body() createCampaignDto: CreateCampaignDto,
   ): Promise<APIResponse> {
-    const {
-      user: { _id: owner },
-    } = request;
+    const { _id: owner } = user;
 
     const { campaign } = await this.campaignsService.create({
       owner,
@@ -44,17 +41,13 @@ export class CampaignsController {
   @AllowUnauthenticatedRequest()
   @Get()
   async findAll(
-    @Request() request: ExpressRequest,
-    @Query('size') size = DEFAULT_PAGE_SIZE,
-    @Query('page') page = DEFAULT_PAGE,
-    @Query('own') own: string | boolean = false,
-    @Query('search') search = '',
+    @CurrentUser() user,
+    @Query() query: CampaignQueryDto,
   ): Promise<APIResponse> {
+    const { page, size, search, own } = query;
     let ownerId: string | null = null;
-    if (request.user && own === 'true') {
-      const {
-        user: { _id: owner },
-      } = request;
+    if (user && own) {
+      const { _id: owner } = user;
       ownerId = owner;
     }
 

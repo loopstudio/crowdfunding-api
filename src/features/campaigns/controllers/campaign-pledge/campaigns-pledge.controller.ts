@@ -1,9 +1,9 @@
-import { Controller, Get, Query, Request } from '@nestjs/common';
-import { Request as ExpressRequest } from 'express';
+import { Controller, Get, Query } from '@nestjs/common';
 
 import { CampaignPledgeService } from '../../services/campaign-pledge/campaign-pledge.service';
 import { APIResponse } from 'src/common/types';
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from 'src/common/constants';
+import { CampaignPledgeQueryDto } from '../../dto/campaigns-pledge-query-dto';
+import { CurrentUser } from 'src/decorators/currentUser.decorator';
 
 @Controller('campaigns-pledge')
 export class CampaignsPledgeController {
@@ -11,14 +11,12 @@ export class CampaignsPledgeController {
 
   @Get()
   async findAllByUser(
-    @Request() request: ExpressRequest,
-    @Query('size') size: number = DEFAULT_PAGE_SIZE,
-    @Query('page') page: number = DEFAULT_PAGE,
-    @Query('search') search = '',
+    @CurrentUser() user,
+    @Query() query: CampaignPledgeQueryDto,
   ): Promise<APIResponse> {
-    const {
-      user: { _id: userId },
-    } = request;
+    const { page, size, search } = query;
+    const { _id: userId } = user;
+
     const campaigns = await this.campaignPledgeService.findAllByUser({
       page,
       size,
