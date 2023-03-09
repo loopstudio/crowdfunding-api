@@ -91,6 +91,8 @@ export const createCampaignDtoMock = {
   endDate: new Date(Date.now() + 10),
   image: 'image.png',
   video: 'video.mp4',
+  url: 'testurl',
+  collaborators: null,
   goal: [
     {
       tokenAddress: '63611e69143b8def9c4843dd',
