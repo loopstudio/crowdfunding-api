@@ -24,6 +24,14 @@ export class CreateCampaignDto {
   @IsOptional()
   story = '';
 
+  @IsOptional()
+  @IsString()
+  url = null;
+
+  @IsOptional()
+  @IsString()
+  collaborators = null;
+
   @Transform(
     ({ value }) => {
       return new Date(Number(value) * 1000);

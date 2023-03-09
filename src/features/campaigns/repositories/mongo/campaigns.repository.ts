@@ -119,7 +119,18 @@ export class CampaignsMongoRepository {
       generalCategoryId,
       owner,
       pendingStatusId,
-      dto: { title, subtitle, story, startDate, endDate, image, video, goal },
+      dto: {
+        title,
+        subtitle,
+        story,
+        startDate,
+        endDate,
+        image,
+        video,
+        goal,
+        url,
+        collaborators,
+      },
     } = createCampaignData;
 
     const currentAmount = goal.map((tokenAmount) => ({
@@ -140,6 +151,8 @@ export class CampaignsMongoRepository {
       status: pendingStatusId,
       currentAmount,
       category: generalCategoryId,
+      url,
+      collaborators,
     });
 
     return campaign;

@@ -86,6 +86,12 @@ export class Campaign {
     required: true,
   })
   owner: User;
+
+  @Prop({ default: null })
+  url: string;
+
+  @Prop({ default: null })
+  collaborators: string;
 }
 
 export const CampaignSchema = SchemaFactory.createForClass(Campaign);
