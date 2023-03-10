@@ -17,6 +17,7 @@ import {
 } from '../../campaign-statuses/types/index';
 import { UsersRepository } from 'src/features/users/repositories/users/mongo/users.repository';
 import { CampaignLaunchEventDto } from '../dto/campaign-launch-event-dto';
+import { CampaignPledgeMongoRepository } from '../repositories/mongo/campaign-pledge/campaign-pledge.repository';
 
 @Injectable()
 export class CampaignsService {
@@ -26,6 +27,7 @@ export class CampaignsService {
     private readonly tokensService: TokensService,
     private readonly campaignCategoriesService: CampaignCategoriesService,
     private readonly campaignStatusService: CampaignStatusService,
+    private readonly campaignPledgeMongoRepository: CampaignPledgeMongoRepository,
   ) {}
 
   async create(createCampaignDto: CreateCampaignDto & { owner: string }) {
@@ -87,7 +89,13 @@ export class CampaignsService {
 
   async findOne(id: string) {
     const campaign = await this.campaignsMongoRepository.findOne(id);
-    return { campaign };
+    const pledges = await this.campaignPledgeMongoRepository.countPledges(
+      campaign,
+    );
+
+    const campaignWithTotal = { campaign, pledges };
+
+    return { campaign: campaignWithTotal };
   }
 
   async findByLaunchEvent(campaignLaunchEventDto: CampaignLaunchEventDto) {
