@@ -19,6 +19,7 @@ import {
 import { mongoBuiltCampaingStatus } from 'src/features/campaign-statuses/tests/mocks';
 import { mongoBuiltCampaingCategory } from 'src/features/campaign-categories/tests/mocks';
 import { UsersRepository } from 'src/features/users/repositories/users/mongo/users.repository';
+import { CampaignPledgeMongoRepository } from '../repositories/mongo/campaign-pledge/campaign-pledge.repository';
 
 describe('UsersService', () => {
   let campaignService: CampaignsService;
@@ -27,6 +28,7 @@ describe('UsersService', () => {
   let campaignStatusService: CampaignStatusService;
   let campaignCategoriesService: CampaignCategoriesService;
   let usersRepository: UsersRepository;
+  let campaignPledgeMongoRepository: CampaignPledgeMongoRepository;
 
   const campaignId = '1';
   const pendingStatusId = '63611e68143b8def9c4843cf';
@@ -50,6 +52,12 @@ describe('UsersService', () => {
           provide: UsersRepository,
           useValue: {
             findByAddress: jest.fn(),
+          },
+        },
+        {
+          provide: CampaignPledgeMongoRepository,
+          useValue: {
+            countPledges: jest.fn(),
           },
         },
         {
@@ -85,6 +93,9 @@ describe('UsersService', () => {
       CampaignCategoriesService,
     );
     usersRepository = module.get<UsersRepository>(UsersRepository);
+    campaignPledgeMongoRepository = module.get<CampaignPledgeMongoRepository>(
+      CampaignPledgeMongoRepository,
+    );
   });
 
   it('campaignService should be defined', () => {
@@ -117,9 +128,15 @@ describe('UsersService', () => {
         .spyOn(campaignsRepository, 'findOne')
         .mockResolvedValue(mongoBuiltCampaign as any);
 
+      jest
+        .spyOn(campaignPledgeMongoRepository, 'countPledges')
+        .mockResolvedValue(1);
+
       const response = await campaignService.findOne(campaignId);
 
-      expect(response).toStrictEqual({ campaign: mongoBuiltCampaign });
+      const campaignResponse = { campaign: mongoBuiltCampaign, pledges: 1 };
+
+      expect(response).toStrictEqual({ campaign: campaignResponse });
       expect(campaignsRepository.findOne).toBeCalledWith(campaignId);
     });
   });

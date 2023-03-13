@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
+import { Campaign } from 'src/features/campaigns/schemas/campaign.schema';
 
 import {
   CampaignPledge,
@@ -133,5 +134,15 @@ export class CampaignPledgeMongoRepository {
     }
 
     return { campaigns, total };
+  }
+
+  async countPledges(campaign: Campaign) {
+    const campaignPledges = await this.campaignPledgeModel.find({
+      campaign,
+    });
+    if (!campaignPledges) {
+      throw new NotFoundException();
+    }
+    return campaignPledges.length;
   }
 }
