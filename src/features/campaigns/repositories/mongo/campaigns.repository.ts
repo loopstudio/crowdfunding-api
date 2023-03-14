@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { BigNumber } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
@@ -57,14 +57,20 @@ export class CampaignsMongoRepository {
     return { campaigns, total: count };
   }
 
-  async findOne(onchainId: string) {
+  async findOne(id: string) {
+    const isAnObjectId = isValidObjectId(id);
+
+    const filters = new Map();
+    filters.set(isAnObjectId ? '_id' : 'onchainId', id);
+
     const campaing = await this.campaignModel
-      .findOne({ onchainId: onchainId })
+      .findOne(Object.fromEntries(filters))
       .populate('owner');
 
     if (!campaing) {
       throw new NotFoundException();
     }
+
     return campaing;
   }
 
@@ -165,12 +171,7 @@ export class CampaignsMongoRepository {
     id: string;
     updateCampaignDto: UpdateCampaignDto;
   }) {
-    const existingCampaign = await this.campaignModel
-      .findOne({ onchainId: id })
-      .exec();
-    if (!existingCampaign) {
-      throw new NotFoundException();
-    }
+    const existingCampaign = await this.findOne(id);
 
     // TODO: Move to utils
     for (const [key, value] of Object.entries(updateCampaignDto)) {

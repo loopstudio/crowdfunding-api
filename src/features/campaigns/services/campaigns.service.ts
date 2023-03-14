@@ -93,9 +93,7 @@ export class CampaignsService {
       campaign,
     );
 
-    const campaignWithTotal = { campaign, pledges };
-
-    return { campaign: campaignWithTotal };
+    return { campaign, pledges };
   }
 
   async findByLaunchEvent(campaignLaunchEventDto: CampaignLaunchEventDto) {
