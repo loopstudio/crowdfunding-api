@@ -4,13 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { isValidObjectId, Model } from 'mongoose';
+import { isValidObjectId, Model, ObjectId } from 'mongoose';
 import { BigNumber } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
 import { campaignFieldsToModify, movementTypeEnum } from '../../constants';
-import { movementType, searchFilters } from '../../types';
+import { movementType, OnchainId, searchFilters } from '../../types';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
@@ -57,7 +57,7 @@ export class CampaignsMongoRepository {
     return { campaigns, total: count };
   }
 
-  async findOne(id: string) {
+  async findOne(id: ObjectId | OnchainId) {
     const isAnObjectId = isValidObjectId(id);
 
     const filters = new Map();
@@ -168,7 +168,7 @@ export class CampaignsMongoRepository {
     id,
     updateCampaignDto,
   }: {
-    id: string;
+    id: ObjectId | OnchainId;
     updateCampaignDto: UpdateCampaignDto;
   }) {
     const existingCampaign = await this.findOne(id);

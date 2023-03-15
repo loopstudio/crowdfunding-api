@@ -7,3 +7,5 @@ export type searchFilters = {
     { subtitle: { $regex: string; $options: string } },
   ];
 };
+
+export type OnchainId = string;
