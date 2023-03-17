@@ -145,7 +145,7 @@ describe('Campaign Statuses Repository', () => {
   describe('update method', () => {
     it('should call update method and fails because campaign does not exist', async () => {
       jest.spyOn(campaignModel, 'findOne').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(null),
+        populate: jest.fn().mockResolvedValue(null),
       } as any);
 
       await expect(
@@ -158,7 +158,7 @@ describe('Campaign Statuses Repository', () => {
 
     it('should call update method and fails because I want to update an unallowed property', async () => {
       jest.spyOn(campaignModel, 'findOne').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mongoBuiltCampaign),
+        populate: jest.fn().mockResolvedValue(mongoBuiltCampaign),
       } as any);
 
       await expect(
@@ -177,7 +177,7 @@ describe('Campaign Statuses Repository', () => {
       delete modifiedMongoBuiltUpdatedCampaign.save;
 
       jest.spyOn(campaignModel, 'findOne').mockReturnValue({
-        exec: jest.fn().mockResolvedValue(mongoBuiltCampaign),
+        populate: jest.fn().mockResolvedValue(mongoBuiltCampaign),
       } as any);
 
       const response = await campaignsRepository.update({

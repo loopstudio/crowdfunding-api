@@ -134,9 +134,12 @@ describe('UsersService', () => {
 
       const response = await campaignService.findOne(campaignId);
 
-      const campaignResponse = { campaign: mongoBuiltCampaign, pledges: 1 };
+      const campaignResponse = {
+        campaign: { ...mongoBuiltCampaign },
+        pledges: 1,
+      };
 
-      expect(response).toStrictEqual({ campaign: campaignResponse });
+      expect(response).toStrictEqual(campaignResponse);
       expect(campaignsRepository.findOne).toBeCalledWith(campaignId);
     });
   });

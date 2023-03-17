@@ -4,13 +4,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model, ObjectId } from 'mongoose';
 import { BigNumber } from 'ethers';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 
 import { Campaign, CampaignDocument } from '../../schemas/campaign.schema';
 import { campaignFieldsToModify, movementTypeEnum } from '../../constants';
-import { movementType, searchFilters } from '../../types';
+import { movementType, OnchainId, searchFilters } from '../../types';
 import { CreateCampaignDto } from '../../dto/create-campaign.dto';
 import { UpdateCampaignDto } from '../../dto/update-campaign.dto';
 import { CampaignLaunchEventDto } from '../../dto/campaign-launch-event-dto';
@@ -57,14 +57,20 @@ export class CampaignsMongoRepository {
     return { campaigns, total: count };
   }
 
-  async findOne(onchainId: string) {
+  async findOne(id: ObjectId | OnchainId) {
+    const isAnObjectId = isValidObjectId(id);
+
+    const filters = new Map();
+    filters.set(isAnObjectId ? '_id' : 'onchainId', id);
+
     const campaing = await this.campaignModel
-      .findOne({ onchainId: onchainId })
+      .findOne(Object.fromEntries(filters))
       .populate('owner');
 
     if (!campaing) {
       throw new NotFoundException();
     }
+
     return campaing;
   }
 
@@ -162,15 +168,10 @@ export class CampaignsMongoRepository {
     id,
     updateCampaignDto,
   }: {
-    id: string;
+    id: ObjectId | OnchainId;
     updateCampaignDto: UpdateCampaignDto;
   }) {
-    const existingCampaign = await this.campaignModel
-      .findOne({ onchainId: id })
-      .exec();
-    if (!existingCampaign) {
-      throw new NotFoundException();
-    }
+    const existingCampaign = await this.findOne(id);
 
     // TODO: Move to utils
     for (const [key, value] of Object.entries(updateCampaignDto)) {

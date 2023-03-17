@@ -5,25 +5,25 @@ import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { UsersService } from 'src/features/users/services/users.service';
 import { CampaignPledgeMongoRepository } from '../../repositories/mongo/campaign-pledge/campaign-pledge.repository';
 import { CampaignsMongoRepository } from '../../repositories/mongo/campaigns.repository';
-import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
-import { UserDocument } from 'src/features/users/schemas/user.schema';
-import { CampaignDocument } from '../../schemas/campaign.schema';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 import { movementTypeEnum } from '../../constants';
 import { CrowdfundingEvent } from 'src/features/events/types';
+import { CampaignEventService } from '../common/campaign-event.service';
 
 @Injectable()
-export class CampaignPledgeService {
+export class CampaignPledgeService extends CampaignEventService {
   private readonly logger = new Logger(CampaignPledgeService.name);
 
   constructor(
-    private readonly campaignService: CampaignsService,
-    private readonly usersService: UsersService,
-    private readonly tokensService: TokensService,
+    readonly campaignService: CampaignsService,
+    readonly usersService: UsersService,
+    readonly tokensService: TokensService,
     private readonly campaignPledgeMongoRepository: CampaignPledgeMongoRepository,
     private readonly campaignMongoRepository: CampaignsMongoRepository,
     private readonly userCampaignsMongoRepository: UserCampaignsRepository,
-  ) {}
+  ) {
+    super(campaignService, usersService, tokensService);
+  }
 
   async create(eventData: unknown) {
     if (!Array.isArray(eventData)) {
@@ -57,36 +57,6 @@ export class CampaignPledgeService {
       event: savedPledge,
       eventType: CrowdfundingEvent.Pledge,
     });
-  }
-
-  // TODO: Use abstract class CampaignEventService
-  private async getMetadata({
-    onchainId,
-    userAddress,
-  }: {
-    onchainId: string;
-    userAddress: string;
-  }): Promise<{
-    campaign: CampaignDocument;
-    user: UserDocument;
-    token: TokenDocument;
-  }> {
-    const promises = [
-      this.campaignService.findOne(onchainId),
-      this.usersService.findUserByAddress(userAddress),
-      this.tokensService.getByDefault(),
-    ];
-
-    const promiseResults = await Promise.all<unknown>(promises);
-    if (promiseResults.some((result) => !result)) {
-      throw new Error('No metadata associated');
-    }
-
-    const { campaign } = promiseResults[0] as { campaign: CampaignDocument };
-    const user = promiseResults[1] as UserDocument;
-    const token = promiseResults[2] as TokenDocument;
-
-    return { campaign, user, token };
   }
 
   async findAllByUser({
