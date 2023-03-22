@@ -73,13 +73,15 @@ describe('Campaigns Controller', () => {
 
   describe('findOne method', () => {
     it('should call findOne campaignsService method without errors', async () => {
+      const pledges = 1;
       jest
         .spyOn(campaignsService, 'findOne')
-        .mockResolvedValue({ campaign: mongoBuiltCampaign } as any);
-
+        .mockResolvedValue({ campaign: mongoBuiltCampaign, pledges } as any);
       const response = await campaignsController.findOne(campaignId);
 
-      expect(response).toStrictEqual({ data: mongoBuiltCampaign });
+      expect(response).toStrictEqual({
+        data: { campaign: mongoBuiltCampaign, pledges },
+      });
     });
   });
 
