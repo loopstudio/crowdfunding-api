@@ -7,8 +7,8 @@ automatic_scaling:
 env_variables:
   API_PORT: 8080
   TOKEN_EXPIRATION_TIME: 60h
-  JWT_PRIVATE_KEY: 2884cad1748abfa75ff11030b819666382e8ffd6fa7b68691a5a29f5a73fac90
-  MONGO_URI_CONNECTION: mongodb+srv://lgalarce:ofJG6bP1ByBWdYnO@prod.dr4tn3m.mongodb.net/crowdfunding
+  JWT_PRIVATE_KEY:
+  MONGO_URI_CONNECTION:
   NETWORK_RPC_URL: https://rpc.sepolia.org
 
 service: crowdfunding-api
