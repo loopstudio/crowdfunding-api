@@ -45,8 +45,9 @@ export class EventsService
     // TODO: Configure api keys for production (https://docs.ethers.io/v5/api/providers)
 
     const rpcEndpoint = this.configService.get<string>('NETWORK_RPC_URL');
+    const apiKey = this.configService.get<string>('NETWORK_API_KEY');
 
-    this.provider = getDefaultProvider(rpcEndpoint);
+    this.provider = getDefaultProvider(rpcEndpoint, { alchemy: apiKey });
   }
 
   private intializeContracts() {

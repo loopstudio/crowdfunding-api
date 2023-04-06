@@ -17,7 +17,7 @@ export const eventsToHandle = {
 
 export const contractsToHandle = [
   {
-    address: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
+    address: '0x848b92662f67971cf92ce0214107bBDA90316cda',
     abi: [
       {
         inputs: [

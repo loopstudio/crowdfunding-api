@@ -1,0 +1,14 @@
+runtime: nodejs18
+entrypoint: 'node dist/src/main'
+instance_class: F2
+automatic_scaling:
+  min_instances: 1
+
+env_variables:
+  API_PORT: 8080
+  TOKEN_EXPIRATION_TIME: 60h
+  JWT_PRIVATE_KEY:
+  MONGO_URI_CONNECTION:
+  NETWORK_RPC_URL: https://rpc.sepolia.org
+
+service: crowdfunding-api
