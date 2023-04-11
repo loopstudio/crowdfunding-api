@@ -212,7 +212,11 @@ export class CampaignsMongoRepository {
 
       campaign.currentAmount[tokenIndex].amount =
         action === movementTypeEnum.INCREASE
-          ? formatEther(currentValue.add(amountToChange))
+          ? formatEther(
+              parseEther(currentValue.toString()).add(
+                parseEther(amountToChange.toString()),
+              ),
+            )
           : formatEther(currentValue.sub(amountToChange));
 
       await campaign.save();
