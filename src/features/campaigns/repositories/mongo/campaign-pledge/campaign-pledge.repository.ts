@@ -46,7 +46,7 @@ export class CampaignPledgeMongoRepository {
     userId: string;
     search: string;
   }) {
-    const skipValue = page > 0 ? (page - 1) * size : 0;
+    const skipValue = (page - 1) * size;
 
     const campaignsMongoResponse = await this.campaignPledgeModel.aggregate([
       {

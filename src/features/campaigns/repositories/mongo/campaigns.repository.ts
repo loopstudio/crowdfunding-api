@@ -32,7 +32,7 @@ export class CampaignsMongoRepository {
     ownerId: string | null;
     search: string | null;
   }) {
-    const skipValue = page > 0 ? (page - 1) * size : 0;
+    const skipValue = (page - 1) * size;
     const filters: searchFilters = {};
 
     if (ownerId) {

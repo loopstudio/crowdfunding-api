@@ -1,16 +1,19 @@
-import { Transform } from 'class-transformer';
+import { Type } from 'class-transformer';
 import { IsString, IsOptional, IsNumber, Min } from 'class-validator';
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from 'src/common/constants';
 
 export class CampaignPledgeQueryDto {
   @IsNumber()
-  @Min(0)
-  @Transform(({ value }) => Number(value))
-  readonly page: number;
+  @IsOptional()
+  @Min(1)
+  @Type(() => Number)
+  page?: number = DEFAULT_PAGE;
 
   @IsNumber()
+  @IsOptional()
   @Min(1)
-  @Transform(({ value }) => Number(value))
-  readonly size: number;
+  @Type(() => Number)
+  size?: number = DEFAULT_PAGE_SIZE;
 
   @IsString()
   @IsOptional()
