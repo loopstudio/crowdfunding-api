@@ -19,7 +19,13 @@ export class TokenAmount {
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
 export class Campaign {
-  @Prop({ index: true, required: true, maxlength: 30, validate: [IsNotEmpty] })
+  @Prop({
+    index: true,
+    required: true,
+    maxlength: 30,
+    validate: [IsNotEmpty],
+    set: (value: string) => value.trim(),
+  })
   title: string;
 
   @Prop({ required: true })

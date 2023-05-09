@@ -19,7 +19,7 @@ export class CreateCampaignDto {
   @IsDefined()
   @IsString()
   @IsNotEmpty()
-  @MaxLength(10)
+  @MaxLength(30)
   title: string;
 
   @IsOptional()
