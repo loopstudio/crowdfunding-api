@@ -8,6 +8,8 @@ import {
   ValidateNested,
   MaxDate,
   MinDate,
+  IsNotEmpty,
+  MaxLength,
 } from 'class-validator';
 
 import { maxCampaignDurationInMs } from '../constants';
@@ -16,6 +18,8 @@ import { TokenAmount } from '../schemas/campaign.schema';
 export class CreateCampaignDto {
   @IsDefined()
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(30)
   title: string;
 
   @IsOptional()
