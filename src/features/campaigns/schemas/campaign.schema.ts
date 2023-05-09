@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
+import { IsNotEmpty } from 'class-validator';
 
 import { User } from 'src/features/users/schemas/user.schema';
 import { CampaignStatus } from 'src/features/campaign-statuses/schemas/campaign-status.schema';
@@ -18,7 +19,7 @@ export class TokenAmount {
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
 export class Campaign {
-  @Prop({ index: true, required: true })
+  @Prop({ index: true, required: true, maxlength: 30, validate: [IsNotEmpty] })
   title: string;
 
   @Prop({ required: true })
