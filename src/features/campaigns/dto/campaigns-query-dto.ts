@@ -11,7 +11,7 @@ import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from 'src/common/constants';
 export class CampaignQueryDto {
   @IsNumber()
   @IsOptional()
-  @Min(0)
+  @Min(1)
   @Type(() => Number)
   page?: number = DEFAULT_PAGE;
 

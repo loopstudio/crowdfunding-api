@@ -9,7 +9,7 @@ import { CampaignPledgeQueryDto } from '../../dto/campaigns-pledge-query-dto';
 const user = userMock2;
 const query: CampaignPledgeQueryDto = {
   size: 20,
-  page: 0,
+  page: 1,
   search: '',
 };
 
