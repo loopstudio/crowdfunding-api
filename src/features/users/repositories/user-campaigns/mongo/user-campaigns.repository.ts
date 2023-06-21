@@ -84,6 +84,10 @@ export class UserCampaignsRepository {
         userCampaign.claims.push(event._id);
         userCampaign.totalClaimed = formatEther(parseEther(event.amount));
         break;
+      case CrowdfundingEvent.Refund:
+        userCampaign.refunds.push(event._id);
+        userCampaign.totalRefunded = formatEther(parseEther(event.amount));
+        break;
     }
 
     return userCampaign;

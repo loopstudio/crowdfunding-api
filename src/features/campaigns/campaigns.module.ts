@@ -13,6 +13,8 @@ import { CampaignLaunchService } from './services/campaign-launch.service';
 import { CampaignLaunchMongoRepository } from './repositories/mongo/campaign-launch.repository';
 import { CampaignPledgeService } from './services/campaign-pledge/campaign-pledge.service';
 import { CampaignPledgeMongoRepository } from './repositories/mongo/campaign-pledge/campaign-pledge.repository';
+import { CampaignRefundService } from './services/campaign-refund/campaign-refund.service';
+import { CampaignRefundMongoRepository } from './repositories/mongo/campaign-refund/campaign-refund.repository';
 import {
   CampaignLaunch,
   CampaignLaunchSchema,
@@ -25,6 +27,10 @@ import {
   CampaignClaim,
   CampaignClaimSchema,
 } from './schemas/campaign-claim.schema';
+import {
+  CampaignRefund,
+  CampaignRefundSchema,
+} from './schemas/campaign-refund.schema';
 import { UsersRepository } from '../users/repositories/users/mongo/users.repository';
 import { UsersModule } from '../users/users.module';
 import { User, UserSchema } from '../users/schemas/user.schema';
@@ -51,6 +57,10 @@ import { CampaignClaimMongoRepository } from './repositories/mongo/campaign-clai
         schema: CampaignClaimSchema,
       },
       {
+        name: CampaignRefund.name,
+        schema: CampaignRefundSchema,
+      },
+      {
         name: User.name,
         schema: UserSchema,
       },
@@ -67,11 +77,18 @@ import { CampaignClaimMongoRepository } from './repositories/mongo/campaign-clai
     CampaignLaunchService,
     CampaignLaunchMongoRepository,
     CampaignPledgeService,
+    CampaignRefundService,
     CampaignPledgeMongoRepository,
     CampaignClaimMongoRepository,
+    CampaignRefundMongoRepository,
     UsersRepository,
     CampaignClaimService,
   ],
-  exports: [CampaignLaunchService, CampaignPledgeService, CampaignClaimService],
+  exports: [
+    CampaignLaunchService,
+    CampaignPledgeService,
+    CampaignClaimService,
+    CampaignRefundService,
+  ],
 })
 export class CampaignsModule {}
