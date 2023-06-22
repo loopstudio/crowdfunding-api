@@ -24,15 +24,8 @@ describe('Campaign Refund Repository', () => {
         {
           provide: getModelToken(CampaignRefund.name),
           useValue: {
-            find: jest.fn(),
-            findOne: jest.fn(),
-            sort: jest.fn(),
-            skip: jest.fn(),
-            limit: jest.fn(),
-            lean: jest.fn(),
             create: jest.fn(),
             save: jest.fn(),
-            aggregate: jest.fn(),
           },
         },
       ],
