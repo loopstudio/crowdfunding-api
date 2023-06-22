@@ -77,9 +77,7 @@ describe('CampaignRefundService', () => {
     campaignRefundMongoRepository = module.get<CampaignRefundMongoRepository>(
       CampaignRefundMongoRepository,
     );
-    campaignMongoRepository = module.get<CampaignsMongoRepository>(
-      CampaignsMongoRepository,
-    );
+
     userCampaignsMongoRepository = module.get<UserCampaignsRepository>(
       UserCampaignsRepository,
     );
