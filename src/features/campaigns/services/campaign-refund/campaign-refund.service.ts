@@ -4,7 +4,6 @@ import { CampaignsService } from 'src/features/campaigns/services/campaigns.serv
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { UsersService } from 'src/features/users/services/users.service';
 import { CampaignRefundMongoRepository } from '../../repositories/mongo/campaign-refund/campaign-refund.repository';
-import { CampaignsMongoRepository } from '../../repositories/mongo/campaigns.repository';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 import { CrowdfundingEvent } from 'src/features/events/types';
 import { CampaignEventService } from '../common/campaign-event.service';
@@ -18,7 +17,6 @@ export class CampaignRefundService extends CampaignEventService {
     readonly usersService: UsersService,
     readonly tokensService: TokensService,
     private readonly campaignRefundMongoRepository: CampaignRefundMongoRepository,
-    private readonly campaignMongoRepository: CampaignsMongoRepository,
     private readonly userCampaignsMongoRepository: UserCampaignsRepository,
   ) {
     super(campaignService, usersService, tokensService);
