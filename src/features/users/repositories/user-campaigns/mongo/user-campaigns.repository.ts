@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { formatEther, parseEther } from 'ethers/lib/utils';
 
+import { formatEther, parseEther } from 'ethers/lib/utils';
 import { CrowdfundingEvent } from 'src/features/events/types/index';
 import { CampaignPledgeDocument } from 'src/features/campaigns/schemas/campaign-pledge.schema';
+import { CampaignCancelDocument } from 'src/features/campaigns/schemas/campaign-cancel.schema';
 import { CampaignDocument } from 'src/features/campaigns/schemas/campaign.schema';
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
 import { UserDocument } from 'src/features/users/schemas/user.schema';
@@ -12,6 +13,8 @@ import {
   UserCampaign,
   UserCampaignDocument,
 } from 'src/features/users/schemas/user-campaign.schema';
+
+type Event = CampaignPledgeDocument | CampaignCancelDocument;
 
 @Injectable()
 export class UserCampaignsRepository {
@@ -31,7 +34,7 @@ export class UserCampaignsRepository {
     user: UserDocument;
     token: TokenDocument;
     eventType: CrowdfundingEvent;
-    event: CampaignPledgeDocument | CampaignPledgeDocument;
+    event: Event;
   }): Promise<void> {
     let associatedUserCampaign = await this.userCampaignModel.findOne({
       campaign: campaign._id,
@@ -71,19 +74,31 @@ export class UserCampaignsRepository {
   }: {
     userCampaign: UserCampaignDocument;
     eventType: CrowdfundingEvent;
-    event: CampaignPledgeDocument | CampaignPledgeDocument;
+    event: Event;
   }): UserCampaignDocument {
     switch (eventType) {
       case CrowdfundingEvent.Pledge:
         userCampaign.pledges.push(event._id);
         userCampaign.totalPledged = formatEther(
-          parseEther(userCampaign.totalPledged).add(parseEther(event.amount)),
+          parseEther(userCampaign.totalPledged).add(
+            parseEther((event as CampaignPledgeDocument).amount),
+          ),
         );
         break;
       case CrowdfundingEvent.Claim:
         userCampaign.claims.push(event._id);
-        userCampaign.totalClaimed = formatEther(parseEther(event.amount));
+        userCampaign.totalClaimed = formatEther(
+          parseEther((event as CampaignPledgeDocument).amount),
+        );
         break;
+      case CrowdfundingEvent.Refund:
+        userCampaign.refunds.push(event._id);
+        userCampaign.totalRefunded = formatEther(
+          parseEther((event as CampaignPledgeDocument).amount),
+        );
+        break;
+      case CrowdfundingEvent.Cancel:
+        userCampaign.cancels.push(event._id);
     }
 
     return userCampaign;

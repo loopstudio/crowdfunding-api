@@ -167,6 +167,8 @@ export const mongoLaunchedCampaign = {
 
 export const campaignPledgeArgumentMock = [onchainId, userAddress, amount];
 export const campaignClaimArgumentMock = [onchainId, userAddress, amount];
+export const campaignRefundArgumentMock = [onchainId, userAddress, amount];
+export const campaignCancelArgumentMock = [onchainId, userAddress, amount];
 
 export const userMock = {
   username: 'rcargnelutti',
@@ -255,6 +257,30 @@ export const campaignClaimMock = {
   __v: 0,
 };
 
+export const campaignRefundMock = {
+  _id: '639b969369bed1e35eeca7a5',
+  campaign: '638e605ab710197625b571be',
+  user: '634dd92c34361cf5a21fb96b',
+  token: '63611e69143b8def9c4843dd',
+  amount: '1000000000000000000',
+  date: '2022-12-15T21:50:11.066+0000',
+  created: '2022-12-15T21:50:11.072+0000',
+  updated: '2022-12-15T21:50:11.072+0000',
+  __v: 0,
+};
+
+export const campaignCancelMock = {
+  _id: '639b969369bed1e35eeca7a5',
+  campaign: '638e605ab710197625b571be',
+  user: '634dd92c34361cf5a21fb96b',
+  token: '63611e69143b8def9c4843dd',
+  amount: '1000000000000000000',
+  date: '2022-12-15T21:50:11.066+0000',
+  created: '2022-12-15T21:50:11.072+0000',
+  updated: '2022-12-15T21:50:11.072+0000',
+  __v: 0,
+};
+
 export const campaignLaunchEventDto = {
   creator: launchEventData[2],
   goal: launchEventData[1],
@@ -277,6 +303,15 @@ export const mongoClaimedCampaingStatus = {
   _id: '73611e68143b8def9c4843de',
   name: 'Claimed',
   code: 'claimed',
+  created: '2022-10-18T23:11:14.611Z',
+  updated: '2022-10-18T23:11:14.611Z',
+  __v: 0,
+};
+
+export const mongoCancelCampaingStatus = {
+  _id: '83611e68143b8def9c4843de',
+  name: 'Canceled',
+  code: 'canceled',
   created: '2022-10-18T23:11:14.611Z',
   updated: '2022-10-18T23:11:14.611Z',
   __v: 0,

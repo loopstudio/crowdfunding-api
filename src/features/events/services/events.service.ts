@@ -13,6 +13,8 @@ import { CrowdfundingEvent } from '../types';
 import { CampaignLaunchService } from 'src/features/campaigns/services/campaign-launch.service';
 import { CampaignClaimService } from 'src/features/campaigns/services/campaign-claim/campaign-claim.service';
 import { CampaignPledgeService } from 'src/features/campaigns/services/campaign-pledge/campaign-pledge.service';
+import { CampaignRefundService } from 'src/features/campaigns/services/campaign-refund/campaign-refund.service';
+import { CampaignCancelService } from 'src/features/campaigns/services/campaign-cancel/campaign-cancel.service';
 
 @Injectable()
 export class EventsService
@@ -27,6 +29,8 @@ export class EventsService
     private campaignLaunchService: CampaignLaunchService,
     private campaignPledgeService: CampaignPledgeService,
     private campaignClaimService: CampaignClaimService,
+    private campaignRefundService: CampaignRefundService,
+    private campaignCancelService: CampaignCancelService,
   ) {}
 
   onApplicationShutdown() {
@@ -83,6 +87,12 @@ export class EventsService
         break;
       case CrowdfundingEvent.Claim:
         await this.campaignClaimService.create(data);
+        break;
+      case CrowdfundingEvent.Refund:
+        await this.campaignRefundService.create(data);
+        break;
+      case CrowdfundingEvent.Cancel:
+        await this.campaignCancelService.create(data);
         break;
     }
 
