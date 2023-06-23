@@ -5,10 +5,10 @@ import { User } from 'src/features/users/schemas/user.schema';
 import { Campaign } from 'src/features/campaigns/schemas/campaign.schema';
 import { Token } from 'src/features/tokens/schemas/token.schema';
 
-export type RefundDocument = Refund & Document;
+export type CampaignRefundDocument = CampaignRefund & Document;
 
 @Schema({ timestamps: { createdAt: 'created', updatedAt: 'updated' } })
-export class Refund {
+export class CampaignRefund {
   @Prop({
     index: true,
     type: MongooseSchema.Types.ObjectId,
@@ -35,4 +35,5 @@ export class Refund {
   date: Date;
 }
 
-export const RefundSchema = SchemaFactory.createForClass(Refund);
+export const CampaignRefundSchema =
+  SchemaFactory.createForClass(CampaignRefund);

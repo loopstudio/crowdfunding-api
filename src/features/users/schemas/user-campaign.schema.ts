@@ -4,7 +4,7 @@ import { Document, Schema as MongooseSchema } from 'mongoose';
 import { Campaign } from 'src/features/campaigns/schemas/campaign.schema';
 import { CampaignClaim } from 'src/features/campaigns/schemas/campaign-claim.schema';
 import { CampaignPledge } from 'src/features/campaigns/schemas/campaign-pledge.schema';
-import { Refund } from 'src/features/campaigns/schemas/refund.schema';
+import { CampaignRefund } from 'src/features/campaigns/schemas/campaign-refund.schema';
 import { Unpledge } from 'src/features/campaigns/schemas/unpledge.schema';
 import { Token } from 'src/features/tokens/schemas/token.schema';
 import { User } from './user.schema';
@@ -67,7 +67,7 @@ export class UserCampaign {
     type: [{ type: MongooseSchema.Types.ObjectId, ref: 'Refund' }],
     default: [],
   })
-  refunds: Refund[];
+  refunds: CampaignRefund[];
 }
 
 export const UserCampaignSchema = SchemaFactory.createForClass(UserCampaign);
