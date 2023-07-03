@@ -8,7 +8,7 @@ import { CampaignCancel } from 'src/features/campaigns/schemas/campaign-cancel.s
 import { campaignCancelMock } from 'src/features/campaigns/tests/mocks';
 import { CampaignCancelMongoRepository } from './campaign-cancel.repository';
 
-describe('Campaign Claim Mongo Repository', () => {
+describe('Campaign Cancel Mongo Repository', () => {
   let campaignCancelRepository: CampaignCancelMongoRepository;
   let campaignCancelModel: Model<CampaignCancel>;
 
