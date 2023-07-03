@@ -97,8 +97,6 @@ export class UserCampaignsRepository {
           parseEther((event as CampaignPledgeDocument).amount),
         );
         break;
-      case CrowdfundingEvent.Cancel:
-        userCampaign.cancels.push(event._id);
     }
 
     return userCampaign;

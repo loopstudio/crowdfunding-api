@@ -27,7 +27,6 @@ describe('CampaignCancelService', () => {
   let campaignStatusService: CampaignStatusService;
   let campaignCancelMongoRepository: CampaignCancelMongoRepository;
   let campaignMongoRepository: CampaignsMongoRepository;
-  let userCampaignsMongoRepository: UserCampaignsRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -93,9 +92,6 @@ describe('CampaignCancelService', () => {
     campaignMongoRepository = module.get<CampaignsMongoRepository>(
       CampaignsMongoRepository,
     );
-    userCampaignsMongoRepository = module.get<UserCampaignsRepository>(
-      UserCampaignsRepository,
-    );
   });
 
   describe('create method', () => {
@@ -140,9 +136,6 @@ describe('CampaignCancelService', () => {
         .spyOn(campaignStatusService, 'getStatusByCode')
         .mockResolvedValue(mongoCancelCampaingStatus as any);
       jest.spyOn(campaignMongoRepository, 'update').mockResolvedValue(null);
-      jest
-        .spyOn(userCampaignsMongoRepository, 'updateUserCampaignByEvent')
-        .mockResolvedValue(null);
 
       await expect(() =>
         campaignCancelService.create(campaignCancelArgumentMock),

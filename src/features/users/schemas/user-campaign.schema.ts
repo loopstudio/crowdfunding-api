@@ -5,7 +5,6 @@ import { Campaign } from 'src/features/campaigns/schemas/campaign.schema';
 import { CampaignClaim } from 'src/features/campaigns/schemas/campaign-claim.schema';
 import { CampaignPledge } from 'src/features/campaigns/schemas/campaign-pledge.schema';
 import { CampaignRefund } from 'src/features/campaigns/schemas/campaign-refund.schema';
-import { CampaignCancel } from 'src/features/campaigns/schemas/campaign-cancel.schema';
 import { Unpledge } from 'src/features/campaigns/schemas/unpledge.schema';
 import { Token } from 'src/features/tokens/schemas/token.schema';
 import { User } from './user.schema';
@@ -69,12 +68,6 @@ export class UserCampaign {
     default: [],
   })
   refunds: CampaignRefund[];
-
-  @Prop({
-    type: [{ type: MongooseSchema.Types.ObjectId, ref: 'CampaignCancel' }],
-    default: [],
-  })
-  cancels: CampaignCancel[];
 }
 
 export const UserCampaignSchema = SchemaFactory.createForClass(UserCampaign);

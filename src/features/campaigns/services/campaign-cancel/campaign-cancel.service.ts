@@ -6,8 +6,6 @@ import { UsersService } from 'src/features/users/services/users.service';
 import { CampaignEventService } from '../common/campaign-event.service';
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
 import { CampaignsMongoRepository } from 'src/features/campaigns/repositories/mongo/campaigns.repository';
-import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
-import { CrowdfundingEvent } from 'src/features/events/types';
 import { CampaignCancelMongoRepository } from '../../repositories/mongo/campaign-cancel/campaign-cancel.repository';
 
 @Injectable()
@@ -20,7 +18,6 @@ export class CampaignCancelService extends CampaignEventService {
     readonly tokensService: TokensService,
     private readonly campaignCancelMongoRepository: CampaignCancelMongoRepository,
     private readonly campaignMongoRepository: CampaignsMongoRepository,
-    private readonly userCampaignsMongoRepository: UserCampaignsRepository,
     private readonly campaignStatusService: CampaignStatusService,
   ) {
     super(campaignService, usersService, tokensService);
@@ -37,7 +34,7 @@ export class CampaignCancelService extends CampaignEventService {
       userAddress,
     });
 
-    const savedCancel = await this.campaignCancelMongoRepository.create({
+    await this.campaignCancelMongoRepository.create({
       campaignId: campaign._id,
       userId: user._id,
       tokenId: token._id,
@@ -51,14 +48,6 @@ export class CampaignCancelService extends CampaignEventService {
       updateCampaignDto: {
         status: cancelStatusId,
       },
-    });
-
-    await this.userCampaignsMongoRepository.updateUserCampaignByEvent({
-      campaign,
-      user,
-      token,
-      event: savedCancel,
-      eventType: CrowdfundingEvent.Cancel,
     });
   }
 }
