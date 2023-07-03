@@ -5,7 +5,6 @@ import { Model } from 'mongoose';
 import { formatEther, parseEther } from 'ethers/lib/utils';
 import { CrowdfundingEvent } from 'src/features/events/types/index';
 import { CampaignPledgeDocument } from 'src/features/campaigns/schemas/campaign-pledge.schema';
-import { CampaignCancelDocument } from 'src/features/campaigns/schemas/campaign-cancel.schema';
 import { CampaignDocument } from 'src/features/campaigns/schemas/campaign.schema';
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
 import { UserDocument } from 'src/features/users/schemas/user.schema';
@@ -13,8 +12,6 @@ import {
   UserCampaign,
   UserCampaignDocument,
 } from 'src/features/users/schemas/user-campaign.schema';
-
-type Event = CampaignPledgeDocument | CampaignCancelDocument;
 
 @Injectable()
 export class UserCampaignsRepository {
@@ -34,7 +31,7 @@ export class UserCampaignsRepository {
     user: UserDocument;
     token: TokenDocument;
     eventType: CrowdfundingEvent;
-    event: Event;
+    event: CampaignPledgeDocument;
   }): Promise<void> {
     let associatedUserCampaign = await this.userCampaignModel.findOne({
       campaign: campaign._id,
@@ -74,28 +71,22 @@ export class UserCampaignsRepository {
   }: {
     userCampaign: UserCampaignDocument;
     eventType: CrowdfundingEvent;
-    event: Event;
+    event: CampaignPledgeDocument;
   }): UserCampaignDocument {
     switch (eventType) {
       case CrowdfundingEvent.Pledge:
         userCampaign.pledges.push(event._id);
         userCampaign.totalPledged = formatEther(
-          parseEther(userCampaign.totalPledged).add(
-            parseEther((event as CampaignPledgeDocument).amount),
-          ),
+          parseEther(userCampaign.totalPledged).add(parseEther(event.amount)),
         );
         break;
       case CrowdfundingEvent.Claim:
         userCampaign.claims.push(event._id);
-        userCampaign.totalClaimed = formatEther(
-          parseEther((event as CampaignPledgeDocument).amount),
-        );
+        userCampaign.totalClaimed = formatEther(parseEther(event.amount));
         break;
       case CrowdfundingEvent.Refund:
         userCampaign.refunds.push(event._id);
-        userCampaign.totalRefunded = formatEther(
-          parseEther((event as CampaignPledgeDocument).amount),
-        );
+        userCampaign.totalRefunded = formatEther(parseEther(event.amount));
         break;
     }
 
