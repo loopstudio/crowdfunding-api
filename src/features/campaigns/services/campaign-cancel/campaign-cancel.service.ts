@@ -24,7 +24,8 @@ export class CampaignCancelService extends CampaignEventService {
 
   async create(eventData: unknown) {
     if (!Array.isArray(eventData)) {
-      throw new Error('Event data is corrupted');
+      console.log('Event Data: ', eventData);
+      throw new Error('Event data is not an array');
     }
 
     const [onchainId, userAddress] = eventData;
