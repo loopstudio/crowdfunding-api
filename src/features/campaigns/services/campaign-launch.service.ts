@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 import { CampaignStatusRepository } from 'src/features/campaign-statuses/repositories/mongo/campaign-status.repository';
-import { activeStatusCode } from 'src/features/campaign-statuses/types';
+import { ACTIVE_STATUS_CODE } from 'src/features/campaign-statuses/constants';
 import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
 import { TokenRepository } from 'src/features/tokens/repositories/mongo/tokens.repository';
 import { TokenDocument } from 'src/features/tokens/schemas/token.schema';
@@ -49,7 +49,7 @@ export class CampaignLaunchService {
       );
 
       const activeStatus = await this.campaignStatusRepository.getStatusByCode(
-        activeStatusCode,
+        ACTIVE_STATUS_CODE,
       );
 
       const updateStatusDto: UpdateCampaignDto = {

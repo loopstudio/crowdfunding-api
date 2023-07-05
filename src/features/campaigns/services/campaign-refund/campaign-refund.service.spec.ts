@@ -6,7 +6,7 @@ import { CampaignsService } from '.././campaigns.service';
 import { CampaignsMongoRepository } from '../../repositories/mongo/campaigns.repository';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import {
-  campaignRefundArgumentMock,
+  campaignEventArgumentMock,
   campaignRefundMock,
   tokenMock,
   userMock,
@@ -108,7 +108,7 @@ describe('CampaignRefundService', () => {
         .mockResolvedValue(null);
 
       await expect(() =>
-        campaignRefundService.create(campaignRefundArgumentMock),
+        campaignRefundService.create(campaignEventArgumentMock),
       ).not.toThrow();
 
       expect(campaignService.findOne).toBeCalledTimes(1);
@@ -126,7 +126,7 @@ describe('CampaignRefundService', () => {
         .mockResolvedValue(tokenMock as any);
 
       await expect(() =>
-        campaignRefundService.create(campaignRefundArgumentMock),
+        campaignRefundService.create(campaignEventArgumentMock),
       ).rejects.toThrow();
 
       expect(campaignService.findOne).toBeCalledTimes(1);

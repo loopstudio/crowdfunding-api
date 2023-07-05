@@ -165,10 +165,7 @@ export const mongoLaunchedCampaign = {
   save: jest.fn().mockReturnValue(null),
 };
 
-export const campaignPledgeArgumentMock = [onchainId, userAddress, amount];
-export const campaignClaimArgumentMock = [onchainId, userAddress, amount];
-export const campaignRefundArgumentMock = [onchainId, userAddress, amount];
-export const campaignCancelArgumentMock = [onchainId, userAddress, amount];
+export const campaignEventArgumentMock = [onchainId, userAddress, amount];
 
 export const userMock = {
   username: 'rcargnelutti',
@@ -274,7 +271,6 @@ export const campaignCancelMock = {
   campaign: '638e605ab710197625b571be',
   user: '634dd92c34361cf5a21fb96b',
   token: '63611e69143b8def9c4843dd',
-  amount: '1000000000000000000',
   date: '2022-12-15T21:50:11.066+0000',
   created: '2022-12-15T21:50:11.072+0000',
   updated: '2022-12-15T21:50:11.072+0000',

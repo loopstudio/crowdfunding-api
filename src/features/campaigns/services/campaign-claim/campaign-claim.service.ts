@@ -9,11 +9,11 @@ import { CampaignClaimMongoRepository } from 'src/features/campaigns/repositorie
 import { CampaignsMongoRepository } from 'src/features/campaigns/repositories/mongo/campaigns.repository';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 import { CrowdfundingEvent } from 'src/features/events/types';
+import { CLAIMED_STATUS_CODE } from 'src/features/campaign-statuses/constants';
 
 @Injectable()
 export class CampaignClaimService extends CampaignEventService {
   private readonly logger = new Logger(CampaignClaimService.name);
-  private readonly claimStatusCode = 'claimed';
 
   constructor(
     readonly campaignService: CampaignsService,
@@ -46,7 +46,7 @@ export class CampaignClaimService extends CampaignEventService {
     });
 
     const { _id: claimStatusId } =
-      await this.campaignStatusService.getStatusByCode(this.claimStatusCode);
+      await this.campaignStatusService.getStatusByCode(CLAIMED_STATUS_CODE);
 
     await this.campaignMongoRepository.update({
       id: parseInt(onchainId).toString(),

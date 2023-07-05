@@ -3,9 +3,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  campaignClaimArgumentMock,
+  campaignEventArgumentMock,
   campaignClaimMock,
-  campaignPledgeArgumentMock,
   mongoClaimedCampaingStatus,
   tokenMock,
   userMock,
@@ -119,7 +118,7 @@ describe('CampaignClaimService', () => {
         .mockResolvedValue(tokenMock as any);
 
       await expect(() =>
-        campaignClaimService.create(campaignClaimArgumentMock),
+        campaignClaimService.create(campaignEventArgumentMock),
       ).rejects.toThrow();
 
       expect(campaignService.findOne).toBeCalledTimes(1);
@@ -149,7 +148,7 @@ describe('CampaignClaimService', () => {
         .mockResolvedValue(null);
 
       await expect(() =>
-        campaignClaimService.create(campaignPledgeArgumentMock),
+        campaignClaimService.create(campaignEventArgumentMock),
       ).not.toThrow();
 
       expect(campaignService.findOne).toBeCalledTimes(1);

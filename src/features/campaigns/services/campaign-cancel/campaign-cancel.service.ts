@@ -7,11 +7,10 @@ import { CampaignEventService } from '../common/campaign-event.service';
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
 import { CampaignsMongoRepository } from 'src/features/campaigns/repositories/mongo/campaigns.repository';
 import { CampaignCancelMongoRepository } from '../../repositories/mongo/campaign-cancel/campaign-cancel.repository';
+import { CANCELED_STATUS_CODE } from 'src/features/campaign-statuses/constants';
 
 @Injectable()
 export class CampaignCancelService extends CampaignEventService {
-  private readonly cancelStatusCode = 'canceled';
-
   constructor(
     readonly campaignService: CampaignsService,
     readonly usersService: UsersService,
@@ -41,7 +40,7 @@ export class CampaignCancelService extends CampaignEventService {
     });
 
     const { _id: cancelStatusId } =
-      await this.campaignStatusService.getStatusByCode(this.cancelStatusCode);
+      await this.campaignStatusService.getStatusByCode(CANCELED_STATUS_CODE);
 
     await this.campaignMongoRepository.update({
       id: parseInt(onchainId).toString(),

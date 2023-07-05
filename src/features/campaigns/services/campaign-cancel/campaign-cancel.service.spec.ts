@@ -3,7 +3,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
 import {
-  campaignCancelArgumentMock,
+  campaignEventArgumentMock,
   campaignCancelMock,
   mongoCancelCampaingStatus,
   tokenMock,
@@ -111,7 +111,7 @@ describe('CampaignCancelService', () => {
         .mockResolvedValue(tokenMock as any);
 
       await expect(() =>
-        campaignCancelService.create(campaignCancelArgumentMock),
+        campaignCancelService.create(campaignEventArgumentMock),
       ).rejects.toThrow();
 
       expect(campaignService.findOne).toBeCalledTimes(1);
@@ -138,7 +138,7 @@ describe('CampaignCancelService', () => {
       jest.spyOn(campaignMongoRepository, 'update').mockResolvedValue(null);
 
       await expect(() =>
-        campaignCancelService.create(campaignCancelArgumentMock),
+        campaignCancelService.create(campaignEventArgumentMock),
       ).not.toThrow();
 
       expect(campaignService.findOne).toBeCalledTimes(1);

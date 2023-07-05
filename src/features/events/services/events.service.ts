@@ -78,23 +78,15 @@ export class EventsService
     contract: Contract,
     data: unknown,
   ) {
-    switch (event) {
-      case CrowdfundingEvent.Launch:
-        await this.campaignLaunchService.create(data);
-        break;
-      case CrowdfundingEvent.Pledge:
-        await this.campaignPledgeService.create(data);
-        break;
-      case CrowdfundingEvent.Claim:
-        await this.campaignClaimService.create(data);
-        break;
-      case CrowdfundingEvent.Refund:
-        await this.campaignRefundService.create(data);
-        break;
-      case CrowdfundingEvent.Cancel:
-        await this.campaignCancelService.create(data);
-        break;
-    }
+    const servicesByEvent = {
+      [CrowdfundingEvent.Launch]: this.campaignLaunchService,
+      [CrowdfundingEvent.Pledge]: this.campaignPledgeService,
+      [CrowdfundingEvent.Claim]: this.campaignClaimService,
+      [CrowdfundingEvent.Refund]: this.campaignRefundService,
+      [CrowdfundingEvent.Cancel]: this.campaignCancelService,
+    };
+
+    await servicesByEvent[event].create(data);
 
     this.storeRawEvent(data, event); //FIXME could process repetead events. storeRawEvent does not distinguish.
   }
