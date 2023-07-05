@@ -86,6 +86,10 @@ export class EventsService
       [CrowdfundingEvent.Cancel]: this.campaignCancelService,
     };
 
+    if (!servicesByEvent[event]) {
+      return console.log('No handler for related event');
+    }
+
     await servicesByEvent[event].create(data);
 
     this.storeRawEvent(data, event); //FIXME could process repetead events. storeRawEvent does not distinguish.
