@@ -12,9 +12,9 @@ import { CampaignStatusService } from 'src/features/campaign-statuses/services/c
 import { CampaignCategoriesService } from 'src/features/campaign-categories/services/campaign-category.service';
 
 import {
-  pendingStatusCode,
+  PENDING_STATUS_CODE,
   generalCategoryCode,
-} from '../../campaign-statuses/types/index';
+} from '../../campaign-statuses/constants';
 import { UsersRepository } from 'src/features/users/repositories/users/mongo/users.repository';
 import { CampaignLaunchEventDto } from '../dto/campaign-launch-event-dto';
 import { CampaignPledgeMongoRepository } from '../repositories/mongo/campaign-pledge/campaign-pledge.repository';
@@ -43,7 +43,7 @@ export class CampaignsService {
     }
 
     const pendingStatus = await this.campaignStatusService.getStatusByCode(
-      pendingStatusCode,
+      PENDING_STATUS_CODE,
     );
     if (!pendingStatus) {
       throw new BadRequestException();
@@ -108,7 +108,7 @@ export class CampaignsService {
     }
 
     const pendingStatus = await this.campaignStatusService.getStatusByCode(
-      pendingStatusCode,
+      PENDING_STATUS_CODE,
     );
     if (!pendingStatus) {
       throw new NotFoundException(

@@ -2,37 +2,46 @@
 
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { CampaignsService } from '.././campaigns.service';
-import { CampaignsMongoRepository } from '../../repositories/mongo/campaigns.repository';
-import { TokensService } from 'src/features/tokens/services/tokens.service';
 import {
   campaignEventArgumentMock,
-  campaignRefundMock,
+  campaignCancelMock,
+  mongoCancelCampaingStatus,
   tokenMock,
   userMock,
 } from '../../tests/mocks';
-import { UsersService } from 'src/features/users/services/users.service';
-import { CampaignRefundMongoRepository } from '../../repositories/mongo/campaign-refund/campaign-refund.repository';
-import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
-import { CampaignRefundService } from './campaign-refund.service';
 import { campaignMock } from 'src/features/users/tests/mocks';
+import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
+import { TokensService } from 'src/features/tokens/services/tokens.service';
+import { UsersService } from 'src/features/users/services/users.service';
+import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
+import { CampaignsMongoRepository } from 'src/features/campaigns/repositories/mongo/campaigns.repository';
+import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
+import { CampaignCancelMongoRepository } from '../../repositories/mongo/campaign-cancel/campaign-cancel.repository';
+import { CampaignCancelService } from './campaign-cancel.service';
 
-describe('CampaignRefundService', () => {
-  let campaignRefundService: CampaignRefundService;
+describe('CampaignCancelService', () => {
+  let campaignCancelService: CampaignCancelService;
   let campaignService: CampaignsService;
   let usersService: UsersService;
   let tokensService: TokensService;
-  let campaignRefundMongoRepository: CampaignRefundMongoRepository;
-  let userCampaignsMongoRepository: UserCampaignsRepository;
+  let campaignStatusService: CampaignStatusService;
+  let campaignCancelMongoRepository: CampaignCancelMongoRepository;
+  let campaignMongoRepository: CampaignsMongoRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        CampaignRefundService,
+        CampaignCancelService,
         {
           provide: CampaignsService,
           useValue: {
             findOne: jest.fn(),
+          },
+        },
+        {
+          provide: CampaignStatusService,
+          useValue: {
+            getStatusByCode: jest.fn(),
           },
         },
         {
@@ -48,7 +57,7 @@ describe('CampaignRefundService', () => {
           },
         },
         {
-          provide: CampaignRefundMongoRepository,
+          provide: CampaignCancelMongoRepository,
           useValue: {
             create: jest.fn(),
           },
@@ -56,7 +65,7 @@ describe('CampaignRefundService', () => {
         {
           provide: CampaignsMongoRepository,
           useValue: {
-            updateTokenAmount: jest.fn(),
+            update: jest.fn(),
           },
         },
         {
@@ -68,26 +77,46 @@ describe('CampaignRefundService', () => {
       ],
     }).compile();
 
-    campaignRefundService = module.get<CampaignRefundService>(
-      CampaignRefundService,
+    campaignCancelService = module.get<CampaignCancelService>(
+      CampaignCancelService,
     );
     campaignService = module.get<CampaignsService>(CampaignsService);
     usersService = module.get<UsersService>(UsersService);
     tokensService = module.get<TokensService>(TokensService);
-    campaignRefundMongoRepository = module.get<CampaignRefundMongoRepository>(
-      CampaignRefundMongoRepository,
+    campaignStatusService = module.get<CampaignStatusService>(
+      CampaignStatusService,
     );
-
-    userCampaignsMongoRepository = module.get<UserCampaignsRepository>(
-      UserCampaignsRepository,
+    campaignCancelMongoRepository = module.get<CampaignCancelMongoRepository>(
+      CampaignCancelMongoRepository,
+    );
+    campaignMongoRepository = module.get<CampaignsMongoRepository>(
+      CampaignsMongoRepository,
     );
   });
 
   describe('create method', () => {
     it('should call create method and fails because arguments are not right', async () => {
       await expect(() =>
-        campaignRefundService.create('WrongArgument'),
+        campaignCancelService.create('WrongArgument'),
       ).rejects.toThrow();
+    });
+
+    it('should call create method and fails because there is no associated campaign', async () => {
+      jest.spyOn(campaignService, 'findOne').mockResolvedValue(null as any);
+      jest
+        .spyOn(usersService, 'findUserByAddress')
+        .mockResolvedValue(userMock as any);
+      jest
+        .spyOn(tokensService, 'getByDefault')
+        .mockResolvedValue(tokenMock as any);
+
+      await expect(() =>
+        campaignCancelService.create(campaignEventArgumentMock),
+      ).rejects.toThrow();
+
+      expect(campaignService.findOne).toBeCalledTimes(1);
+      expect(usersService.findUserByAddress).toBeCalledTimes(1);
+      expect(tokensService.getByDefault).toBeCalledTimes(1);
     });
 
     it('should call create method without errors', async () => {
@@ -101,33 +130,16 @@ describe('CampaignRefundService', () => {
         .spyOn(tokensService, 'getByDefault')
         .mockResolvedValue(tokenMock as any);
       jest
-        .spyOn(campaignRefundMongoRepository, 'create')
-        .mockResolvedValue(campaignRefundMock as any);
+        .spyOn(campaignCancelMongoRepository, 'create')
+        .mockResolvedValue(campaignCancelMock as any);
       jest
-        .spyOn(userCampaignsMongoRepository, 'updateUserCampaignByEvent')
-        .mockResolvedValue(null);
+        .spyOn(campaignStatusService, 'getStatusByCode')
+        .mockResolvedValue(mongoCancelCampaingStatus as any);
+      jest.spyOn(campaignMongoRepository, 'update').mockResolvedValue(null);
 
       await expect(() =>
-        campaignRefundService.create(campaignEventArgumentMock),
+        campaignCancelService.create(campaignEventArgumentMock),
       ).not.toThrow();
-
-      expect(campaignService.findOne).toBeCalledTimes(1);
-      expect(usersService.findUserByAddress).toBeCalledTimes(1);
-      expect(tokensService.getByDefault).toBeCalledTimes(1);
-    });
-
-    it('should call create method and fails because there is no associated campaign', async () => {
-      jest.spyOn(campaignService, 'findOne').mockResolvedValue(null as any);
-      jest
-        .spyOn(usersService, 'findUserByAddress')
-        .mockResolvedValue(userMock as any);
-      jest
-        .spyOn(tokensService, 'getByDefault')
-        .mockResolvedValue(tokenMock as any);
-
-      await expect(() =>
-        campaignRefundService.create(campaignEventArgumentMock),
-      ).rejects.toThrow();
 
       expect(campaignService.findOne).toBeCalledTimes(1);
       expect(usersService.findUserByAddress).toBeCalledTimes(1);

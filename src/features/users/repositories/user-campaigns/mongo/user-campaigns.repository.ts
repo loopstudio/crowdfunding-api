@@ -31,7 +31,7 @@ export class UserCampaignsRepository {
     user: UserDocument;
     token: TokenDocument;
     eventType: CrowdfundingEvent;
-    event: CampaignPledgeDocument | CampaignPledgeDocument;
+    event: CampaignPledgeDocument;
   }): Promise<void> {
     let associatedUserCampaign = await this.userCampaignModel.findOne({
       campaign: campaign._id,
@@ -71,7 +71,7 @@ export class UserCampaignsRepository {
   }: {
     userCampaign: UserCampaignDocument;
     eventType: CrowdfundingEvent;
-    event: CampaignPledgeDocument | CampaignPledgeDocument;
+    event: CampaignPledgeDocument;
   }): UserCampaignDocument {
     switch (eventType) {
       case CrowdfundingEvent.Pledge:

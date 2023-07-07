@@ -1,27 +1,22 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { UsersService } from 'src/features/users/services/users.service';
 import { CampaignEventService } from '../common/campaign-event.service';
 import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
-import { CampaignClaimMongoRepository } from 'src/features/campaigns/repositories/mongo/campaign-claim/campaign-claim.repository';
 import { CampaignsMongoRepository } from 'src/features/campaigns/repositories/mongo/campaigns.repository';
-import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
-import { CrowdfundingEvent } from 'src/features/events/types';
-import { CLAIMED_STATUS_CODE } from 'src/features/campaign-statuses/constants';
+import { CampaignCancelMongoRepository } from '../../repositories/mongo/campaign-cancel/campaign-cancel.repository';
+import { CANCELED_STATUS_CODE } from 'src/features/campaign-statuses/constants';
 
 @Injectable()
-export class CampaignClaimService extends CampaignEventService {
-  private readonly logger = new Logger(CampaignClaimService.name);
-
+export class CampaignCancelService extends CampaignEventService {
   constructor(
     readonly campaignService: CampaignsService,
     readonly usersService: UsersService,
     readonly tokensService: TokensService,
-    private readonly campaignClaimMongoRepository: CampaignClaimMongoRepository,
+    private readonly campaignCancelMongoRepository: CampaignCancelMongoRepository,
     private readonly campaignMongoRepository: CampaignsMongoRepository,
-    private readonly userCampaignsMongoRepository: UserCampaignsRepository,
     private readonly campaignStatusService: CampaignStatusService,
   ) {
     super(campaignService, usersService, tokensService);
@@ -29,38 +24,30 @@ export class CampaignClaimService extends CampaignEventService {
 
   async create(eventData: unknown) {
     if (!Array.isArray(eventData)) {
-      throw new Error('Event data is corrupted');
+      console.log('Event Data: ', eventData);
+      throw new Error('Event data is not an array');
     }
 
-    const [onchainId, userAddress, amount] = eventData;
+    const [onchainId, userAddress] = eventData;
     const { campaign, user, token } = await this.getMetadata({
       onchainId,
       userAddress,
     });
 
-    const savedClaim = await this.campaignClaimMongoRepository.create({
+    await this.campaignCancelMongoRepository.create({
       campaignId: campaign._id,
       userId: user._id,
       tokenId: token._id,
-      amount,
     });
 
-    const { _id: claimStatusId } =
-      await this.campaignStatusService.getStatusByCode(CLAIMED_STATUS_CODE);
+    const { _id: cancelStatusId } =
+      await this.campaignStatusService.getStatusByCode(CANCELED_STATUS_CODE);
 
     await this.campaignMongoRepository.update({
       id: parseInt(onchainId).toString(),
       updateCampaignDto: {
-        status: claimStatusId,
+        status: cancelStatusId,
       },
-    });
-
-    await this.userCampaignsMongoRepository.updateUserCampaignByEvent({
-      campaign,
-      user,
-      token,
-      event: savedClaim,
-      eventType: CrowdfundingEvent.Claim,
     });
   }
 }

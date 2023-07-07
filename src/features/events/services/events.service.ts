@@ -14,6 +14,7 @@ import { CampaignLaunchService } from 'src/features/campaigns/services/campaign-
 import { CampaignClaimService } from 'src/features/campaigns/services/campaign-claim/campaign-claim.service';
 import { CampaignPledgeService } from 'src/features/campaigns/services/campaign-pledge/campaign-pledge.service';
 import { CampaignRefundService } from 'src/features/campaigns/services/campaign-refund/campaign-refund.service';
+import { CampaignCancelService } from 'src/features/campaigns/services/campaign-cancel/campaign-cancel.service';
 
 @Injectable()
 export class EventsService
@@ -29,6 +30,7 @@ export class EventsService
     private campaignPledgeService: CampaignPledgeService,
     private campaignClaimService: CampaignClaimService,
     private campaignRefundService: CampaignRefundService,
+    private campaignCancelService: CampaignCancelService,
   ) {}
 
   onApplicationShutdown() {
@@ -76,20 +78,19 @@ export class EventsService
     contract: Contract,
     data: unknown,
   ) {
-    switch (event) {
-      case CrowdfundingEvent.Launch:
-        await this.campaignLaunchService.create(data);
-        break;
-      case CrowdfundingEvent.Pledge:
-        await this.campaignPledgeService.create(data);
-        break;
-      case CrowdfundingEvent.Claim:
-        await this.campaignClaimService.create(data);
-        break;
-      case CrowdfundingEvent.Refund:
-        await this.campaignRefundService.create(data);
-        break;
+    const servicesByEvent = {
+      [CrowdfundingEvent.Launch]: this.campaignLaunchService,
+      [CrowdfundingEvent.Pledge]: this.campaignPledgeService,
+      [CrowdfundingEvent.Claim]: this.campaignClaimService,
+      [CrowdfundingEvent.Refund]: this.campaignRefundService,
+      [CrowdfundingEvent.Cancel]: this.campaignCancelService,
+    };
+
+    if (!servicesByEvent[event]) {
+      return console.log('No handler for related event');
     }
+
+    await servicesByEvent[event].create(data);
 
     this.storeRawEvent(data, event); //FIXME could process repetead events. storeRawEvent does not distinguish.
   }
