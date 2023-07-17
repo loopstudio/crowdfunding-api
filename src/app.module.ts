@@ -12,6 +12,7 @@ import { TokensModule } from './features/tokens/tokens.module';
 import { CampaignStatusesModule } from './features/campaign-statuses/campaign-statuses.module';
 import { CampaignCategoriesModule } from './features/campaign-categories/campaign-categories.module';
 import { AuthModule } from './features/auth/auth.module';
+import { RabbitmqModule } from './features/rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AuthModule } from './features/auth/auth.module';
     CampaignStatusesModule,
     CampaignCategoriesModule,
     AuthModule,
+    RabbitmqModule,
   ],
 })
 export class AppModule {}
