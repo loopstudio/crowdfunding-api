@@ -32,6 +32,6 @@ jobs:
 
       - name: Run linter and test coverage
         shell: bash
-        run: rm -rf node_modules && yarn install --frozen-lockfile && yarn run build:ci
+        run: rm node_modules && npm install && npm run build:ci
 
 
