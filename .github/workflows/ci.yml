@@ -32,4 +32,4 @@ jobs:
 
       - name: Run linter and test coverage
         shell: bash
-        run: rm node_modules && yarn install --frozen-lockfile && yarn run build:ci
+        run: yarn install --frozen-lockfile && yarn run build:ci
