@@ -42,6 +42,7 @@ import { CampaignClaimService } from './services/campaign-claim/campaign-claim.s
 import { CampaignClaimMongoRepository } from './repositories/mongo/campaign-claim/campaign-claim.repository';
 import { CampaignCancelService } from './services/campaign-cancel/campaign-cancel.service';
 import { CampaignCancelMongoRepository } from './repositories/mongo/campaign-cancel/campaign-cancel.repository';
+import { RabbitmqModule } from '../rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { CampaignCancelMongoRepository } from './repositories/mongo/campaign-can
     CampaignStatusesModule,
     CampaignCategoriesModule,
     UsersModule,
+    RabbitmqModule,
   ],
   controllers: [CampaignsController, CampaignsPledgeController],
   providers: [
