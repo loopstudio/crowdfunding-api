@@ -32,4 +32,4 @@ jobs:
 
       - name: Run linter and test coverage
         shell: bash
-        run: npm install && npm run build:ci
+        run: rm -rf node_modules && npm install && npm run build:ci
