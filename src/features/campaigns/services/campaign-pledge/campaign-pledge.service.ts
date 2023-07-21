@@ -63,7 +63,7 @@ export class CampaignPledgeService extends CampaignEventService {
     await this.rabbitmqService.sendMessageToQueue({
       userAddress: user.publicAddress,
       campaign: campaign.title,
-      amount: amount.toString(),
+      amount: `${amount.toString()} ${token.symbol}`,
     });
   }
 
