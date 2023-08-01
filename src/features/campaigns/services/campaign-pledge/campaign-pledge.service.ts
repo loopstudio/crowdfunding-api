@@ -3,12 +3,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
 import { TokensService } from 'src/features/tokens/services/tokens.service';
 import { UsersService } from 'src/features/users/services/users.service';
+import { RabbitmqService } from 'src/features/rabbitmq/rabbitmq.service';
+import { CampaignEventService } from '../common/campaign-event.service';
 import { CampaignPledgeMongoRepository } from '../../repositories/mongo/campaign-pledge/campaign-pledge.repository';
 import { CampaignsMongoRepository } from '../../repositories/mongo/campaigns.repository';
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 import { movementTypeEnum } from '../../constants';
 import { CrowdfundingEvent } from 'src/features/events/types';
-import { CampaignEventService } from '../common/campaign-event.service';
 
 @Injectable()
 export class CampaignPledgeService extends CampaignEventService {
@@ -21,6 +22,7 @@ export class CampaignPledgeService extends CampaignEventService {
     private readonly campaignPledgeMongoRepository: CampaignPledgeMongoRepository,
     private readonly campaignMongoRepository: CampaignsMongoRepository,
     private readonly userCampaignsMongoRepository: UserCampaignsRepository,
+    private readonly rabbitmqService: RabbitmqService,
   ) {
     super(campaignService, usersService, tokensService);
   }
@@ -56,6 +58,12 @@ export class CampaignPledgeService extends CampaignEventService {
       token,
       event: savedPledge,
       eventType: CrowdfundingEvent.Pledge,
+    });
+
+    await this.rabbitmqService.sendMessageToQueue({
+      userAddress: user.publicAddress,
+      campaign: campaign.title,
+      amount: `${amount.toString()} ${token.symbol}`,
     });
   }
 

@@ -16,6 +16,7 @@ import { CampaignPledgeMongoRepository } from '../../repositories/mongo/campaign
 import { UserCampaignsRepository } from 'src/features/users/repositories/user-campaigns/mongo/user-campaigns.repository';
 import { CampaignPledgeService } from './campaign-pledge.service';
 import { campaignMock } from 'src/features/users/tests/mocks';
+import { RabbitmqService } from 'src/features/rabbitmq/rabbitmq.service';
 
 describe('CampaignPledgeService', () => {
   let campaignPledgeService: CampaignPledgeService;
@@ -65,6 +66,12 @@ describe('CampaignPledgeService', () => {
           provide: UserCampaignsRepository,
           useValue: {
             updateUserCampaignByEvent: jest.fn(),
+          },
+        },
+        {
+          provide: RabbitmqService,
+          useValue: {
+            sendMessageToQueue: jest.fn(),
           },
         },
       ],

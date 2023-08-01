@@ -8,5 +8,6 @@ import { RabbitmqService } from './rabbitmq.service';
   imports: [ClientsModule.registerAsync([rabbitmqConnectionFactory])],
   controllers: [],
   providers: [RabbitmqService],
+  exports: [RabbitmqService],
 })
 export class RabbitmqModule {}

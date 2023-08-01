@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 import { NFT_GENERATION_QUEUE, RABBITMQ_SERVICE_NAME } from './constants';
+import { ImageData } from './types';
 
 @Injectable()
 export class RabbitmqService {
@@ -11,11 +12,9 @@ export class RabbitmqService {
     await this.rmqClient.connect();
   }
 
-  sendMessageToQueue() {
-    // TODO: Handle business logic here
-    // TODO: this method should be called when a new pledge is generated
+  sendMessageToQueue(data: ImageData) {
     this.rmqClient.emit<number>(NFT_GENERATION_QUEUE, {
-      message: 'Hello World!',
+      data,
     });
   }
 }
