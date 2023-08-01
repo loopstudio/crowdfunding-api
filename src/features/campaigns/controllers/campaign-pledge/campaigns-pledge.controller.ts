@@ -1,10 +1,10 @@
 import { Controller, Get, Query } from '@nestjs/common';
+import { EventPattern } from '@nestjs/microservices';
 
 import { CampaignPledgeService } from '../../services/campaign-pledge/campaign-pledge.service';
 import { APIResponse } from 'src/common/types';
 import { CampaignPledgeQueryDto } from '../../dto/campaigns-pledge-query-dto';
 import { CurrentUser } from 'src/decorators/currentUser.decorator';
-import { EventPattern } from '@nestjs/microservices';
 import { MINT_MANAGEMENT_QUEUE } from 'src/common/constants';
 
 @Controller('campaigns-pledge')
