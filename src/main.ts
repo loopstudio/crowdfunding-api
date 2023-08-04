@@ -9,6 +9,7 @@ import { AllExceptionsFilter } from './middlewares/filters/exception.filter';
 import { JwtAuthGuard } from './features/auth/guards/auth.guard';
 import { createRMQMicroservice } from './common/rabbitmq';
 import { MINT_MANAGEMENT_QUEUE } from './common/constants';
+import { ConfigService } from '@nestjs/config';
 
 const { API_PORT, NODE_ENV } = process.env;
 
@@ -16,8 +17,9 @@ async function bootstrap() {
   const isProductionEnv = NODE_ENV === 'production';
   const app = await NestFactory.create(AppModule);
   const adapterHost = app.get(HttpAdapterHost);
-  const mintManagementChannel = await createRMQMicroservice(
+  const queue = await createRMQMicroservice(
     MINT_MANAGEMENT_QUEUE,
+    new ConfigService(),
   );
 
   app.use(helmet());
@@ -45,8 +47,8 @@ async function bootstrap() {
     await app.listen(API_PORT);
     console.log(`NestJS API listening on port ${API_PORT}`);
 
-    await mintManagementChannel.listen();
-    console.log('Listening to mint management channel');
+    await queue.listen();
+    console.log('RabbitMQ service running');
   } catch (err) {
     console.log('Error starting app!', err);
     process.exit(1);

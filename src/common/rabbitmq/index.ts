@@ -29,11 +29,14 @@ export const rabbitmqConnectionFactory = {
   inject: [ConfigService],
 } as ClientsProviderAsyncOptions;
 
-export const createRMQMicroservice = (queueName: string) => {
+export const createRMQMicroservice = (
+  queueName: string,
+  configService: ConfigService,
+) => {
   return NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
     transport: Transport.RMQ,
     options: {
-      urls: ['amqp://admin:admin@localhost:5672'], // TODO: Change path
+      urls: [configService.get('RABBITMQ_URL') as string], // TODO: Change path
       queue: queueName,
       prefetchCount: 1,
       queueOptions: { durable: false },

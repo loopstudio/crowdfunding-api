@@ -29,7 +29,7 @@ export class CampaignsPledgeController {
   }
 
   @EventPattern(MINT_MANAGEMENT_QUEUE)
-  async handleNftGeneration(data) {
+  async handleMint(data) {
     console.log('Received data: ', data);
   }
 }
