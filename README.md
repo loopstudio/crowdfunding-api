@@ -97,3 +97,12 @@ git push --no-verify
 ## Testing
 
 🕵🏼‍♂️ In progress
+
+
+## Deploy on GCloud
+
+- Install [gcloud CLI](https://cloud.google.com/sdk/docs/install).
+- Useful link to set up your [gcloud account](https://devopscube.com/setup-google-cloud-clisdk/)
+- Build project with `yarn build`
+- Upload to gcloud: `gcloud app deploy `
+
