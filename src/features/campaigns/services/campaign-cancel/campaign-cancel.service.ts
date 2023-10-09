@@ -1,0 +1,53 @@
+import { Injectable } from '@nestjs/common';
+
+import { CampaignsService } from 'src/features/campaigns/services/campaigns.service';
+import { TokensService } from 'src/features/tokens/services/tokens.service';
+import { UsersService } from 'src/features/users/services/users.service';
+import { CampaignEventService } from '../common/campaign-event.service';
+import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
+import { CampaignsMongoRepository } from 'src/features/campaigns/repositories/mongo/campaigns.repository';
+import { CampaignCancelMongoRepository } from '../../repositories/mongo/campaign-cancel/campaign-cancel.repository';
+import { CANCELED_STATUS_CODE } from 'src/features/campaign-statuses/constants';
+
+@Injectable()
+export class CampaignCancelService extends CampaignEventService {
+  constructor(
+    readonly campaignService: CampaignsService,
+    readonly usersService: UsersService,
+    readonly tokensService: TokensService,
+    private readonly campaignCancelMongoRepository: CampaignCancelMongoRepository,
+    private readonly campaignMongoRepository: CampaignsMongoRepository,
+    private readonly campaignStatusService: CampaignStatusService,
+  ) {
+    super(campaignService, usersService, tokensService);
+  }
+
+  async create(eventData: unknown) {
+    if (!Array.isArray(eventData)) {
+      console.log('Event Data: ', eventData);
+      throw new Error('Event data is not an array');
+    }
+
+    const [onchainId, userAddress] = eventData;
+    const { campaign, user, token } = await this.getMetadata({
+      onchainId,
+      userAddress,
+    });
+
+    await this.campaignCancelMongoRepository.create({
+      campaignId: campaign._id,
+      userId: user._id,
+      tokenId: token._id,
+    });
+
+    const { _id: cancelStatusId } =
+      await this.campaignStatusService.getStatusByCode(CANCELED_STATUS_CODE);
+
+    await this.campaignMongoRepository.update({
+      id: parseInt(onchainId).toString(),
+      updateCampaignDto: {
+        status: cancelStatusId,
+      },
+    });
+  }
+}

@@ -1,0 +1,142 @@
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+
+import { CreateCampaignDto } from '../dto/create-campaign.dto';
+import { UpdateCampaignDto } from '../dto/update-campaign.dto';
+import { CampaignsMongoRepository } from '../repositories/mongo/campaigns.repository';
+import { TokensService } from 'src/features/tokens/services/tokens.service';
+import { CampaignStatusService } from 'src/features/campaign-statuses/services/campaign-statuses.service';
+import { CampaignCategoriesService } from 'src/features/campaign-categories/services/campaign-category.service';
+
+import {
+  PENDING_STATUS_CODE,
+  generalCategoryCode,
+} from '../../campaign-statuses/constants';
+import { UsersRepository } from 'src/features/users/repositories/users/mongo/users.repository';
+import { CampaignLaunchEventDto } from '../dto/campaign-launch-event-dto';
+import { CampaignPledgeMongoRepository } from '../repositories/mongo/campaign-pledge/campaign-pledge.repository';
+
+@Injectable()
+export class CampaignsService {
+  constructor(
+    private readonly campaignsMongoRepository: CampaignsMongoRepository,
+    private readonly usersMongoRepository: UsersRepository,
+    private readonly tokensService: TokensService,
+    private readonly campaignCategoriesService: CampaignCategoriesService,
+    private readonly campaignStatusService: CampaignStatusService,
+    private readonly campaignPledgeMongoRepository: CampaignPledgeMongoRepository,
+  ) {}
+
+  async create(createCampaignDto: CreateCampaignDto & { owner: string }) {
+    const { goal, owner } = createCampaignDto;
+    const tokenAddresses = goal.map((tokenGoal) => {
+      return tokenGoal.tokenAddress as unknown as string;
+    });
+    const areTokensValid = await this.tokensService.areTokensValid(
+      tokenAddresses,
+    );
+    if (!areTokensValid) {
+      throw new BadRequestException();
+    }
+
+    const pendingStatus = await this.campaignStatusService.getStatusByCode(
+      PENDING_STATUS_CODE,
+    );
+    if (!pendingStatus) {
+      throw new BadRequestException();
+    }
+
+    const generalCategory = await this.campaignCategoriesService.getByIdOrCode({
+      code: generalCategoryCode,
+    });
+    if (!generalCategory) {
+      throw new BadRequestException();
+    }
+
+    const campaign = await this.campaignsMongoRepository.create({
+      owner,
+      dto: createCampaignDto,
+      pendingStatusId: pendingStatus._id,
+      generalCategoryId: generalCategory._id,
+    });
+
+    return { campaign };
+  }
+
+  async findAll({
+    page,
+    size,
+    ownerId,
+    search,
+  }: {
+    page: number;
+    size: number;
+    ownerId: string | null;
+    search: string;
+  }) {
+    const campaigns = await this.campaignsMongoRepository.findAll({
+      page,
+      size,
+      ownerId,
+      search,
+    });
+
+    return { campaigns };
+  }
+
+  async findOne(id: string) {
+    const campaign = await this.campaignsMongoRepository.findOne(id);
+    const pledges = await this.campaignPledgeMongoRepository.countPledges(
+      campaign,
+    );
+
+    return { campaign, pledges };
+  }
+
+  async findByLaunchEvent(campaignLaunchEventDto: CampaignLaunchEventDto) {
+    const user = await this.usersMongoRepository.findByAddress(
+      campaignLaunchEventDto.creator,
+    );
+    if (!user) {
+      throw new NotFoundException(
+        'User not found when processing launch event. Address: ',
+        campaignLaunchEventDto.creator,
+      );
+    }
+
+    const pendingStatus = await this.campaignStatusService.getStatusByCode(
+      PENDING_STATUS_CODE,
+    );
+    if (!pendingStatus) {
+      throw new NotFoundException(
+        'Pending status not found when processing launch event',
+      );
+    }
+
+    const campaign = await this.campaignsMongoRepository.findByLaunchEvent({
+      campaignLaunchEventDto,
+      pendingStatusId: pendingStatus._id,
+      ownerId: user._id,
+    });
+
+    return { campaign };
+  }
+
+  async update({
+    id,
+    updateCampaignDto,
+  }: {
+    id: string;
+    updateCampaignDto: UpdateCampaignDto;
+  }) {
+    const campaign = await this.campaignsMongoRepository.update({
+      id,
+      updateCampaignDto,
+    });
+
+    return { campaign };
+  }
+}

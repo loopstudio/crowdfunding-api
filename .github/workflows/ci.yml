@@ -9,5 +9,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - run: yarn install && yarn run build:ci
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Collecting NodeJS Version
+        id: prepare
+        run: |
+          version=$(cat .nvmrc | cut -d'/' -f2)
+          full_version=$(cat .nvmrc)
+
+          echo "node_version=$version" >> $GITHUB_OUTPUT
+
+          echo "Using Node Version      : ${version}"
+          echo "Using Node Full Version : ${full_version}"
+
+      - name: Setup NodeJS version
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ steps.prepare.outputs.full_version }}
+
+      - name: Run linter and test coverage
+        shell: bash
+        run: rm -rf node_modules && yarn install && yarn run build:ci
