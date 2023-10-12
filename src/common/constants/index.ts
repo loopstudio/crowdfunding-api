@@ -4,3 +4,5 @@ export const DEFAULT_PAGE_SIZE = 20;
 export const DEFAULT_PAGE = 1;
 
 export const TOKEN_EXPIRATION_TIME = '30d';
+
+export const MINT_MANAGEMENT_QUEUE = 'mint_management';
